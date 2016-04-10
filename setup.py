@@ -35,7 +35,7 @@ setup(name='medoly',
       packages = ['medoly'],
       install_requires=['setuptools',  'tornado'],
       keywords=["web FrameWork"],
-      license="GPL",
+      license="Apache License",
       platforms='any',
       classifiers=(
           "Development Status :: 3 - Alpha",
