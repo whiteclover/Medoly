@@ -58,7 +58,7 @@ class ThreadPoolExecutor(object):
     put = lambda self, task: self._idel_tasks.put(task)
 
     def run(self):
-        LOGGER.debug('Starting schedule ....')
+        LOGGER.debug('Starting executor ....')
         LOGGER.debug('Master thread : %d', get_ident())
         self.ready = True
         self.threadpool.start()
@@ -80,7 +80,7 @@ class ThreadPoolExecutor(object):
                 cls, e, tb = sys.exc_info()
                 LOGGER.exception('Unhandled Error %s', e)
 
-        LOGGER.debug('Stoping schedule...')
+        LOGGER.debug('Stoping executor...')
         self.stop()
 
     def stop(self):
@@ -117,8 +117,7 @@ class ThreadPoolExecutor(object):
         self._append_tasks.put(pros)
 
     def claim(self):
-        return self.bus.office()
-
+        return self._append_tasks.get()
 
 class HeartBeat(threading.Thread):
 
@@ -142,8 +141,8 @@ class HeartBeat(threading.Thread):
 
 class ThreadPool(object):
 
-    def __init__(self, schedule, min, max):
-        self.schedule = schedule
+    def __init__(self, executor, min, max):
+        self.executor = executor
         self.min = min
         self.max = max
         self._created = 0
@@ -179,7 +178,7 @@ class ThreadPool(object):
         return thread
 
     def _new_thread(self):
-        return WorkerThread(self.schedule, self)
+        return WorkerThread(self.executor, self)
 
     def stop(self, timeout=5):
         # Must shut down threads here so the code that calls
@@ -189,10 +188,8 @@ class ThreadPool(object):
             time.sleep(1)
             with self._lock:
                 if self._in_use_threads or self._idel_threads:
-                    LOGGER.info('_idel_threads')
                     while self._idel_threads:
                         worker = self._idel_threads.pop(0)
-                        worker.current_task = _SHUTDOWNTASK
                         worker.resume()
                         # worker.event.clear()
                 else:
@@ -201,10 +198,10 @@ class ThreadPool(object):
 
 class WorkerThread(threading.Thread):
 
-    def __init__(self, scheduler, pool):
+    def __init__(self, executor, pool):
         self.ready = False
         self.event = threading.Event()
-        self.scheduler = scheduler
+        self.executor = executor
         self.current_task = None
         self.pool = pool
         threading.Thread.__init__(self)
