@@ -22,8 +22,10 @@ class ConfigError(Exception):
 
 
 class HoconParserException(ConfigError):
-    pass
+	"""hocon parse error"""
+	pass
 
 
 class HoconTokenizerException(ConfigError):
-    pass
+	"""tokenizer error exception"""
+	pass

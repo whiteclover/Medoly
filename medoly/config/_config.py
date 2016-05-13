@@ -15,7 +15,8 @@
 # under the License.
 
 
-# Human-Optimized Config Object Notation
+"""Human-Optimized Config Object Notation
+"""
 
 
 from copy import deepcopy
