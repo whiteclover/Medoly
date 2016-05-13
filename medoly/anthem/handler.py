@@ -15,15 +15,6 @@ class Handler(RequestHandler, FlashMessagesMixin):
         FlashMessagesMixin
     """
 
-    @property
-    def hooks(self):
-        """Get application hook map
-
-        Returns:
-            [HookMap] -- hook map instacne
-        """
-        return self.application.hooks
-
     def prepare(self):
         """Perpare request process
 

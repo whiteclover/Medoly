@@ -242,7 +242,7 @@ class InventoryManager(object):
 
         """
         REG = re.compile(r"(\w[\w\d_]+)\s*\-\s*>\s*(\w[\w\d_]+)")
-        doc = getattr(handler,  '__mapper__', "")
+        doc = getattr(handler, '__mapper__', "")
         if doc:
             lines = [part.strip() for part in doc.split("\n") if part.strip()]
             for line in lines:
@@ -289,7 +289,7 @@ class InventoryManager(object):
 
         """
         REG = re.compile(r"(\w[\w\d_]+)\s*\-\s*>\s*(\w[\w\d_]+)")
-        doc = getattr(handler,  '__thing__', "")
+        doc = getattr(handler, '__thing__', "")
         if doc:
             lines = [part.strip() for part in doc.split("\n") if part.strip()]
             for line in lines:
@@ -303,7 +303,7 @@ class InventoryManager(object):
 
 class Menu(object):
 
-    def __init__(self,  url_spec, handler=None, settings=None, name=None, render=None):
+    def __init__(self, url_spec, handler=None, settings=None, name=None, render=None):
         self.url_spec = url_spec
         self.handler = handler
         self.settings = settings

@@ -68,7 +68,7 @@ class ChocoTemplateLoader(Loader):
     """
 
     def __init__(self, directories, ui_container=None, module_directory=None, filesystem_checks=False, **kwargs):
-        """Choco Tempatle Engine set up loder
+        """Choco Tempatle Engine set up loader
 
         Arguments:
             directories {list[str]} -- the choco template root paths
@@ -77,7 +77,7 @@ class ChocoTemplateLoader(Loader):
         Keyword Arguments:
             ui_container {UIContainer} -- the ui template container (default: {None})
             module_directory {str} -- the choco template module cache path (default: {None})
-            filesystem_checks {bool} -- when ``True`` the choco loader will check the template file and reload the last modifiy template(default: {False})
+            filesystem_checks {bool} -- when ``True`` the choco loader will check the template file and reload the last modify template(default: {False})
         """
         super(ChocoTemplateLoader, self).__init__(directories[0], **kwargs)
 
