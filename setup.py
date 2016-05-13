@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
+
 import os
 try:
     from setuptools import setup
@@ -27,19 +27,18 @@ readme = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
 setup(name='medoly',
       version=medoly.__version__,
-      description='Mutil-thread/mutil-process task scheduler drive by Tornado IOLoop for human.',
+      description='Medoly is a Web Framework, the design is inspried by Spring-boot and Emberjs.',
       long_description=readme,
       author="Thomas Huang",
       url='https://github.com/whiteclover/medoly',
       author_email='lyanghwy@gmail.com',
-      packages = ['medoly'],
-      install_requires=['setuptools',  'tornado'],
-      keywords=["web FrameWork"],
+      packages=['medoly'],
+      install_requires=['setuptools', 'tornado', 'choco'],
+      keywords=["Web FrameWork"],
       license="Apache License",
       platforms='any',
       classifiers=(
           "Development Status :: 3 - Alpha",
-          "License :: OSI Approved :: GNU Affero General Public License v3",
           "Natural Language :: English",
           "Programming Language :: Python",
           "Programming Language :: Python :: 2.7",
