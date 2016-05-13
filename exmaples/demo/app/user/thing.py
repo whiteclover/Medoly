@@ -6,7 +6,7 @@ from medoly.anthem import Backend
 class UserThing(object):
 
 	def __init__(self):
-		self.dao = Backend('User')
+		self.mapper = Backend('User')
 
 	def find_by_uid(self, uid):
-		return self.dao.find_by_uid(uid)
+		return self.mapper.find_by_uid(uid)
