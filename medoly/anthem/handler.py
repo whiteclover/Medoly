@@ -1,22 +1,41 @@
+#!/usr/bin/env python
+
 from tornado.web import RequestHandler, url
-from tornado.escape import utf8, json_encode, json_decode
+from tornado.escape import utf8, json_encode
 
 
 from .flash import FlashMessagesMixin
 
 
 class Handler(RequestHandler, FlashMessagesMixin):
+    """Medoly Request Hander class
+
+    Extends:
+        RequestHandler
+        FlashMessagesMixin
+    """
+
+    @property
+    def hooks(self):
+        """Get application hook map
+
+        Returns:
+            [HookMap] -- hook map instacne
+        """
+        return self.application.hooks
 
     def prepare(self):
+        """Perpare request process
+
+        [description]
+        """
         self.hooks.run('on_start_request', self)
         self.on_start_request()
 
     def on_start_request(self):
+        """Process hook after ``on_start_request''
+        """
         pass
-
-    @property
-    def remote_ip(self):
-        return self.request.remote_ip
 
     def get_current_user(self):
         """Override to determine the current user from, e.g., a cookie."""
@@ -60,15 +79,22 @@ class Handler(RequestHandler, FlashMessagesMixin):
             xsrf_form_html=self.xsrf_form_html,
             reverse_url=self.reverse_url
         )
-        # namespace.update(self.ui)
         return namespace
 
-    def jsonify(self, chunk):
+    def jsonify(self, json_obj):
+        """Json data write
+
+        Arguments:
+            json_obj {object} -- the data can json encoding
+
+        Raises:
+            RuntimeError --  run time exception when  request had finshed
+        """
         if self._finished:
             raise RuntimeError("Cannot jsonify() after finish().  May be caused "
                                "by using async operations without the "
                                "@asynchronous decorator.")
-        chunk = json_encode(chunk)
+        chunk = json_encode(json_obj)
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         chunk = utf8(chunk)
         self._write_buffer.append(chunk)
@@ -79,28 +105,65 @@ class Handler(RequestHandler, FlashMessagesMixin):
         self.finish(html)
 
     def on_finish(self):
+        """Hook  pointer process  on request finshing
+        """
         self.hooks.run('on_end_request', self)
         self.on_end_request()
 
     def on_end_request(self):
+        """Custom request hanlder hook on end request
+        """
         pass
 
     def Backend(self, key):
+        """Get backend by bean key
+
+        Arguments:
+            key {str} -- backend key
+
+        Returns:
+             backend instacne
+        """
         return __backend.get(key)
 
     def Thing(self, key):
+        """Get thing by bean key
+
+        Arguments:
+            key {str} -- thing key
+
+        Returns:
+             thing instacne
+        """
         return __thing.get(key)
 
     def Model(self, key):
+        """Get model by bean key
+
+        Arguments:
+            key {str} -- model key
+
+        Returns:
+             model instacne
+        """
         return __model.get(key)
 
 
 class RenderHandler(Handler):
+    """Render Hanlder class """
 
     def initialize(self, template):
+        """Initialize and bind tempalte
+
+
+        Arguments:
+            template {str} -- tempalte path
+        """
         self.template = template
 
     def get(self, *args):
+        """Reder template
+        """
         self.render(self.template)
 
 

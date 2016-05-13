@@ -14,6 +14,36 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+
+"""Flash message session Mixin
+===================================
+
+
+How to use
+-----------------
+
+.. code:: python
+
+
+    Exmaple::
+
+        class Index(anthem.Handler):
+
+            def get(self):
+                self.flash("User name is invalid", "error")
+                self.render("user.html")
+
+
+
+template "user.html"::
+
+.. code:: mako
+
+        <div> <h2> Flash message</h2>
+                ${flash()}
+        </div>
+"""
+
 import tornado
 
 
@@ -29,6 +59,11 @@ class FlashMessagesMixin(object):
         return self._messages
 
     def flash(self, message, level='error'):
+        """Appeding message in flash.
+
+        param message: Str, message info.
+        param level: message level enum in ["error", "info", "warnning"].
+        """
         if isinstance(message, str):
             message = message.decode('utf8')
 
@@ -37,6 +72,7 @@ class FlashMessagesMixin(object):
             'flash_messages', tornado.escape.json_encode(self.messages))
 
     def get_flashed_messages(self):
+        """Get flashed message"""
         messages = self.messages
         self._messages = []
         self.clear_cookie('flash_messages')

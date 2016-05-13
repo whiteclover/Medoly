@@ -1,9 +1,14 @@
+#!/usr/bin.env python
 
+
+"""Http RequestHandler hook point manager
+
+"""
 import logging
 from sys import exc_info
 
 
-LOGGER = logging.getLogger('seraph.hook')
+LOGGER = logging.getLogger('anthem.hook')
 
 
 class Hook(object):
@@ -67,6 +72,8 @@ class HookMap(dict):
         return d
 
     def __init__(self, *a, **kw):
+        """Init
+        """
         pass
 
     def attach(self, point, callback, failsafe=None, priority=None, **kwargs):
@@ -91,7 +98,7 @@ class HookMap(dict):
                     hook(*args, **kw)
                 except (KeyboardInterrupt, SystemExit):
                     raise
-                except:
+                except Exception:
                     exc = exc_info()[1]
                     LOGGER.exception("Hook Error: %s", exc)
         if exc:

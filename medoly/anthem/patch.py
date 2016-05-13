@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2015 Medoly
+# Copyright 2016 Medoly
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
 # not use this file except in compliance with the License. You may obtain
@@ -21,8 +21,6 @@ import traceback
 
 
 def patch_tornado():
-
-    from functools import wraps
 
     import datetime
     import decimal
@@ -78,9 +76,9 @@ def patch_tornado():
         finally:
             self.hooks.run("after_error_response", self, status_code, **kwargs)
 
-
     @property
     def hooks(self):
+        """Get Application request handler hooks"""
         return self.application.hooks
 
     from tornado import escape
