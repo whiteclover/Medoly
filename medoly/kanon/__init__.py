@@ -1,14 +1,36 @@
 import os.path
 
 from .manager import InventoryManager
-
-from functools import wraps
 from . import composer
+
+
 __inventoryMgr = InventoryManager()
 
 
+def chant():
+    """Initalize the setting and application"""
+    return __inventoryMgr.load()
+
+
+def hook(point, failsafe=None, priority=None, **kwargs):
+
+    def _hook(func):
+        __inventoryMgr.attach(point, func, failsafe, priority, kwargs)
+    return _hook
+
+
+def error_page(status_code):
+
+    def _error_page(func):
+        __inventoryMgr.error_page(status_code, func)
+    return _error_page
+
+
 def boot():
-    pass
+    def _boot(kclass):
+        __inventoryMgr.put_boot(kclass)
+        return kclass
+    return _boot
 
 
 def set_app_name(name):
@@ -25,8 +47,13 @@ def inventory_mgr():
 
 
 def compose(module, include_template=True):
-    module_infso, is_path, package = composer.import_submodules(module)
+    """Scan the module including all sub modules. 
+    check the template path ``template``, if exists, will add it in the template engine paths
 
+    param module: the python dot module string.
+    param inclue_template: if the module is a diretory and the value is true. it will add the template path, \
+    if exist the sub diretory named "template" """
+    module_infso, is_path, package = composer.scan_submodules(module)
     if is_path and include_template:
         path = os.path.dirname(package.__file__)
         tempalte_path = os.path.join(path, "template")
@@ -59,19 +86,31 @@ def menu(url_spec, settings=None, name=None, render=None):
 
 def route(prefix_url=''):
 
-    def __def(f):
+    def __route(f):
         c = Connetor(prefix_url, __inventoryMgr)
         f(c)
         return f
-    return __def
+    return __route
 
 
-def chant():
-    return __inventoryMgr.load()
+class Connetor(object):
+
+    def __init__(self, prefix_path, mgr):
+        self.prefix_path = prefix_path
+        self.mgr = mgr
+
+    def __enter__(self):
+        return self
+
+    def connect(self, url_spec, *args, **kw):
+        self.autoload.add_menu(self.prefix_path + url_spec, *args, **kw)
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        pass
 
 
 def bloom(inventory_name, alias=None):
-
+    """bind the inventory"""
     def _bloom(inventory):
         kclass_name = inventory.__name__
         if inventory_name == "thing":
@@ -80,7 +119,7 @@ def bloom(inventory_name, alias=None):
                 name = alias
             else:
                 if kclass_name.endswith("Thing"):
-                    name = kclass_name[:4]
+                    name = kclass_name[:-5]
                 else:
                     name = kclass_name
 
@@ -101,7 +140,7 @@ def bloom(inventory_name, alias=None):
                 name = alias
             else:
                 if kclass_name.endswith("Mapper"):
-                    name = kclass_name[:4]
+                    name = kclass_name[:-6]
                 else:
                     name = kclass_name
 
@@ -109,19 +148,3 @@ def bloom(inventory_name, alias=None):
 
         return inventory
     return _bloom
-
-
-class Connetor(object):
-
-    def __init__(self, prefix_path, mgr):
-        self.prefix_path = prefix_path
-        self.mgr = mgr
-
-    def __enter__(self):
-        return self
-
-    def connect(self,  url_spec, *args, **kw):
-        self.autoload.add_menu(self.prefix_path + url_spec, *args, **kw)
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        pass

@@ -16,6 +16,8 @@ class InventoryManager(object):
     def __init__(self, handlercls=None):
         self.boots = []
         self.app_ctx = AppContext()
+        self.config = None
+        self.settings = {}
         self.models = {}
         self.things = {}
         self.routes = []
@@ -29,23 +31,68 @@ class InventoryManager(object):
     def set_app_name(self, name):
         self.app_name = name
 
+    def attach(self, point, callback, failsafe, priority, kwargs):
+        """Append hook"""
+        self.app_ctx.attach(point, callback, failsafe, priority, kwargs)
+
+    def error_page(self, status_code, callback):
+        """Http exception handler hook
+
+        Arguments:
+            status_code {int} -- http status code
+            callback {function} -- the excption handle callback
+        """
+        self.app_ctx.error_page(status_code, callback)
+
     def load(self):
+        self.load_boot()
         self.mount_model()
         self.mount_mapper()
         self.mount_thing()
         self.mount_menu()
         return self.create_app()
 
+    def load_boot(self):
+        from medoly import cmd
+        # intialize console option parser
+        LOGGER.debug("Parsing console options")
+        console = cmd.Cmd('/etc/%s/app.conf' % (self.app_name))
+        self.boots = [boot() for boot in self.boots]
+        self.config = console.parse_cmd(self.app_name, self.boots)
+        self.boot_config()
+
+    def boot_config(self):
+        LOGGER.debug("Bootstrap config")
+        for boot in self.boots:
+            if hasattr(boot, 'setup'):
+                boot.setup(self.config, self.settings)
+
     def create_app(self):
         LOGGER.debug("Creating app!")
         settings = self.intitilaize_app_settings()
-        return anthem.Application(self.routes, self.initilaize_app, **settings)
+        self.settings.update(settings)
+        return anthem.Application(self.routes, self.initilaize_app, **self.settings)
 
     def initilaize_app(self, app):
+        """Initilalze and setting application
+
+        #. load hook points
+        #. load error page hooks
+
+        Arguments:
+            app {Application} -- the modely application
+        """
         LOGGER.debug("Starting init app!")
         LOGGER.debug("Start init app hooks!")
-        for hook in self.app_ctx.hooks:
-            app.attach(*hook[0], **hook[1])
+        # intialize app hooks
+        for (point, callback, failsafe, priority, kwargs) in self.app_ctx.hooks:
+            app.attach(point, callback, failsafe, priority, **kwargs)
+
+        # intialize error page hooks
+        for (code, func) in self.app_ctx.error_pages.items():
+            app.error_page(code, func)
+
+        app.config = self.config
 
     def intitilaize_app_settings(self):
         settings = dict()
@@ -55,26 +102,41 @@ class InventoryManager(object):
             settings[
                 'template_loader'] = self.template_mananger.create_template_loader(self)
 
+        # try to setting static resource
+        static_path = self.config.get("asset.path")
+        if static_path:
+            settings['static_path'] = static_path
+        static_url_prefix = self.config.get("asset.url_prefix")
+        if static_url_prefix:
+            settings['static_url_prefix'] = static_url_prefix
+
+        settings['debug'] = self.config.get("debug", False)
+        settings['cookie_secret'] = self.config.get("secert_key", None)
+
         return settings
 
     def put_ui(self, ui_name, uicls):
         if not issubclass(uicls, UIModule):
-            classes = [UIModule] + list(uicls.__bases__)
+            classes = [UIModule] + self.get_class_bases(uicls)
             uicls = type(uicls.__name__, tuple(classes), dict(uicls.__dict__))
 
-        LOGGER.debug("Putting ui:<%s -> %r", ui_name, uicls)
+        LOGGER.debug("Putting ui:{%s -> %r}", ui_name, uicls)
         self.template_mananger.put_ui(ui_name, uicls)
 
+    def put_boot(self, boot):
+        LOGGER.debug("Puting boot:%s", boot.__name__)
+        self.boots.append(boot)
+
     def put_model(self, name, model):
-        LOGGER.debug("Puting model:<%s -> %r", name, model)
+        LOGGER.debug("Puting model:{%s -> %r}", name, model)
         self.models[name] = model
 
     def put_mapper(self, name, mapper):
-        LOGGER.debug("Puting mapper:<%s -> %r", name, mapper)
+        LOGGER.debug("Puting mapper:{%s -> %r}", name, mapper)
         self.mappers[name] = mapper
 
     def put_thing(self, name, thing):
-        LOGGER.debug("Puting thing:<%s -> %r", name, thing)
+        LOGGER.debug("Puting thing:{%s -> %r}", name, thing)
         self.things[name] = thing
 
     def add_template_path(self, template_path):
@@ -124,17 +186,61 @@ class InventoryManager(object):
         if handler is None:
             raise ValueError("Handler is required, can't be empty")
 
+        # DI: mapper and thing
         self.load_mapper(handler)
         self.load_thing(handler)
 
+        # check inhert handler class, if not, inject the default handler class
         if not issubclass(handler, self.defalut_handler):
-            classes = [self.defalut_handler] + list(handler.__bases__)
+            classes = [self.defalut_handler] + self.get_class_bases(handler)
             handler = type(handler.__name__, tuple(
                 classes), dict(handler.__dict__))
 
         self.routes.append(anthem.url(url_spec, handler, settings, name))
 
+    def get_class_bases(self, klass):
+        """Getting the base classes excluding the type<object>"""
+        bases = klass.__bases__
+        if len(bases) == 1 and bases[0] == object:
+            return []
+        else:
+            return list(bases)
+
     def load_mapper(self, handler):
+        """Mapper Dependency injection, check the line split here doc "__mapper__"
+
+        rule::
+
+            $variableName->$mapperName
+
+        Example::
+
+        .. code:: python
+
+            class Index(object):
+
+                __mapper__ = '''userMapper->User
+                postMapper->Post'''
+
+                def get(self):
+                    pass
+
+        The mapper dependecy injection, it will load the mapper instacne by the backend name and assign to the named class variable.
+
+
+
+        .. code:: python
+
+            class Index(object):
+
+                userMapper = Backend("User")
+                postMapper = Backend("Post")
+
+
+                def get(self):
+                    pass
+
+        """
         REG = re.compile(r"(\w[\w\d_]+)\s*\-\s*>\s*(\w[\w\d_]+)")
         doc = getattr(handler,  '__mapper__', "")
         if doc:
@@ -148,6 +254,40 @@ class InventoryManager(object):
             delattr(handler, '__mapper__')
 
     def load_thing(self, handler):
+        """Thing Dependency injection, check the line split here doc "__thing__"
+
+        Line Rule::
+
+            $variableName->$thingName
+
+        Example::
+
+        .. code:: python
+
+            class Index(object):
+
+                __thing__ = '''userThing->User
+                postThing->Post'''
+
+                def get(self):
+                    pass
+
+        The thing dependecy injection, it will load the thing instacne by the thing name and assign to the named class variable.
+
+
+
+        .. code:: python
+
+            class Index(object):
+
+                userThing = Thing("User")
+                postThing = Thing("Post")
+
+
+                def get(self):
+                    pass
+
+        """
         REG = re.compile(r"(\w[\w\d_]+)\s*\-\s*>\s*(\w[\w\d_]+)")
         doc = getattr(handler,  '__thing__', "")
         if doc:
@@ -194,13 +334,22 @@ class TempateMananger(object):
             mgr.load_mapper(uicls)
             mgr.load_thing(uicls)
             ui_container.put_ui(name, uicls)
-        return anthem.ChocoTemplateLoader(self.template_paths, ui_container=ui_container)
+        return anthem.ChocoTemplateLoader(self.template_paths, ui_container=ui_container,
+                                          filesystem_checks=mgr.config.get(
+                                              "choco.filesystem_checks", False),
+                                          module_directory=mgr.config.get("choco.cache_path"))
 
     def add_ui_path(self, ui_path):
         """Added Ui tempate path to head"""
         self.ui_paths.insert(0, ui_path)
 
     def put_ui(self, ui_name, uicls):
+        """Put ui in  uis
+
+        Arguments:
+            ui_name {str} -- ui template name
+            uicls {UIModule} -- UI Module class instance
+        """
         self.uis.append((ui_name, uicls))
 
     def add_template_path(self, template_path):
