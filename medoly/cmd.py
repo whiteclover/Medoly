@@ -44,12 +44,9 @@ class Cmd(object):
     def __init__(self, config_path, opt=None):
         """Init
 
-        Arguments:
-            config_path {str} --  hocon config file path
-
-        Keyword Arguments:
-            opt {Options} -- the default option config class instance
-                 (default: {None}, use the global default options instance)
+        :param string config_path: hocon config file path
+        :param Options opt: the default option config class instance
+                (default: {None}, use the global default options instance)
         """
         self.options = opt or options
         self.confing_path = config_path
@@ -58,7 +55,7 @@ class Cmd(object):
         """Loading the hocon config for the file path
 
         Returns:
-            [SelectDict] -- the option select dict config
+            SelectDict -- the option select dict config
         """
         # parse terminal option get file path, then load the hocon from file path
         opt = options.Options(None)
@@ -66,7 +63,7 @@ class Cmd(object):
                    help="config path (default %(default)r)", metavar="FILE")
         o = opt.parse_args(sys.argv)
         if os.path.exists(o.config):
-            config = ConfigFactory.parseFile(o.config, pystyle=True)
+            config = ConfigFactory.parse_file(o.config, pystyle=True)
             return config
         else:
             # Return default
@@ -75,14 +72,11 @@ class Cmd(object):
     def parse_cmd(self, help_doc, boots):
         """Parse config and setting config for the terminal options
 
-
-
-        Arguments:
-            help_doc {str} -- The OptionPaser help doc
-            boots {Boot} --  the boot  instances options
+        :param string help_doc: The OptionPaser help doc
+        "param boots:  the boot  instances options
 
         Returns:
-            [SelectConfig] --  the dict like config
+            SelectConfig --  the dict like config
         """
         self.options.setup_options(help_doc)
         self.boot_options(self.options, boots)

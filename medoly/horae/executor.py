@@ -12,7 +12,6 @@ except ImportError:
     from _thread import get_ident
 
 
-
 from .pros import Pros
 
 LOGGER = logging.getLogger(__name__)
@@ -25,7 +24,21 @@ class ThreadPoolExecutor(object):
     # the total time for worker thread to cleanly exit
     SHOTDOWN_TIMEOUT = 5
 
-    def __init__(self, bus, queue_size, minthreads=5, maxthreads=10):
+    def __init__(self, bus, queue, minthreads=5, maxthreads=10):
+        """[summary]
+
+        [description]
+        :param bus: [description]
+        :type bus: [type]
+        :param queue: [description]
+        :type queue: [type]
+        :param minthreads: [description], defaults to 5
+        :type minthreads: number, optional
+        :param maxthreads: [description], defaults to 10
+        :type maxthreads: number, optional
+        :raises: TypeError
+        """
+
         minthreads = minthreads or 1
         minthreads = 1 if minthreads <= 0 else minthreads
         maxthreads = maxthreads or 10
@@ -46,7 +59,7 @@ class ThreadPoolExecutor(object):
 
         if (time.time() - self.clear_time) > 300:
             self.clear_time = time.time()
-     
+
         # clear idle tasks
         idel_queue_size = self._idel_tasks.qsize()
         for _ in range(idel_queue_size):
@@ -118,6 +131,7 @@ class ThreadPoolExecutor(object):
 
     def claim(self):
         return self._append_tasks.get()
+
 
 class HeartBeat(threading.Thread):
 

@@ -21,15 +21,15 @@ import sys
 
 class Options(object):
     """Console args parser
+
+    :param help_doc: Terminal help doc description, defaults to None
+    :type help_doc: string, optional
+    :param args: config options , defaults to None
+    :type args: list[string], optional
     """
 
     def __init__(self, help_doc=None, args=None):
-        """Init
 
-        Keyword Arguments:
-            help_doc {[str} -- Terminal help doc description
-            args {list[str]} -- config options
-        """
         self.args = args or sys.argv
         if help_doc is None:
             self.argparser = ArgumentParser(add_help=False)

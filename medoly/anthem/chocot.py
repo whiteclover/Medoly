@@ -2,27 +2,21 @@
 
 
 """Choco Tempatle Engine
-==================
 
 Example
 --------------
 
-index.html
-~~~~~~~~~~~~
+index.html:
 
-
-::
+.. code::
 
     This is an UI Page
     <%@ PostView(post_id)/>
 
+ui/post.html:
 
 
-ui/post.html
-~~~~~~~~~~~~~
-
-
-::
+.. code::
 
     This is a Post View
 
@@ -65,20 +59,19 @@ class ChocoTemplateLoader(Loader):
 
     Extends:
         Loader
+
+
+    :param  list[str] directories: the choco template root paths
+    :param  kwargs: the more settings for choco template
+
+    :param UIContainer ui_container: the ui template container (default: {None})
+    :param string module_directory: the choco template module cache path (default: {None})
+    :param bool filesystem_checks: when ``True`` the choco loader will check the template file and reload the last modify template(default: {False})
+
     """
 
     def __init__(self, directories, ui_container=None, module_directory=None, filesystem_checks=False, **kwargs):
-        """Choco Tempatle Engine set up loader
 
-        Arguments:
-            directories {list[str]} -- the choco template root paths
-            **kwargs {dict} -- the more settings for choco template
-
-        Keyword Arguments:
-            ui_container {UIContainer} -- the ui template container (default: {None})
-            module_directory {str} -- the choco template module cache path (default: {None})
-            filesystem_checks {bool} -- when ``True`` the choco loader will check the template file and reload the last modify template(default: {False})
-        """
         super(ChocoTemplateLoader, self).__init__(directories[0], **kwargs)
 
         self._lookup = TemplateLookup(directories=directories,
@@ -93,11 +86,10 @@ class ChocoTemplateLoader(Loader):
         """The tonado temaple loader load the real tempalte
 
 
-        Arguments:
-            name {str} -- the template path name
-
-        Returns:
-            [Template] -- the choco template instance
+        :param name: the template path name
+        :type name:  string
+        :returns: the choco template instance
+        :rtype: {Template}
         """
         template = self._lookup.get_template(name)
         template.generate = template.render
