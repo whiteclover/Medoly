@@ -79,8 +79,8 @@ class InventoryManager(object):
         #. load hook points
         #. load error page hooks
 
-        Arguments:
-            app {Application} -- the modely application
+
+        :param Applaction app: the modely application
         """
         LOGGER.debug("Starting init app!")
         LOGGER.debug("Start init app hooks!")
@@ -213,7 +213,7 @@ class InventoryManager(object):
 
             $variableName->$mapperName
 
-        Example::
+        Example:
 
         .. code:: python
 
@@ -260,7 +260,7 @@ class InventoryManager(object):
 
             $variableName->$thingName
 
-        Example::
+        Example:
 
         .. code:: python
 
@@ -312,6 +312,8 @@ class Menu(object):
 
 
 class TempateMananger(object):
+    """Template Mannager
+    """
 
     def __init__(self):
         self.template_paths = []
@@ -323,8 +325,9 @@ class TempateMananger(object):
         return bool(self.template_paths)
 
     def create_template_loader(self, mgr):
-        """Initialize tempate and bind uis:
-        param mgr: InventoryManger
+        """Initialize tempate and bind uis
+
+        :param mgr: InventoryManger
         """
 
         ui_container = UIContainer(self.ui_paths)
@@ -346,9 +349,9 @@ class TempateMananger(object):
     def put_ui(self, ui_name, uicls):
         """Put ui in  uis
 
-        Arguments:
-            ui_name {str} -- ui template name
-            uicls {UIModule} -- UI Module class instance
+
+        :param string ui_name: ui template name
+        :param uicls: UI Module class instance
         """
         self.uis.append((ui_name, uicls))
 

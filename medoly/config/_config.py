@@ -94,35 +94,35 @@ class SelectConfig(object):
 class BaseConfig(object):
 
     def __init__(self, root, fallback=None):
-        if root.value == None:
+        if root.value is None:
             raise AttributeError(" error")
         self.root = root.value  # HoconValue
         self.substitutions = root.substitutions  # List<HoconSubstitution>
         self.fallback = fallback  # Config
 
-    def getNode(self, path):
+    def get_node(self, path):
         keys = path.split(".")
-        currentNode = self.root
-        if currentNode is None:
+        current_node = self.root
+        if current_node is None:
             raise KeyError("Doesn't exist the key:" % (path))
         for key in keys:
-            currentNode = currentNode.getChildObject(key)
-            if currentNode is None:
+            current_node = current_node.get_childe_object(key)
+            if current_node is None:
                 if self.fallback:
-                    return self.fallback.getNode(path)
+                    return self.fallback.get_node(path)
                 return None
-        return currentNode
+        return current_node
 
-    def getConfig(self, path):
+    def get_config(self, path):
         cls = self.__class__
-        value = self.getNode(path)
+        value = self.get_node(path)
         if self.fallback:
-            f = self.fallback.getConfig(path)
+            f = self.fallback.get_config(path)
             if value is None and f is None:
                 return None
             if value is None:
                 return f
-            return cls(HoconRoot(value).withFallback(f))
+            return cls(HoconRoot(value).with_fallback(f))
         if value is None:
             return None
         return cls(HoconRoot(value))
@@ -132,13 +132,13 @@ class BaseConfig(object):
             return ""
         return str(self.root)
 
-    def toDict(self):
+    def to_dict(self):
         return self.root.get()
 
-    def toSelectConfig(self):
+    def to_select_config(self):
         return SelectConfig(self.root.get())
 
-    def withFallback(self, fallback):
+    def with_fallback(self, fallback):
         if fallback == self:
             raise Exception(" error")
         clone = deepcopy(self)
@@ -148,81 +148,81 @@ class BaseConfig(object):
         current.fallback = fallback
         return clone
 
-    def hasPath(self, path):
-        return self.getNode(value) is not None
+    def has_path(self, path):
+        return self.get_node(path) is not None
 
     def append(self, config, fallback):
-        fallbackConfig = ConfigFactory.parse(fallback)
-        return config.withFallback(fallback)
+        #fallbackConfig = ConfigFactory.parse(fallback)
+        return config.with_fallback(fallback)
 
 
 class Config(BaseConfig):
 
-    def getBoolean(self, path, default=False):
-        value = self.getNode(path)
+    def get_bool(self, path, default=False):
+        value = self.get_node(path)
         if value is None:
             return default
-        return value.getBoolean()
+        return value.get_bool()
 
-    def getInt(self, path, default=0):
-        value = self.getNode(path)
+    def get_int(self, path, default=0):
+        value = self.get_node(path)
         if value is None:
             return default
-        return value.getInt()
+        return value.get_int()
 
-    def getLong(self, path, default=0):
-        value = self.getNode(path)
+    def get_long(self, path, default=0):
+        value = self.get_node(path)
         if value is None:
             return default
         return value.getLong()
 
     def get(self, path, default=None):
-        value = self.getNode(path)
+        value = self.get_node(path)
         if value is None:
             return default
-        return value.getString()
+        return value.get_string()
 
-    getString = get
+    get_string = get
 
-    def getFloat(self, path, default=0.0):
-        value = self.getNode(path)
+    def get_float(self, path, default=0.0):
+        value = self.get_node(path)
         if value is None:
             return default
-        return value.getFloat()
+        return value.get_float()
 
-    def getBooleanList(self, path):
-        value = self.getNode(path)
+    def get_bool_list(self, path):
+        value = self.get_node(path)
 
-        return value.getBooleanList()
+        return value.get_bool_list()
 
-    def getFloatList(self, path):
-        value = self.getNode(path)
+    def get_float_list(self, path):
+        value = self.get_node(path)
 
-        return value.getFloatList()
+        return value.get_float_list()
 
-    def getIntList(self, path):
-        value = self.getNode(path)
+    def get_int_list(self, path):
+        value = self.get_node(path)
 
-        return value.getIntList()
+        return value.get_int_list()
 
-    def getList(self, path):
-        value = self.getNode(path)
+    def get_list(self, path):
+        value = self.get_node(path)
 
-        return value.getList()
+        return value.get_list()
 
-    def getLongList(self, path):
-        value = self.getNode(path)
+    def get_long_list(self, path):
+        value = self.get_node(path)
 
-        return value.getLongList()
+        return value.get_long_list()
 
-    def getValue(self, path):
-        return self.getNode(path)
+    def get_value(self, path):
+        return self.get_node(path)
 
 
 class PyConfig(BaseConfig):
 
     def get(self, path, default=None):
-        value = self.getNode(path)
+        value = self.get_node(path)
         if value is None:
             return default
         return value.get()
@@ -243,13 +243,13 @@ class ConfigFactory(object):
         return configCls(res)
 
     @classmethod
-    def parseFile(cls, path, pystyle=False):
+    def parse_file(cls, path, pystyle=False):
         with open(path) as f:
             content = f.read()
             return cls.parse(content, pystyle=pystyle)
 
     @classmethod
-    def fromJson(cls, jsonObj, pystyle=False):
+    def from_json(cls, jsonObj, pystyle=False):
         import json
         text = json.dumps(jsonObj)
         return cls.parse(text, pystyle)

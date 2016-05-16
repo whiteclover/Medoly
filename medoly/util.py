@@ -20,7 +20,7 @@ class lazy_attr(object):
         self.wrapped = wrapped
         try:
             self.__doc__ = wrapped.__doc__
-        except: # pragma: no cover
+        except:  # pragma: no cover
             pass
 
     def __get__(self, inst, objtype=None):

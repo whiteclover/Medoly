@@ -50,9 +50,10 @@ def compose(module, include_template=True):
     """Scan the module including all sub modules. 
     check the template path ``template``, if exists, will add it in the template engine paths
 
-    param module: the python dot module string.
-    param inclue_template: if the module is a diretory and the value is true. it will add the template path, \
-    if exist the sub diretory named "template" """
+    :param module: the python dot module string.
+    :param inclue_template: if the module is a diretory and the value is true. it will add the template path,
+            if exist the sub diretory named "template".
+    """
     module_infso, is_path, package = composer.scan_submodules(module)
     if is_path and include_template:
         path = os.path.dirname(package.__file__)
