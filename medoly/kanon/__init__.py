@@ -4,46 +4,43 @@ from .manager import InventoryManager
 from . import composer
 
 
-__inventoryMgr = InventoryManager()
-
-
 def chant():
-    """Initalize the setting and application"""
-    return __inventoryMgr.load()
+    """Initialize the setting and application"""
+    return InventoryManager.instance().load()
 
 
 def hook(point, failsafe=None, priority=None, **kwargs):
 
     def _hook(func):
-        __inventoryMgr.attach(point, func, failsafe, priority, kwargs)
+        InventoryManager.instance().attach(point, func, failsafe, priority, kwargs)
     return _hook
 
 
 def error_page(status_code):
 
     def _error_page(func):
-        __inventoryMgr.error_page(status_code, func)
+        InventoryManager.instance().error_page(status_code, func)
     return _error_page
 
 
 def boot():
     def _boot(kclass):
-        __inventoryMgr.put_boot(kclass)
+        InventoryManager.instance().put_boot(kclass)
         return kclass
     return _boot
 
 
 def set_app_name(name):
-    __inventoryMgr.set_app_name(name)
+    InventoryManager.instance().set_app_name(name)
 
 
 def set_debug():
     from medoly import log
-    log.log_config(__inventoryMgr.app_name, True)
+    log.log_config(InventoryManager.instance().app_name, True)
 
 
 def inventory_mgr():
-    return __inventoryMgr
+    return InventoryManager.instance()
 
 
 def compose(module, include_template=True):
@@ -59,7 +56,7 @@ def compose(module, include_template=True):
         path = os.path.dirname(package.__file__)
         tempalte_path = os.path.join(path, "template")
         if os.path.isdir(tempalte_path):
-            __inventoryMgr.add_template_path(tempalte_path)
+            InventoryManager.instance().add_template_path(tempalte_path)
 
 
 def ui(template_name=None, name=None):
@@ -73,14 +70,14 @@ def ui(template_name=None, name=None):
 
         if template_name is not None:
             uicls.default_template = template_name
-        __inventoryMgr.put_ui(ui_name, uicls)
+        InventoryManager.instance().put_ui(ui_name, uicls)
         return uicls
     return _ui
 
 
 def menu(url_spec, settings=None, name=None, render=None):
     def __menu(handler):
-        __inventoryMgr.add_route(url_spec, handler, settings, name, render)
+        InventoryManager.instance().add_route(url_spec, handler, settings, name, render)
         return handler
     return __menu
 
@@ -88,15 +85,23 @@ def menu(url_spec, settings=None, name=None, render=None):
 def route(prefix_url=''):
 
     def __route(f):
-        c = Connetor(prefix_url, __inventoryMgr)
+        c = Connetor(prefix_url, InventoryManager.instance())
         f(c)
         return f
     return __route
 
 
 class Connetor(object):
+    """Route menu processor
+
+        :param prefix_path: the url route path prefix
+        :type prefix_path: stirng
+        :param mgr: the inventory manager for adding routes
+        :type mgr:  InventoryManager
+    """
 
     def __init__(self, prefix_path, mgr):
+
         self.prefix_path = prefix_path
         self.mgr = mgr
 
@@ -104,6 +109,13 @@ class Connetor(object):
         return self
 
     def connect(self, url_spec, *args, **kw):
+        """Added a url route handler
+
+        :param url_spec: the url path or URLSpec
+        :type url_spec: string|url
+        :param args:  the more args for  route
+        :param kw: the more settings for route confinguration
+        """
         self.autoload.add_menu(self.prefix_path + url_spec, *args, **kw)
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -111,7 +123,7 @@ class Connetor(object):
 
 
 def bloom(inventory_name, alias=None):
-    """bind the inventory"""
+    """Bind the inventory"""
     def _bloom(inventory):
         kclass_name = inventory.__name__
         if inventory_name == "thing":
@@ -124,7 +136,7 @@ def bloom(inventory_name, alias=None):
                 else:
                     name = kclass_name
 
-            __inventoryMgr.put_thing(name, inventory)
+            InventoryManager.instance().put_thing(name, inventory)
 
         elif inventory_name == "model":
             name = None
@@ -133,7 +145,7 @@ def bloom(inventory_name, alias=None):
             else:
                 name = kclass_name
 
-            __inventoryMgr.put_model(name, inventory)
+            InventoryManager.instance().put_model(name, inventory)
 
         elif inventory_name == "mapper":
             name = None
@@ -145,7 +157,7 @@ def bloom(inventory_name, alias=None):
                 else:
                     name = kclass_name
 
-            __inventoryMgr.put_mapper(name, inventory)
+            InventoryManager.instance().put_mapper(name, inventory)
 
         return inventory
     return _bloom

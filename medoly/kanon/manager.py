@@ -12,35 +12,67 @@ LOGGER = logging.getLogger("kanon.manager")
 
 
 class InventoryManager(object):
+    """Manage and load app context, mappers and things.
+
+     :param handlercls: the default request handler class for build url route handler.
+        Defaults is ``anthem.Handler``
+    """
+
+    @staticmethod
+    def instance():
+        """Get or create an InventoryManager singleton
+
+        :returns: the current InventoryManager singletion
+        :rtype: InventoryManager
+        """
+        if not hasattr(InventoryManager, "_current"):
+            InventoryManager._current = InventoryManager()
+
+        return InventoryManager._current
 
     def __init__(self, handlercls=None):
+        #: the boot class instances for bootstrap configuration
         self.boots = []
+
+        #: the applcation context
         self.app_ctx = AppContext()
+
+        #: the config
         self.config = None
-        self.settings = {}
+
+        #: the model class container
         self.models = {}
+
+        #: the data-mapping layer singletio  instance container
+        self.mappers = {}
+
+        #: the thing singleton instance container
         self.things = {}
-        self.routes = []
+
+        #: the url route container list
         self.menus = []
+
+        #: the application name
         self.app_name = "Medoly"
 
-        self.mappers = {}
         self.defalut_handler = handlercls or anthem.Handler
+
+        #: the choco template manger
         self.template_mananger = TempateMananger()
 
     def set_app_name(self, name):
+        """Set application name"""
         self.app_name = name
 
     def attach(self, point, callback, failsafe, priority, kwargs):
-        """Append hook"""
+        """Append a hook"""
         self.app_ctx.attach(point, callback, failsafe, priority, kwargs)
 
     def error_page(self, status_code, callback):
         """Http exception handler hook
 
-        Arguments:
-            status_code {int} -- http status code
-            callback {function} -- the excption handle callback
+            :param int status_code: http status code
+            :param function callback: the excption handle callback
         """
         self.app_ctx.error_page(status_code, callback)
 
@@ -65,13 +97,14 @@ class InventoryManager(object):
         LOGGER.debug("Bootstrap config")
         for boot in self.boots:
             if hasattr(boot, 'setup'):
-                boot.setup(self.config, self.settings)
+                boot.setup(self.config, self.app_ctx.settings)
 
     def create_app(self):
+        """Returns an anthem application thats intialize with settings"""
         LOGGER.debug("Creating app!")
         settings = self.intitilaize_app_settings()
-        self.settings.update(settings)
-        return anthem.Application(self.routes, self.initilaize_app, **self.settings)
+        self.app_ctx.settings.update(settings)
+        return anthem.Application(self.app_ctx.routes, self.initilaize_app, **self.app_ctx.settings)
 
     def initilaize_app(self, app):
         """Initilalze and setting application
@@ -99,8 +132,7 @@ class InventoryManager(object):
         # try bind template loader
         if self.template_mananger.is_valid():
             LOGGER.debug("Init template!")
-            settings[
-                'template_loader'] = self.template_mananger.create_template_loader(self)
+            settings['template_loader'] = self.template_mananger.create_template_loader(self)
 
         # try to setting static resource
         static_path = self.config.get("asset.path")
@@ -178,9 +210,9 @@ class InventoryManager(object):
 
     def connect(self, url_spec, handler=None, settings=None, name=None, render=None):
 
+        #: if render is ``true``,  it is a simple template request handler
         if render:
-            self.routes.append(
-                (url_spec, anthem.RenderHandler, dict(template=render)))
+            self.app_ctx.routes.append((url_spec, anthem.RenderHandler, dict(template=render)))
             return
 
         if handler is None:
@@ -190,13 +222,13 @@ class InventoryManager(object):
         self.load_mapper(handler)
         self.load_thing(handler)
 
-        # check inhert handler class, if not, inject the default handler class
+        #: check inhert handler class, if not, inject the default handler class
         if not issubclass(handler, self.defalut_handler):
             classes = [self.defalut_handler] + self.get_class_bases(handler)
             handler = type(handler.__name__, tuple(
                 classes), dict(handler.__dict__))
 
-        self.routes.append(anthem.url(url_spec, handler, settings, name))
+        self.app_ctx.routes.append(anthem.url(url_spec, handler, settings, name))
 
     def get_class_bases(self, klass):
         """Getting the base classes excluding the type<object>"""
@@ -343,12 +375,11 @@ class TempateMananger(object):
                                           module_directory=mgr.config.get("choco.cache_path"))
 
     def add_ui_path(self, ui_path):
-        """Added Ui tempate path to head"""
+        """Add Ui tempate path to head"""
         self.ui_paths.insert(0, ui_path)
 
     def put_ui(self, ui_name, uicls):
         """Put ui in  uis
-
 
         :param string ui_name: ui template name
         :param uicls: UI Module class instance
@@ -356,5 +387,5 @@ class TempateMananger(object):
         self.uis.append((ui_name, uicls))
 
     def add_template_path(self, template_path):
-        """Added  tempate path to head"""
+        """Add  tempate path to head"""
         self.template_paths.insert(0, template_path)
