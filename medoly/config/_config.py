@@ -180,9 +180,9 @@ class Config(BaseConfig):
         value = self.get_node(path)
         if value is None:
             return default
-        return value.getString()
+        return value.get_string()
 
-    getString = get
+    get_string = get
 
     def get_float(self, path, default=0.0):
         value = self.get_node(path)
