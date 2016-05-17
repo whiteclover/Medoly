@@ -14,28 +14,26 @@ Medoly is a Web Framework, the design is inspried by Spring-boot and Emberjs.
 
 .. code:: python
 
+    #!/usr/bin/env python
 
-	class DemoService(object):
-
-	    def __init__(self):
-	        kanon.set_app_name("Demo")
-	        kanon.set_debug()
-	        kanon.compose("app")
-	        self.app = kanon.chant()
-
-	    def startup(self):
-	        try:
-	            port = 8888
-	            host = 'localhost'
-	            self.app.listen(port, host)
-	            tornado.ioloop.IOLoop.instance().start()
-	        except KeyboardInterrupt as e:
-	            self.shutdown()
-
-	    def shutdown(self):
-	        tornado.ioloop.IOLoop.instance().stop()
+    from medoly import kanon
+    import tornado.ioloop
 
 
-	if __name__ == "__main__":
+    @kanon.menu("/")
+    class Index(object):
 
-	    DemoService().startup()
+        def get(self):
+            self.write("hello world!")
+
+
+    @kanon.error_page(404)
+    def on_not_fonud(req_handler, code, **kw):
+        req_handler.write("Page not found!")
+
+    if __name__ == "__main__":
+        kanon.set_debug()
+        app = kanon.chant()
+        app.listen(8888)
+        tornado.ioloop.IOLoop.current().start()
+
