@@ -54,7 +54,7 @@ class InventoryManager(object):
         #: the model class container
         self.models = {}
 
-        #: the data-mapping layer singletio  instance container
+        #: the data-mapping layer singletion  instance container
         self.mappers = {}
 
         #: the thing singleton instance container
@@ -68,7 +68,7 @@ class InventoryManager(object):
 
         self.defalut_handler = handlercls or anthem.Handler
 
-        #: the choco template manger
+        #: the choco template manager
         self.template_mananger = TempateMananger()
 
     def set_app_name(self, name):
