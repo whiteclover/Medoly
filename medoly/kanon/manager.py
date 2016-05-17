@@ -30,6 +30,17 @@ class InventoryManager(object):
 
         return InventoryManager._current
 
+    @staticmethod
+    def set_instance(mgr):
+        """Set current singleton inventoy manager
+
+        :param InventoryManager mgr: inventoy manager
+        """
+        if isinstance(mgr, InventoryManager):
+            InventoryManager._current = mgr
+        else:
+            raise TypeError("The mgr must be an instance of InventoryManager")
+
     def __init__(self, handlercls=None):
         #: the boot class instances for bootstrap configuration
         self.boots = []
