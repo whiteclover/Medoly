@@ -8,6 +8,5 @@ class User(object):
         self.uid = uid
         self.name = name
 
-
     def __json__(self):
-    	return {"uid": self.uid, "name": self.name}
+        return {"uid": self.uid, "name": self.name}
