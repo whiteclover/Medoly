@@ -48,7 +48,7 @@ def compose(module, include_template=True):
     check the template path ``template``, if exists, will add it in the template engine paths
 
     :param module: the python dot module string.
-    :param inclue_template: if the module is a diretory and the value is true. it will add the template path,
+    :param include_template: if the module is a diretory and the value is true. it will add the template path,
             if exist the sub diretory named "template".
     """
     module_infso, is_path, package = composer.scan_submodules(module)
@@ -116,7 +116,7 @@ class Connetor(object):
         :param args:  the more args for  route
         :param kw: the more settings for route confinguration
         """
-        self.autoload.add_menu(self.prefix_path + url_spec, *args, **kw)
+        self.mgr.add_menu(self.prefix_path + url_spec, *args, **kw)
 
     def __exit__(self, exc_type, exc_value, traceback):
         pass
