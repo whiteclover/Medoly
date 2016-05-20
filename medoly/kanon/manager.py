@@ -345,8 +345,24 @@ class InventoryManager(object):
 
 
 class Menu(object):
+    """Url Menu 
+
+        if  ``render`` is not ``None``, it will use the template render. else set the ``handler``.
+
+        :param url_spec:  the url path
+        :type url_spec: string
+        :param handler: the tornado web request handler class, defaults to None
+        :type handler: the subclass of WebRequestHandler,  optional
+        :param settings: the handler setting config, defaults to None
+        :type settings: dict, optional
+        :param name: the name for reverse url, defaults to None
+        :type name: string, optional
+        :param render: the temaplate path for tempalte render handler, defaults to None
+        :type render: string, optional
+    """
 
     def __init__(self, url_spec, handler=None, settings=None, name=None, render=None):
+
         self.url_spec = url_spec
         self.handler = handler
         self.settings = settings
