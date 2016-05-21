@@ -23,11 +23,33 @@ from copy import deepcopy
 
 
 class SelectConfig(object):
+    """Select dict configuration tool
+
+      Example:
+
+        >>> conf = SelectConfig()
+        >>> conf.set("db.host", "localhost")
+        >>> conf.get("db")
+        ...       {"host": "localhost"}
+        >>> conf.get("db.host")
+        ...     "localhost"
+
+    :param config: the default dict namnesapce for config, defaults to None
+    :type config: dict, optional
+    """
 
     def __init__(self, config=None):
-        self._config = config or {}
+        self._config = config or dict()
 
     def set(self, key, value):
+        """Set a chain key  value
+
+
+
+        :param key: the config chain key with dot split, like "db.host", "host"
+        :type key: string
+        :param value: the value for key store
+        """
         keys = self._keys(key)
         config = self._config
         i = 0
@@ -47,6 +69,13 @@ class SelectConfig(object):
         config[last_key] = value
 
     def get(self, key=None, default=None):
+        """Get the chain key value, if not fond returns the default value
+
+        :param key: the key. defaults to None, returns the root config.
+        :type key: string, optional
+        :param default: the default value when not found the key, defaults to None
+        :returns: the value for the chain key
+        """
         keys = self._keys(key)
         config = self._config
         for k in keys:
@@ -59,6 +88,7 @@ class SelectConfig(object):
         return config
 
     def delete(self, key):
+        """Remove the key config from the current config"""
         keys = self._keys(key)
         if len(keys) == 2:
             v = self.get(keys[0])
@@ -72,6 +102,7 @@ class SelectConfig(object):
             self.set(k, v)
 
     def __contains__(self, key):
+        """Check a key in the config"""
         keys = self._keys(key)
         contains = True
         config = self._config
@@ -85,6 +116,7 @@ class SelectConfig(object):
         return contains
 
     def _keys(self, key):
+        """Split the dot chain key to list"""
         return key.split('.')
 
     def __json__(self):
