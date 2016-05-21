@@ -69,11 +69,12 @@ class Cmd(object):
             # Return default
             return {}
 
-    def parse_cmd(self, help_doc, boots):
+    def parse_cmd(self, help_doc, boots, config=None):
         """Parse config and setting config for the terminal options
 
         :param string help_doc: The OptionPaser help doc
-        "param boots:  the boot  instances options
+        :param boots:  the boot  instances options
+        :param config:  if config  is not ``None``, it will use current config, otherwise create a new one.
 
         Returns:
             SelectConfig --  the dict like config
@@ -83,7 +84,8 @@ class Cmd(object):
 
         self._set_defaults(boots)
         opt = self.options.parse_args()
-        config = SelectConfig()
+        if not config:
+            config = SelectConfig()
         config.update(vars(opt))
         return config
 
