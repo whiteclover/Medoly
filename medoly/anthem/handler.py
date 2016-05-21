@@ -174,12 +174,36 @@ class RenderHandler(Handler):
 
 
 def Backend(key):
+    """Get backend by bean key
+
+    Arguments:
+        key {str} -- backend key
+
+    Returns:
+            backend -- instacne
+    """
     return __backend.get(key)
 
 
 def Thing(key):
+    """Get thing by bean key
+
+    Arguments:
+        key {str} -- thing key
+
+    Returns:
+            thing instacne
+     """
     return __thing.get(key)
 
 
 def Model(key):
+    """Get model by bean key
+
+    Arguments:
+            key {str} -- model key
+
+    Returns:
+            model instacne
+    """
     return __model.get(key)
