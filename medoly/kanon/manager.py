@@ -2,6 +2,7 @@ import os.path
 import re
 import logging
 from medoly import anthem
+from medoly.config import SelectConfig
 
 
 from .ctx import AppContext
@@ -35,13 +36,15 @@ class InventoryManager(object):
         """Set current singleton inventoy manager
 
         :param InventoryManager mgr: inventoy manager
+        :param SelectConfig config: the select config , default create a new empty config
+        :param template_mananger: the template mananger for custum template engine
         """
         if isinstance(mgr, InventoryManager):
             InventoryManager._current = mgr
         else:
             raise TypeError("The mgr must be an instance of InventoryManager")
 
-    def __init__(self, handlercls=None):
+    def __init__(self, handlercls=None, config=None, template_mananger=None):
         #: the boot class instances for bootstrap configuration
         self.boots = []
 
@@ -49,7 +52,7 @@ class InventoryManager(object):
         self.app_ctx = AppContext()
 
         #: the config
-        self.config = None
+        self.config = config or SelectConfig()
 
         #: the model class container
         self.models = {}
@@ -69,7 +72,7 @@ class InventoryManager(object):
         self.defalut_handler = handlercls or anthem.Handler
 
         #: the choco template manager
-        self.template_mananger = TempateMananger()
+        self.template_mananger = template_mananger or TempateMananger()
 
     def set_app_name(self, name):
         """Set application name"""
@@ -101,7 +104,7 @@ class InventoryManager(object):
         LOGGER.debug("Parsing console options")
         console = cmd.Cmd('/etc/%s/app.conf' % (self.app_name))
         self.boots = [boot() for boot in self.boots]
-        self.config = console.parse_cmd(self.app_name, self.boots)
+        console.parse_cmd(self.app_name, self.boots, self.config)
         self.boot_config()
 
     def boot_config(self):
