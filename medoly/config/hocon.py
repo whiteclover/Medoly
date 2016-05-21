@@ -226,6 +226,9 @@ class HoconObject(HoconElement, dict):
     def merge(self, obj):
         for k, v in obj.iteritems():
             if k in self:
+                this_item = self[k]
+                if this_item.is_object() and v.value.is_object():
+                    this_item.get_object.merge(v.value.get_object())
             else:
                 self[k] = v.value
 
