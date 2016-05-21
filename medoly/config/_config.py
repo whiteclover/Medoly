@@ -202,12 +202,6 @@ class Config(BaseConfig):
             return default
         return value.get_int()
 
-    def get_long(self, path, default=0):
-        value = self.get_node(path)
-        if value is None:
-            return default
-        return value.getLong()
-
     def get(self, path, default=None):
         value = self.get_node(path)
         if value is None:
@@ -241,11 +235,6 @@ class Config(BaseConfig):
         value = self.get_node(path)
 
         return value.get_list()
-
-    def get_long_list(self, path):
-        value = self.get_node(path)
-
-        return value.get_long_list()
 
     def get_value(self, path):
         return self.get_node(path)
