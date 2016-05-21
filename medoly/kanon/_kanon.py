@@ -60,7 +60,7 @@ class Kanon(object):
         check the template path ``template``, if exists, will add it in the template engine paths
 
         :param module: the python dot module string.
-        :param inclue_template: if the module is a diretory and the value is true. it will add the template path,
+        :param include_template: if the module is a diretory and the value is true. it will add the template path,
                 if exist the sub diretory named "template".
         """
         module_infso, is_path, package = composer.scan_submodules(module)
@@ -161,7 +161,6 @@ class Connetor(object):
         """Added a url route handler
 
         :param url_spec: the url path or URLSpec
-        :type url_spec: string|url
         :param args:  the more args for  route
         :param kw: the more settings for route confinguration
         """
