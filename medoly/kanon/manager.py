@@ -15,7 +15,6 @@
 # under the License.
 
 import os.path
-import re
 import logging
 from medoly import anthem
 from medoly.config import SelectConfig
@@ -92,6 +91,9 @@ class InventoryManager(object):
         #: the choco template manager
         self.template_mananger = template_mananger or TempateMananger()
 
+        #: the custom beans
+        self.beans = {}
+
     def set_app_name(self, name):
         """Set application name"""
         self.app_name = name
@@ -113,6 +115,7 @@ class InventoryManager(object):
         self.mount_model()
         self.mount_mapper()
         self.mount_thing()
+        self.mount_bean()
         self.mount_menu()
         return self.create_app()
 
@@ -179,6 +182,12 @@ class InventoryManager(object):
 
         return settings
 
+    def put_bean(self, bean_name, bean_class):
+        """Added a bean"""
+        if bean_name in self.beans:
+            raise InvenortExistError("Bean for ```{}`` exists.".format(bean_name))
+        self.beans[bean_name] = bean_class
+
     def put_ui(self, ui_name, uicls):
         if not issubclass(uicls, UIModule):
             classes = [UIModule] + self.get_class_bases(uicls)
@@ -214,7 +223,14 @@ class InventoryManager(object):
     def add_route(self, url_spec, handler=None, settings=None, name=None, render=None):
         self.menus.append(Menu(url_spec, handler, settings, name, render))
 
+    def mount_bean(self):
+        """Registe the melos for  the  bean class"""
+        for bean_name in self.beans:
+            bean = self.beans.get(bean_name)
+            self.load_meloes(bean)
+
     def mount_model(self):
+        """Sets Model"""
         setattr(anthem.handler, '__model', self.models)
 
     def mount_mapper(self):
@@ -301,6 +317,11 @@ class InventoryManager(object):
             return self.mappers.get(melos.name)
         elif melos.genre == "model":
             return self.models.get(melos.name)
+
+
+class InvenortExistError(Exception):
+    """Invenort exist exception"""
+    pass
 
 
 class Menu(object):

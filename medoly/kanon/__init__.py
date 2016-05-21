@@ -150,6 +150,8 @@ def bloom(inventory_name, alias=None):
                     name = kclass_name
 
             InventoryManager.instance().put_mapper(name, inventory)
+        else:
+            InventoryManager.instance().put_bean(name, inventory)
 
         return inventory
     return _bloom
