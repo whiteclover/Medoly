@@ -23,6 +23,7 @@ import os.path
 
 from .manager import InventoryManager
 from . import composer
+from ._kanon import Melos
 
 
 def chant():

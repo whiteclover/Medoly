@@ -14,13 +14,13 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from medoly.kanon import ui
+from medoly.kanon import ui, Melos
 
 
 @ui("user.html")
 class UserView(object):
 
-    __thing__ = """thing->User"""
+    thing = Melos("User")
 
     def render(self, uid):
         user = self.thing.find_by_uid(uid)

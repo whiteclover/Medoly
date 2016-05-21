@@ -21,6 +21,8 @@ from medoly import anthem
 from medoly.config import SelectConfig
 
 
+from ._kanon import Melos
+
 from .ctx import AppContext
 from choco.ui import UIContainer, UIModule
 
@@ -249,8 +251,7 @@ class InventoryManager(object):
             raise ValueError("Handler is required, can't be empty")
 
         # DI: mapper and thing
-        self.load_mapper(handler)
-        self.load_thing(handler)
+        self.load_meloes(handler)
 
         #: check inhert handler class, if not, inject the default handler class
         if not issubclass(handler, self.defalut_handler):
@@ -268,103 +269,42 @@ class InventoryManager(object):
         else:
             return list(bases)
 
-    def load_mapper(self, handler):
-        """Mapper Dependency injection, check the line split here doc "__mapper__"
+    def load_meloes(self, kclass):
+        """Load inventory for the kclasss
 
-        rule::
+        Examples:
 
-            $variableName->$mapperName
-
-        Example:
-
-        .. code:: python
+        .. code: python
 
             class Index(object):
+                user_thing  = Melos("thing:User")
+                # default  is a thing inventory
+                post_thing = Melos("Post")
 
-                __mapper__ = '''userMapper->User
-                postMapper->Post'''
-
-                def get(self):
-                    pass
-
-        The mapper dependecy injection, it will load the mapper instacne by the backend name and assign to the named class variable.
-
-
-
-        .. code:: python
-
-            class Index(object):
-
-                userMapper = Backend("User")
-                postMapper = Backend("Post")
-
-
-                def get(self):
-                    pass
+        The  dependecy injection, it will load the relational inventory instacne by the  melos of class had and assign to the named class variable.
 
         """
-        REG = re.compile(r"(\w[\w\d_]+)\s*\-\s*>\s*(\w[\w\d_]+)")
-        doc = getattr(handler, '__mapper__', "")
-        if doc:
-            lines = [part.strip() for part in doc.split("\n") if part.strip()]
-            for line in lines:
-                match = REG.match(line)
-                if match:
-                    name, model_name = match.group(1), match.group(2)
-                    setattr(handler, name, self.mappers[model_name])
 
-            delattr(handler, '__mapper__')
+        attrs = kclass.__dict__
+        for k, v in attrs.iteritems():
+            if isinstance(v, Melos):
+                inventory = self._load_melos(v)
+                if not inventory:
+                    raise ValueError("Can't found inventory for ``%s``." % (v.inventory_name))
+                setattr(kclass, k, inventory)
 
-    def load_thing(self, handler):
-        """Thing Dependency injection, check the line split here doc "__thing__"
-
-        Line Rule::
-
-            $variableName->$thingName
-
-        Example:
-
-        .. code:: python
-
-            class Index(object):
-
-                __thing__ = '''userThing->User
-                postThing->Post'''
-
-                def get(self):
-                    pass
-
-        The thing dependecy injection, it will load the thing instacne by the thing name and assign to the named class variable.
-
-
-
-        .. code:: python
-
-            class Index(object):
-
-                userThing = Thing("User")
-                postThing = Thing("Post")
-
-
-                def get(self):
-                    pass
-
-        """
-        REG = re.compile(r"(\w[\w\d_]+)\s*\-\s*>\s*(\w[\w\d_]+)")
-        doc = getattr(handler, '__thing__', "")
-        if doc:
-            lines = [part.strip() for part in doc.split("\n") if part.strip()]
-            for line in lines:
-                match = REG.match(line)
-                if match:
-                    name, model_name = match.group(1), match.group(2)
-                    setattr(handler, name, self.things[model_name])
-
-            delattr(handler, '__thing__')
+    def _load_melos(self, melos):
+        """ Get the inventory by melos"""
+        if melos.genre == "thing":
+            return self.things.get(melos.name)
+        elif melos.genre == "mapper":
+            return self.mappers.get(melos.name)
+        elif melos.genre == "model":
+            return self.models.get(melos.name)
 
 
 class Menu(object):
-    """Url Menu 
+    """Url Menu
 
         if  ``render`` is not ``None``, it will use the template render. else set the ``handler``.
 
@@ -412,8 +352,7 @@ class TempateMananger(object):
 
         # load ui and bind mapper or thing
         for name, uicls in self.uis:
-            mgr.load_mapper(uicls)
-            mgr.load_thing(uicls)
+            mgr.load_meloes(uicls)
             ui_container.put_ui(name, uicls)
         return anthem.ChocoTemplateLoader(self.template_paths, ui_container=ui_container,
                                           filesystem_checks=mgr.config.get(

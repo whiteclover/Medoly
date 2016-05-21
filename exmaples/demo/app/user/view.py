@@ -14,7 +14,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from medoly.kanon import menu
+from medoly.kanon import menu, Melos
 
 
 @menu("/user")
@@ -28,7 +28,7 @@ class UserPage(object):
 @menu("/user.json")
 class UserJsonPage(object):
 
-    __thing__ = """thing->User"""
+    thing = Melos("User")
 
     def get(self):
         uid = int(self.get_argument("uid"))
