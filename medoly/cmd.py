@@ -62,23 +62,7 @@ class Cmd(object):
         opt.define('-c', '--config', default=self.confing_path,
                    help="config path (default %(default)r)", metavar="FILE")
         o = opt.parse_args(sys.argv)
-        return self.config_from_file(o.config, False)
-
-    @classmethod
-    def config_from_file(cls, path, select_config=True):
-        """Load config form file
-
-        If confiig path exist try to load and parse the config the file, else returns a empty config
-        """
-        if os.path.exists(path):
-            config = ConfigFactory.parse_file(path, pystyle=True)
-            # if ``True`` returns a SelectCofnig
-            if select_config:
-                return config.to_select_config()
-            return config
-        else:
-            # Return default
-            return {}
+        return config_from_file(o.config, False)
 
     def parse_cmd(self, help_doc, boots, config=None):
         """Parse config and setting config for the terminal options
@@ -122,3 +106,19 @@ class Cmd(object):
             if v != _Null:
                 d[k] = v
         self.options.set_defaults(**d)
+
+
+def config_from_file(path, select_config=True):
+    """Load config form file
+
+    If confiig path exist try to load and parse the config the file, else returns a empty config
+    """
+    if os.path.exists(path):
+        config = ConfigFactory.parse_file(path, pystyle=True)
+        # if ``True`` returns a SelectCofnig
+        if select_config:
+            return config.to_select_config()
+        return config
+    else:
+        # Return default
+        return {}

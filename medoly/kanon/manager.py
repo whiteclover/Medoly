@@ -132,7 +132,7 @@ class InventoryManager(object):
     def load_boot(self):
         """load bott config"""
         # intialize console option parser
-        if not self.enable_cmd_parse:
+        if self.enable_cmd_parse:
             LOGGER.debug("Parsing console options")
             console = cmd.Cmd('/etc/%s/app.conf' % (self.app_name))
             self.boots = [boot() for boot in self.boots]
