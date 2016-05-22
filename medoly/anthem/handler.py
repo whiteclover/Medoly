@@ -154,6 +154,17 @@ class Handler(RequestHandler, FlashMessagesMixin):
         """
         return __model.get(key)
 
+    def Chord(self, key):
+        """Get chrod by bean key
+
+        Arguments:
+                key {str} -- chord key
+
+        Returns:
+                model instacne
+        """
+        return __chord.get(key)
+
 
 class RenderHandler(Handler):
     """Render Hanlder class """
@@ -207,3 +218,15 @@ def Model(key):
             model instacne
     """
     return __model.get(key)
+
+
+def Chord(key):
+    """Get chord by bean key
+
+    Arguments:
+            key {str} -- chord key
+
+    Returns:
+            model instacne
+    """
+    return __chord.get(key)

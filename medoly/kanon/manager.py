@@ -19,6 +19,7 @@ import logging
 from medoly import anthem
 from medoly.config import SelectConfig
 
+from tornado.web import RequestHandler
 
 from ._kanon import Melos
 
@@ -86,13 +87,15 @@ class InventoryManager(object):
         #: the application name
         self.app_name = "Medoly"
 
+        if handlercls and not issubclass(handlercls, RequestHandler):
+            raise TypeError("Must be a subclass of RequestHandler: {0}".format(handlercls.__name__))
         self.defalut_handler = handlercls or anthem.Handler
 
         #: the choco template manager
         self.template_mananger = template_mananger or TempateMananger()
 
-        #: the custom beans
-        self.beans = {}
+        #: the custom chords
+        self.chords = {}
 
     def set_app_name(self, name):
         """Set application name"""
@@ -115,7 +118,7 @@ class InventoryManager(object):
         self.mount_model()
         self.mount_mapper()
         self.mount_thing()
-        self.mount_bean()
+        self.mount_chord()
         self.mount_menu()
         return self.create_app()
 
@@ -182,12 +185,12 @@ class InventoryManager(object):
 
         return settings
 
-    def put_bean(self, bean_name, bean_class):
-        """Added a bean"""
-        LOGGER.debug("Putting bean:{%s -> %r}", bean_name, bean_class)
-        if bean_name in self.beans:
-            raise InventoryExistError("Bean for ```{}`` exists.".format(bean_name))
-        self.beans[bean_name] = bean_class
+    def put_chord(self, chord_name, chord_class, **settings):
+        """Added a chord"""
+        LOGGER.debug("Putting chord:{%s -> %r}", chord_name, chord_class)
+        if chord_name in self.chords:
+            raise InventoryExistError("chord for ```{}`` exists.".format(chord_name))
+        self.chords[chord_name] = (chord_class, settings)
 
     def put_ui(self, ui_name, uicls):
         """Added a ui"""
@@ -224,7 +227,7 @@ class InventoryManager(object):
     def put_thing(self, name, thing):
         """Add a thing"""
         LOGGER.debug("Puting thing:{%s -> %r}", name, thing)
-        if name in self.tings:
+        if name in self.things:
             raise InventoryExistError("Thing for ```{}`` exists.".format(name))
 
         self.things[name] = thing
@@ -242,11 +245,17 @@ class InventoryManager(object):
         """Add a url route"""
         self.menus.append(Menu(url_spec, handler, settings, name, render))
 
-    def mount_bean(self):
-        """Registe the melos for  the  bean class"""
-        for bean_name in self.beans:
-            bean = self.beans.get(bean_name)
-            self.load_meloes(bean)
+    def mount_chord(self):
+        """Registe the melos for  the  chord class"""
+
+        for chord_name in self.chords:
+            chord, settings = self.chords.get(chord_name)
+            self.load_meloes(chord)
+            bean = settings.get('bean')
+            if bean:
+                self.chords[chord_name] = chord()
+
+        setattr(anthem.handler, "__chord", self.chords)
 
     def mount_model(self):
         """Sets Model"""
@@ -304,7 +313,7 @@ class InventoryManager(object):
         self.load_meloes(handler)
 
         #: check inhert handler class, if not, inject the default handler class
-        if not issubclass(handler, self.defalut_handler):
+        if not issubclass(handler, RequestHandler):
             classes = [self.defalut_handler] + self.get_class_bases(handler)
             handler = type(handler.__name__, tuple(
                 classes), dict(handler.__dict__))
@@ -351,6 +360,8 @@ class InventoryManager(object):
             return self.mappers.get(melos.name)
         elif melos.genre == "model":
             return self.models.get(melos.name)
+        elif melos.genre == "chord":
+            return self.chords.get(melos.name)
 
 
 class InventoryExistError(Exception):

@@ -17,6 +17,7 @@
 import unittest
 from medoly import kanon
 from medoly import anthem
+from tornado.web import RequestHandler
 
 
 class TestInventoryMgrTest(unittest.TestCase):
@@ -91,3 +92,68 @@ class TestInventoryMgrTest(unittest.TestCase):
 
         self.assertEqual(anthem.Model("ModelName"), ModelName)
         self.assertEqual(anthem.Model("user"), UserModel)
+
+    def test_add_route(self):
+        # default   model
+        @kanon.bloom("model")
+        class ModelName(object):
+            pass
+
+        # custom class name mapper
+        @kanon.bloom("mapper")
+        class BlablaDao(object):
+            pass
+
+        @kanon.bloom("thing")
+        class BlablaService(object):
+            pass
+
+        @kanon.menu("/")
+        class Index(object):
+            mapper = kanon.Melos("mapper:BlablaDao")
+            thing = kanon.Melos("BlablaService")
+
+        @kanon.menu("/user")
+        class UserPage(RequestHandler):
+            pass
+
+        kanon.chant()
+
+        self.assertTrue(isinstance(Index.mapper, BlablaDao))
+        self.assertTrue(isinstance(Index.thing, BlablaService))
+        handler_class = self.mgr.app_ctx.routes[0].handler_class
+        self.assertTrue(issubclass(handler_class, RequestHandler))
+        self.assertTrue(issubclass(handler_class, anthem.Handler))
+        self.assertTrue(issubclass(self.mgr.app_ctx.routes[0].handler_class, RequestHandler))
+
+    def test_add_chrod(self):
+
+        @kanon.bloom("thing")
+        class BlablaService(object):
+            pass
+
+        @kanon.chord()
+        class UserViewMinx(object):
+            thing = kanon.Melos("BlablaService")
+
+            def get_user(self):
+                pass
+
+        # custom class name mapper
+        @kanon.chord("userCache", bean=True)
+        class UserCache(object):
+            pass
+
+        @kanon.menu("/")
+        class Index(UserViewMinx):
+            userCache = kanon.Melos("chord:userCache")
+
+        kanon.chant()
+
+        handler_class = self.mgr.app_ctx.routes[0].handler_class
+        self.assertTrue(issubclass(handler_class, RequestHandler))
+        self.assertTrue(issubclass(handler_class, anthem.Handler))
+        self.assertTrue(issubclass(self.mgr.app_ctx.routes[0].handler_class, RequestHandler))
+        self.assertTrue(Index.thing == UserViewMinx.thing)
+        self.assertTrue(isinstance(UserViewMinx.thing, BlablaService))
+        self.assertTrue(isinstance(Index.userCache, UserCache))

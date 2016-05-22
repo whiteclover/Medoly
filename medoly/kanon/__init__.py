@@ -67,7 +67,7 @@ def inventory_manager():
 
 
 def compose(module, include_template=True):
-    """Scan the module including all sub modules. 
+    """Scan the module including all sub modules.
     check the template path ``template``, if exists, will add it in the template engine paths
 
     :param module: the python dot module string.
@@ -116,6 +116,11 @@ def route(prefix_url=''):
 
 def bloom(inventory_name, alias=None):
     """Bind the inventory"""
+
+    # check the inventory name validation
+    if inventory_name not in ['model', 'thing', 'mapper']:
+        raise KeyError("Kanon doesn't have the inventory stragery for ``{}``".format(inventory_name))
+
     def _bloom(inventory):
         kclass_name = inventory.__name__
         if inventory_name == "thing":
@@ -150,8 +155,18 @@ def bloom(inventory_name, alias=None):
                     name = kclass_name
 
             InventoryManager.instance().put_mapper(name, inventory)
-        else:
-            InventoryManager.instance().put_bean(name, inventory)
 
         return inventory
     return _bloom
+
+
+def chord(name=None, **settings):
+    """Add a chord"""
+
+    def _chord(inventory):
+        kclass_name = inventory.__name__
+        if name and name.strip():
+            kclass_name = name.strip()
+        InventoryManager.instance().put_chord(kclass_name, inventory, **settings)
+        return inventory
+    return _chord
