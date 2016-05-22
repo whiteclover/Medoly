@@ -16,11 +16,15 @@
 
 
 from medoly import kanon
-
+import logging
 import tornado.ioloop
 
 
+LOG = logging.getLogger('app')
+
+
 class DemoService(object):
+    """ Demo boot service"""
 
     def __init__(self):
         kanon.set_app_name("Demo")
@@ -29,15 +33,18 @@ class DemoService(object):
         self.app = kanon.chant()
 
     def startup(self):
+        """Start up service"""
         try:
-            port = 8888
-            host = 'localhost'
+            port = self.app.config.get("server.port", 8888)
+            host = self.app.config.get("server.host", 'localhost')
+            LOG.info("Starting demo on %s:%s", host, port)
             self.app.listen(port, host)
             tornado.ioloop.IOLoop.instance().start()
         except KeyboardInterrupt as e:
             self.shutdown()
 
     def shutdown(self):
+        """stop the servie"""
         tornado.ioloop.IOLoop.instance().stop()
 
 
