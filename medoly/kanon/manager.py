@@ -148,7 +148,7 @@ class InventoryManager(object):
 
     def config_from_file(self, path):
         """Loads config from file"""
-        config = cmd.config_from_file(path, seletct_confing=True)
+        config = cmd.config_from_file(path, select_config=True)
         self.config.update(config)
 
     def create_app(self):
