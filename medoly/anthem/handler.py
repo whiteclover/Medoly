@@ -161,7 +161,7 @@ class Handler(RequestHandler, FlashMessagesMixin):
                 key {str} -- chord key
 
         Returns:
-                model instacne
+                chord instacne
         """
         return __chord.get(key)
 
@@ -227,6 +227,6 @@ def Chord(key):
             key {str} -- chord key
 
     Returns:
-            model instacne
+            chord instacne
     """
     return __chord.get(key)
