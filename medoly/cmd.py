@@ -62,8 +62,19 @@ class Cmd(object):
         opt.define('-c', '--config', default=self.confing_path,
                    help="config path (default %(default)r)", metavar="FILE")
         o = opt.parse_args(sys.argv)
-        if os.path.exists(o.config):
-            config = ConfigFactory.parse_file(o.config, pystyle=True)
+        return self.config_from_file(o.config, False)
+
+    @classmethod
+    def config_from_file(cls, path, select_config=True):
+        """Load config form file
+
+        If confiig path exist try to load and parse the config the file, else returns a empty config
+        """
+        if os.path.exists(path):
+            config = ConfigFactory.parse_file(path, pystyle=True)
+            # if ``True`` returns a SelectCofnig
+            if select_config:
+                return config.to_select_config()
             return config
         else:
             # Return default

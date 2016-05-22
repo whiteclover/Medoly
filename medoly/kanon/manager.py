@@ -14,17 +14,19 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+
 import os.path
 import logging
+
+from choco.ui import UIContainer, UIModule
+from tornado.web import RequestHandler
 from medoly import anthem
 from medoly.config import SelectConfig
+from medoly import cmd
 
-from tornado.web import RequestHandler
 
 from ._kanon import Melos
-
 from .ctx import AppContext
-from choco.ui import UIContainer, UIModule
 
 
 LOGGER = logging.getLogger("kanon.manager")
@@ -34,7 +36,11 @@ class InventoryManager(object):
     """Manage and load app context, mappers and things.
 
      :param handlercls: the default request handler class for build url route handler.
-        Defaults is ``anthem.Handler``
+        Defaults is ``anthem.Handler``.
+    :param SelectConfig config: the select config , default create a new empty config
+    :param template_mananger: the template mananger for custum template engine
+    :param bool enable_cmd_parse, when set to False to disable the console command pasre.
+            Defaults to   ``True`` enable the terminal command option.
     """
 
     @staticmethod
@@ -54,15 +60,15 @@ class InventoryManager(object):
         """Set current singleton inventoy manager
 
         :param InventoryManager mgr: inventoy manager
-        :param SelectConfig config: the select config , default create a new empty config
-        :param template_mananger: the template mananger for custum template engine
         """
         if isinstance(mgr, InventoryManager):
             InventoryManager._current = mgr
         else:
             raise TypeError("The mgr must be an instance of InventoryManager")
 
-    def __init__(self, handlercls=None, config=None, template_mananger=None):
+    def __init__(self, handlercls=None, config=None, template_mananger=None, enable_cmd_parse=True):
+        self.enable_cmd_parse = enable_cmd_parse
+
         #: the boot class instances for bootstrap configuration
         self.boots = []
 
@@ -114,6 +120,7 @@ class InventoryManager(object):
         self.app_ctx.error_page(status_code, callback)
 
     def load(self):
+        """Loads all invenory settings and create the anthem application"""
         self.load_boot()
         self.mount_model()
         self.mount_mapper()
@@ -123,19 +130,26 @@ class InventoryManager(object):
         return self.create_app()
 
     def load_boot(self):
-        from medoly import cmd
+        """load bott config"""
         # intialize console option parser
-        LOGGER.debug("Parsing console options")
-        console = cmd.Cmd('/etc/%s/app.conf' % (self.app_name))
-        self.boots = [boot() for boot in self.boots]
-        console.parse_cmd(self.app_name, self.boots, self.config)
+        if not self.enable_cmd_parse:
+            LOGGER.debug("Parsing console options")
+            console = cmd.Cmd('/etc/%s/app.conf' % (self.app_name))
+            self.boots = [boot() for boot in self.boots]
+            console.parse_cmd(self.app_name, self.boots, self.config)
         self.boot_config()
 
     def boot_config(self):
+        """Bootstrap boot config setup"""
         LOGGER.debug("Bootstrap config")
         for boot in self.boots:
             if hasattr(boot, 'setup'):
                 boot.setup(self.config, self.app_ctx.settings)
+
+    def config_from_file(self, path):
+        """Loads config from file"""
+        config = cmd.config_from_file(path, seletct_confing=True)
+        self.config.update(config)
 
     def create_app(self):
         """Returns an anthem application thats intialize with settings"""
@@ -166,6 +180,7 @@ class InventoryManager(object):
         app.config = self.config
 
     def intitilaize_app_settings(self):
+        """Initialize the application settings"""
         settings = dict()
         # try bind template loader
         if self.template_mananger.is_valid():
@@ -342,7 +357,8 @@ class InventoryManager(object):
                 # default  is a thing inventory
                 post_thing = Melos("Post")
 
-        The  dependecy injection, it will load the relational inventory instacne by the  melos of class had and assign to the named class variable.
+        The  dependecy injection, it will load the relational inventory instacne by the  melos of class ,
+        and assign to the named class variable.
 
         """
 
