@@ -111,7 +111,7 @@ class Cmd(object):
 def config_from_file(path, select_config=True):
     """Load config form file
 
-    If confiig path exist try to load and parse the config the file, else returns a empty config
+    If config path exist try to load and parse the config the file, else returns a empty config
     """
     if os.path.exists(path):
         config = ConfigFactory.parse_file(path, pystyle=True)
