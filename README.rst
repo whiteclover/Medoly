@@ -37,3 +37,8 @@ Medoly is a Web Framework, the design is inspried by Spring-boot and Emberjs.
         app.listen(8888)
         tornado.ioloop.IOLoop.current().start()
 
+
+.. note::
+
+    More examples see ``exampls`` dirrectory.
+
