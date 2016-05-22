@@ -20,7 +20,7 @@ from medoly import anthem
 from tornado.web import RequestHandler
 
 
-class TestInventoryMgrTest(unittest.TestCase):
+class InventoryMgrTest(unittest.TestCase):
 
     def setUp(self):
         self.mgr = kanon.InventoryManager()
@@ -157,3 +157,4 @@ class TestInventoryMgrTest(unittest.TestCase):
         self.assertTrue(Index.thing == UserViewMinx.thing)
         self.assertTrue(isinstance(UserViewMinx.thing, BlablaService))
         self.assertTrue(isinstance(Index.userCache, UserCache))
+        self.assertTrue(isinstance(UserViewMinx(), anthem.Chord("UserViewMinx")))

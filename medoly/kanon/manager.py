@@ -254,6 +254,8 @@ class InventoryManager(object):
             bean = settings.get('bean')
             if bean:
                 self.chords[chord_name] = chord()
+            else:
+                self.chords[chord_name] = chord
 
         setattr(anthem.handler, "__chord", self.chords)
 
