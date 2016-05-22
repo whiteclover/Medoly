@@ -6,7 +6,7 @@ How to run
 ==========
 
 
-.. code-bloc:: bash
+.. code-block:: bash
 
 
    > python service.py -h
