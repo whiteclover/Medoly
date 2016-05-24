@@ -19,6 +19,9 @@
 =================
 
 
+The ``Application``  extends from  tornado base application clalss, encapsulates all of the stateful settings and hook map of a running Application.
+
+
 Examples::
 
 
@@ -53,8 +56,15 @@ class Application(tornado.web.Application):
     Extends:
         tornado.web.Application
 
-    Variables:
-        hookpoints {list} -- hooks points
+
+
+     :param handlers:  the tornado request handers
+     :param intialize: the function for intailize of application
+     :param settings: the more tornado application settings,
+        configuration options for customizing the behavior.
+
+
+    :cvar hookpoints: hooks points
     """
 
     # Hook points
@@ -62,15 +72,6 @@ class Application(tornado.web.Application):
                   'before_error_response', 'after_error_response']
 
     def __init__(self, handlers, intialize, **settings):
-        """Init
-
-        [description]
-
-        Arguments:
-            handlers {list[RequestHandler]} -- tornado request handers
-            intialize {fucntion} -- the initailize function hooks
-            **settings {[type]} -- the more tornado application settings
-        """
         # error pages, contains the error process handler for the status code
         self.error_pages = {}
         self.hooks = HookMap()
@@ -87,9 +88,9 @@ class Application(tornado.web.Application):
     def error_page(self, code, callback):
         """Status code and error expction hander callback
 
-        Arguments:
-            code {int} -- the http status code
-            callback {function} -- the fucktion
+
+        :param int code: the http status code
+        :param callback: the calllable object for error page handle stateful process .
 
 
         callback::

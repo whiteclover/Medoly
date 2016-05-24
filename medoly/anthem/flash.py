@@ -48,9 +48,11 @@ import tornado
 
 
 class FlashMessagesMixin(object):
+    """Flash Message Mixin"""
 
     @property
     def messages(self):
+        """Gets the flashed message"""
         if not hasattr(self, '_messages'):
             messages = self.get_secure_cookie('flash_messages')
             self._messages = []
@@ -59,10 +61,10 @@ class FlashMessagesMixin(object):
         return self._messages
 
     def flash(self, message, level='error'):
-        """Appeding message in flash.
+        """Appends message in flash.
 
-        param message: Str, message info.
-        param level: message level enum in ["error", "info", "warnning"].
+        :param string message:  flash message info.
+        :param string  level: message level enum in ["error", "info", "warnning"].
         """
         if isinstance(message, str):
             message = message.decode('utf8')
@@ -72,7 +74,7 @@ class FlashMessagesMixin(object):
             'flash_messages', tornado.escape.json_encode(self.messages))
 
     def get_flashed_messages(self):
-        """Get flashed message"""
+        """Gets flashed message"""
         messages = self.messages
         self._messages = []
         self.clear_cookie('flash_messages')

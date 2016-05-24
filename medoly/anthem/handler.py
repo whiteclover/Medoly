@@ -14,6 +14,9 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+"""Medoly Request Hander class
+===========================
+"""
 
 from tornado.web import RequestHandler, url
 from tornado.escape import utf8, json_encode
@@ -32,8 +35,6 @@ class Handler(RequestHandler, FlashMessagesMixin):
 
     def prepare(self):
         """Perpare request process
-
-        [description]
         """
         self.hooks.run('on_start_request', self)
         self.on_start_request()
@@ -113,8 +114,8 @@ class Handler(RequestHandler, FlashMessagesMixin):
     def on_finish(self):
         """Hook  pointer process  on request finshing
         """
-        self.hooks.run('on_end_request', self)
         self.on_end_request()
+        self.hooks.run('on_end_request', self)
 
     def on_end_request(self):
         """Custom request hanlder hook on end request
