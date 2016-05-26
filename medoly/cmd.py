@@ -67,6 +67,8 @@ class Cmd(object):
     def parse_cmd(self, help_doc, boots, config=None):
         """Parse config and setting config for the terminal options
 
+        Try load config from configuration file path, then override the file config by the command options .
+
         :param string help_doc: The OptionPaser help doc
         :param boots:  the boot  instances options
         :param config:  if config  is not ``None``, it will use current config, otherwise create a new one.
@@ -76,11 +78,12 @@ class Cmd(object):
         """
         self.options.setup_options(help_doc)
         self.boot_options(self.options, boots)
-
-        self._set_defaults(boots)
+        file_config = self.get_file_opt()
+        self._set_defaults(file_config, boots)
         opt = self.options.parse_args()
         if not config:
             config = SelectConfig()
+        config.update(file_config.to_select_config().config())
         config.update(vars(opt))
         return config
 
@@ -91,10 +94,10 @@ class Cmd(object):
             if hasattr(boot, 'config'):
                 boot.config(opt)
 
-    def _set_defaults(self, boots):
+    def _set_defaults(self, file_config, boots):
         """Setting the default option config
         """
-        c = self.get_file_opt()
+
         opt = options.Options(None)
         self.boot_options(opt, boots)
 
@@ -102,7 +105,7 @@ class Cmd(object):
         d = {}
         config = vars(opt)
         for k in config:
-            v = c.get(k, _Null)
+            v = file_config.get(k, _Null)
             if v != _Null:
                 d[k] = v
         self.options.set_defaults(**d)

@@ -100,6 +100,10 @@ class SelectConfig(object):
         for k, v in config.items():
             self.set(k, v)
 
+    def config(self):
+        """Return real dict config """
+        return self._config
+
     def __contains__(self, key):
         """Check a key in the config"""
         keys = self._keys(key)
