@@ -62,7 +62,7 @@ class Cmd(object):
         opt.define('-c', '--config', default=self.confing_path,
                    help="config path (default %(default)r)", metavar="FILE")
         o = opt.parse_args(sys.argv)
-        return config_from_file(o.config, False)
+        return config_from_file(o.config, True)
 
     def parse_cmd(self, help_doc, boots, config=None):
         """Parse config and setting config for the terminal options
@@ -83,7 +83,7 @@ class Cmd(object):
         opt = self.options.parse_args()
         if not config:
             config = SelectConfig()
-        config.update(file_config.to_select_config().config())
+        config.update(file_config.config())
         config.update(vars(opt))
         return config
 
@@ -118,10 +118,11 @@ def config_from_file(path, select_config=True):
     """
     if os.path.exists(path):
         config = ConfigFactory.parse_file(path, pystyle=True)
-        # if ``True`` returns a SelectCofnig
-        if select_config:
-            return config.to_select_config()
-        return config
     else:
-        # Return default
-        return {}
+        # Return default empty config
+        config = ConfigFactory.parse("", pystle=True)
+    # if ``True`` returns a SelectCofnig
+    if select_config:
+            return config.to_select_config()
+    else:
+        return config
