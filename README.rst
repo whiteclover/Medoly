@@ -39,5 +39,5 @@ Medoly is a Web Framework, the design is inspried by Spring-boot and Emberjs.
 
 
 .. note::
-    More examples see ``examples`` dirrectory.
+    More examples see ``examples`` directory.
 

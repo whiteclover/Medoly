@@ -14,6 +14,9 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+"""Boot Settings"""
+
+import os
 from medoly.kanon import boot
 
 
@@ -29,5 +32,32 @@ class SiteBoot(object):
         _('-p', '--server.port', default=8888, help='The port of the http server (default %(default)r)', type=int)
         _('-d', '--debug', help='Open debug mode (default %(default)r)', action='store_true', default=False)
         _('--secert_key', default="7oGwHH8NQDKn9hL12Gak9G/MEjZZYk4PsAxqKU4cJoY=", help='The secert key for secure cookies (default %(default)r)')
-        _('-c', '--config', default='./conf/app.conf', help="config path (default %(default)r)", metavar="FILE")
+        _('-c', '--config', default='etc/demo/app.conf', help="config path (default %(default)r)", metavar="FILE")
         _("-v", "--version", help="Show demo version 0.1")
+
+
+@boot()
+class ChocotBoot(object):
+    """Choco template options"""
+
+    def config(self, options):
+        group = options.group("choco template settings")
+        _ = group.define
+        _('--choco.cache_path', default=None,
+          help='choco template module cache path: (default %(default)r)')
+        _('--choco.filesystem_checks', action='store_true', default=False,
+          help='choco filesystem checks (default %(default)r)')
+
+
+@boot()
+class AssetBoot(object):
+    """Asset settings"""
+
+    def config(self, options=None):
+        dirname = os.path.dirname
+        path = dirname(dirname(os.path.normpath(__file__)))
+
+        group = options.group("Asset settings")
+        _ = group.define
+        _('--asset.url_prefix', default=path, help='Asset url path prefix: (default %(default)r)')
+        _('--asset.path', default=os.path.join(path, "asset"), help='Asset files path (default %(default)r)')

@@ -120,9 +120,9 @@ def config_from_file(path, select_config=True):
         config = ConfigFactory.parse_file(path, pystyle=True)
     else:
         # Return default empty config
-        config = ConfigFactory.parse("", pystle=True)
+        config = ConfigFactory.parse("", pystyle=True)
     # if ``True`` returns a SelectCofnig
     if select_config:
-            return config.to_select_config()
+        return config.to_select_config()
     else:
         return config
