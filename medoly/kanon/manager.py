@@ -152,8 +152,8 @@ class InventoryManager(object):
 
     def config_from_file(self, path):
         """Loads config from file"""
-        config = cmd.config_from_file(path, select_config=True)
-        self.config.update(config)
+        config = cmd.config_from_file(path)
+        self.config.update(config.config())
 
     def create_app(self):
         """Returns an anthem application thats intialize with settings"""
@@ -391,18 +391,18 @@ class InventoryExistError(Exception):
 class Menu(object):
     """Url Menu
 
-        if  ``render`` is not ``None``, it will use the template render. else set the ``handler``.
+    if  ``render`` is not ``None``, it will use the template render. else set the ``handler``.
 
-        :param url_spec:  the url path
-        :type url_spec: string
-        :param handler: the tornado web request handler class, defaults to None
-        :type handler: the subclass of WebRequestHandler,  optional
-        :param settings: the handler setting config, defaults to None
-        :type settings: dict, optional
-        :param name: the name for reverse url, defaults to None
-        :type name: string, optional
-        :param render: the temaplate path for tempalte render handler, defaults to None
-        :type render: string, optional
+    :param url_spec:  the url path
+    :type url_spec: string
+    :param handler: the tornado web request handler class, defaults to None
+    :type handler: the subclass of WebRequestHandler,  optional
+    :param settings: the handler setting config, defaults to None
+    :type settings: dict, optional
+    :param name: the name for reverse url, defaults to None
+    :type name: string, optional
+    :param render: the temaplate path for tempalte render handler, defaults to None
+    :type render: string, optional
     """
 
     def __init__(self, url_spec, handler=None, settings=None, name=None, render=None):
@@ -448,11 +448,11 @@ class TempateMananger(object):
                                           module_directory=mgr.config.get("choco.cache_path"))
 
     def add_ui_path(self, ui_path):
-        """Add Ui tempate path to head"""
+        """Adds Ui tempate path to head"""
         self.ui_paths.insert(0, ui_path)
 
     def put_ui(self, ui_name, uicls):
-        """Put ui in  uis
+        """Puts ui in  uis
 
         :param string ui_name: ui template name
         :param uicls: UI Module class instance
