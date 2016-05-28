@@ -136,7 +136,7 @@ def config_from_file(path):
 def _get_yaml_config(path):
     """Try load yaml from the path
 
-    :param srting path: the yaml file path
+    :param string path: the yaml file path
     """
     try:
         import yaml
