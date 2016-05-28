@@ -55,9 +55,9 @@ class AssetBoot(object):
 
     def config(self, options=None):
         dirname = os.path.dirname
-        path = dirname(dirname(os.path.normpath(__file__)))
+        path = dirname(os.path.normpath(__file__))
 
         group = options.group("Asset settings")
         _ = group.define
-        _('--asset.url_prefix', default=path, help='Asset url path prefix: (default %(default)r)')
+        _('--asset.url_prefix', default="/assets/", help='Asset url path prefix: (default %(default)r)')
         _('--asset.path', default=os.path.join(path, "asset"), help='Asset files path (default %(default)r)')

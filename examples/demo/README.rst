@@ -14,6 +14,7 @@ App Structure
   │  │  index.py # home menu
   │  │  __init__.py
   │  │
+  │  ├─ asset # default static asset path
   │  ├─template # tempalte path
   │  │  │  404.html
   │  │  │  index.html
@@ -60,7 +61,7 @@ How to run
                           The secert key for secure cookies (default
                           '7oGwHH8NQDKn9hL12Gak9G/MEjZZYk4PsAxqKU4cJoY=')
     -c FILE, --config FILE
-                          config path (default '/etc/demoapp.conf')
+                          config path (default '/etc/demo/app.conf')
     -v VERSION, --version VERSION
                           Show demo version 0.1
 
@@ -76,4 +77,4 @@ How to run
                           '/Medoly/examples/demo')
     --asset.path ASSET.PATH
                           Asset files path (default
-                          '/Medoly/examples/demo/asset')
+                          '/Medoly/examples/demo/app/asset')

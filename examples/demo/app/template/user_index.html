@@ -1,11 +1,11 @@
-<htlml>
+<%inherit file="base.html"/>
 
-    <head>
-        <title>This is a test page</title>
-    </head>
+<%def name="headIncludes()">
+    <title>This is a test page</title>
+</%def>
 
-    <body>
-        <h2> Curent User</h2>
-        <%@ UserView(uid) />
-	</body>
-</htlml>
+
+<%def name="body()">
+    <h2> Curent User</h2>
+    <%@ UserView(uid) />
+</%def>

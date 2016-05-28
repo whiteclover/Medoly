@@ -16,6 +16,8 @@ local.properties
 .settings/
 .loadpath
 
+examples/demo/cache
+
 # External tool builders
 .externalToolBuilders/
 
