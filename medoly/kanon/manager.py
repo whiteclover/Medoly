@@ -255,10 +255,6 @@ class InventoryManager(object):
         """Added a template path in template manager"""
         LOGGER.debug("Adding template path: '%s'", template_path)
         self.template_mananger.add_template_path(template_path)
-        ui_path = os.path.join(template_path, "ui")
-        if os.path.isdir(ui_path):
-            LOGGER.debug("Adding template ui path : '%s'", ui_path)
-            self.template_mananger.add_ui_path(ui_path)
 
     def add_route(self, url_spec, handler=None, settings=None, name=None, render=None):
         """Add a url route"""
@@ -420,10 +416,13 @@ class Menu(object):
 
 class TempateMananger(object):
     """Template Mannager
+
+    :param string ui_path: the default ui path for template loading, Defaults to "ui".
     """
 
-    def __init__(self):
+    def __init__(self, ui_path="ui"):
         self.template_paths = []
+        self.ui_path = ui_path
         self.ui_paths = []
         self.uis = {}
 
@@ -463,3 +462,7 @@ class TempateMananger(object):
     def add_template_path(self, template_path):
         """Add  tempate path to head"""
         self.template_paths.insert(0, template_path)
+        ui_path = os.path.join(template_path, self.ui_path)
+        if os.path.isdir(ui_path):
+            LOGGER.debug("Adding template ui path : '%s'", ui_path)
+            self.add_ui_path(ui_path)

@@ -66,23 +66,23 @@ def inventory_manager():
     return InventoryManager.instance()
 
 
-def compose(module, url_prefix="", include_template=True):
+def compose(module, url_prefix="", template_path="template"):
     """Scan the module including all sub modules.
     check the template path ``template``, if exists, will add it in the template engine paths
 
     :param module: the python dot module string.
     :param string url_prefix: sets the current package url prefix for url route.
-    :param include_template: if the module is a diretory and the value is true. it will add the template path,
-            if exist the sub diretory named "template".
+    :param template_path: if the module is a diretory and set the template path. it will add the template path,
+            if exists the subdiretory  ``template_path`` in the current scan module directory,. Defaults to "template".
     """
     # settings to current url prefix
     InventoryManager.instance().compose_url_prefix = url_prefix
     module_infso, is_path, package = composer.scan_submodules(module)
-    if is_path and include_template:
+    if is_path and template_path:
         path = os.path.dirname(package.__file__)
-        tempalte_path = os.path.join(path, "template")
-        if os.path.isdir(tempalte_path):
-            InventoryManager.instance().add_template_path(tempalte_path)
+        full_tempalte_path = os.path.join(path, template_path)
+        if os.path.isdir(full_tempalte_path):
+            InventoryManager.instance().add_template_path(full_tempalte_path)
 
 
 def ui(template_name=None, name=None):
