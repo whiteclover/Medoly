@@ -62,7 +62,7 @@ class Cmd(object):
         opt.define('-c', '--config', default=self.confing_path,
                    help="config path (default %(default)r)", metavar="FILE")
         o = opt.parse_args(sys.argv)
-        return config_from_file(o.config, True)
+        return config_from_file(o.config)
 
     def parse_cmd(self, help_doc, boots, config=None):
         """Parse config and setting config for the terminal options
@@ -88,7 +88,7 @@ class Cmd(object):
         return config
 
     def boot_options(self, opt, boots):
-        """Boot terminal option 
+        """Boot terminal option
         """
         for boot in boots:
             if hasattr(boot, 'config'):
@@ -111,18 +111,36 @@ class Cmd(object):
         self.options.set_defaults(**d)
 
 
-def config_from_file(path, select_config=True):
+def config_from_file(path):
     """Load config form file
 
-    If config path exist try to load and parse the config the file, else returns a empty config
+    If config path exist  try to load and parse the config the file, else returns a empty config.
+    If the config path extension is ``yml`` , will load the config by yaml parse module requires
+    the yaml module, otherwise load hocon config
     """
     if os.path.exists(path):
-        config = ConfigFactory.parse_file(path, pystyle=True)
-    else:
-        # Return default empty config
-        config = ConfigFactory.parse("", pystyle=True)
-    # if ``True`` returns a SelectCofnig
-    if select_config:
-        return config.to_select_config()
-    else:
-        return config
+        # try load yaml config
+        if path.endswith(".yaml"):
+            yaml_config = _get_yaml_config(path)
+            config = SelectConfig()
+            config.update(yaml_config)
+            return config
+        else:
+            config = ConfigFactory.parse_file(path, pystyle=True)
+            return config.to_select_config()
+
+    # Returns default empty config
+    return SelectConfig()
+
+
+def _get_yaml_config(path):
+    """Try load yaml from the path
+    :paramsrting path: the yaml file path
+    """
+    try:
+        import yaml
+    except ImportError as e:
+        LOG.warning("Yaml config requires pyyaml modlue.")
+        raise e
+    with open(path) as f:
+        return yaml.safe_load(f)

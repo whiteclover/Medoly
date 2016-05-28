@@ -40,10 +40,11 @@ class SelectConfig(object):
     def __init__(self, config=None):
         self._config = config or dict()
 
+    def __len__(self):
+        return len(self._config)
+
     def set(self, key, value):
         """Set a chain key  value
-
-
 
         :param key: the config chain key with dot split, like "db.host", "host"
         :type key: string
