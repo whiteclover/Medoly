@@ -135,12 +135,13 @@ def config_from_file(path):
 
 def _get_yaml_config(path):
     """Try load yaml from the path
-    :paramsrting path: the yaml file path
+
+    :param srting path: the yaml file path
     """
     try:
         import yaml
     except ImportError as e:
-        LOG.warning("Yaml config requires pyyaml modlue.")
+        LOG.warning("Yaml config requires pyyaml modlule.")
         raise e
     with open(path) as f:
         return yaml.safe_load(f)
