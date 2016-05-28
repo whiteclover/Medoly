@@ -67,6 +67,10 @@ class InventoryManager(object):
             raise TypeError("The mgr must be an instance of InventoryManager")
 
     def __init__(self, handlercls=None, config=None, template_mananger=None, enable_cmd_parse=True):
+
+        #: the current compose context url prefix
+        self.compose_url_prefix = "/"
+        #: the terminal parse controll
         self.enable_cmd_parse = enable_cmd_parse
 
         #: the boot class instances for bootstrap configuration
@@ -258,7 +262,8 @@ class InventoryManager(object):
 
     def add_route(self, url_spec, handler=None, settings=None, name=None, render=None):
         """Add a url route"""
-        self.menus.append(Menu(url_spec, handler, settings, name, render))
+
+        self.menus.append(Menu(self.compose_url_prefix + url_spec, handler, settings, name, render))
 
     def mount_chord(self):
         """Registe the melos for  the  chord class"""
