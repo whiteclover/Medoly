@@ -17,7 +17,14 @@
 # Human-Optimized Config Object Notation
 
 
+import re
+
+from .errors import HoconParserException, HoconTokenizerException
+from ._config import Config
+
+
 class HoconRoot(object):
+    """Hocon config object"""
 
     def __init__(self, value=None, substitutions=None):
         self.value = value or HoconValue()
@@ -29,6 +36,7 @@ class MightBeAHoconObject(object):
 
 
 class HoconValue(MightBeAHoconObject):
+    """Hocon data value node object"""
 
     def __init__(self, values=None):
         self.values = values or []
@@ -259,6 +267,7 @@ class HoconSubstitution(HoconElement, MightBeAHoconObject):
 
 
 class TokenType(object):
+    """Token  Type enum"""
 
     Comment = 1
     Key = 2
@@ -298,10 +307,6 @@ class Token(object):
     @staticmethod
     def Include(path, source_index, source_length):
         return Token(TokenType.Include, source_index, source_length, path)
-
-
-from .errors import HoconParserException, HoconTokenizerException
-from ._config import Config
 
 
 class Parser(object):
@@ -496,7 +501,7 @@ class Tokenizer(object):
     def __init__(self, text, pystyle=False):
         self._text = text
         self._index = 0
-        self._indexStack = []
+        self._index_stack = []
         self.pystyle = pystyle
 
     @property
@@ -508,10 +513,10 @@ class Tokenizer(object):
         return self._index
 
     def push(self):
-        self._indexStack.append(self._index)
+        self._index_stack.append(self._index)
 
     def pop(self):
-        self._indexStack.pop()
+        self._index_stack.pop()
 
     @property
     def eof(self):
@@ -569,8 +574,6 @@ class Tokenizer(object):
             return snippet + "..."
         snippet = snippet.replace("\r", "\\r").replace("\n", "\\n")
         return str.format("at index {0}: `{1}`", index, snippet)
-
-import re
 
 
 class HoconTokenizer(Tokenizer):

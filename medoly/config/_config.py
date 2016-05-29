@@ -98,6 +98,7 @@ class SelectConfig(object):
             del self._config[keys[0]]
 
     def update(self, config):
+        """Update the settings in the current config"""
         for k, v in config.items():
             self.set(k, v)
 
@@ -128,8 +129,16 @@ class SelectConfig(object):
 
 
 class BaseConfig(object):
+    """Base Config
+
+    :param root:  the real hocon root value
+    :type root: HoconRoot
+    :param fallback:  the fallback for handle hocon actions, defaults to None
+    :raises: AttributeError
+    """
 
     def __init__(self, root, fallback=None):
+
         if root.value is None:
             raise AttributeError(" error")
         self.root = root.value  # HoconValue
@@ -137,6 +146,7 @@ class BaseConfig(object):
         self.fallback = fallback  # Config
 
     def get_node(self, path):
+        """Gets the path data node"""
         keys = path.split(".")
         current_node = self.root
         if current_node is None:
@@ -149,32 +159,21 @@ class BaseConfig(object):
                 return None
         return current_node
 
-    def get_config(self, path):
-        cls = self.__class__
-        value = self.get_node(path)
-        if self.fallback:
-            f = self.fallback.get_config(path)
-            if value is None and f is None:
-                return None
-            if value is None:
-                return f
-            return cls(HoconRoot(value).with_fallback(f))
-        if value is None:
-            return None
-        return cls(HoconRoot(value))
-
     def __str__(self):
         if self.root is None:
             return ""
         return str(self.root)
 
     def to_dict(self):
+        """Converts to dict"""
         return self.root.get()
 
     def to_select_config(self):
+        """Converts to SelectConfig"""
         return SelectConfig(self.root.get())
 
     def with_fallback(self, fallback):
+        """Clones a new one config"""
         if fallback == self:
             raise Exception(" error")
         clone = deepcopy(self)
@@ -185,28 +184,28 @@ class BaseConfig(object):
         return clone
 
     def has_path(self, path):
+        """Check  the config has the path node"""
         return self.get_node(path) is not None
-
-    def append(self, config, fallback):
-        #fallbackConfig = ConfigFactory.parse(fallback)
-        return config.with_fallback(fallback)
 
 
 class Config(BaseConfig):
 
     def get_bool(self, path, default=False):
+        """Gets the bool data value, defaults not found returns the default value"""
         value = self.get_node(path)
         if value is None:
             return default
         return value.get_bool()
 
     def get_int(self, path, default=0):
+        """Gets the integer data value, defaults not found returns the default value"""
         value = self.get_node(path)
         if value is None:
             return default
         return value.get_int()
 
     def get(self, path, default=None):
+        """Gets the  string data value, defaults not found returns the default value"""
         value = self.get_node(path)
         if value is None:
             return default
@@ -215,66 +214,77 @@ class Config(BaseConfig):
     get_string = get
 
     def get_float(self, path, default=0.0):
+        """Gets the  float data value, defaults not found returns the default value"""
         value = self.get_node(path)
         if value is None:
             return default
         return value.get_float()
 
     def get_bool_list(self, path):
+        """Gets the  bool data value, defaults not found returns the default value"""
         value = self.get_node(path)
 
         return value.get_bool_list()
 
     def get_float_list(self, path):
+        """Gets the  float list data value"""
         value = self.get_node(path)
 
         return value.get_float_list()
 
     def get_int_list(self, path):
+        """Gets the  int list data value"""
         value = self.get_node(path)
 
         return value.get_int_list()
 
     def get_list(self, path):
+        """Gets the  list ojbect data value"""
         value = self.get_node(path)
 
         return value.get_list()
 
     def get_value(self, path):
+        """Gets the  string data node, defaults not found returns the default value"""
         return self.get_node(path)
 
 
 class PyConfig(BaseConfig):
 
     def get(self, path, default=None):
+        """Get real type value"""
         value = self.get_node(path)
         if value is None:
             return default
         return value.get()
 
-from .hocon import Parser, HoconRoot
+from medoly.config.hocon import Parser
 
 
 class ConfigFactory(object):
 
     @classmethod
     def empty(cls):
+        """Creates a empty hocon config"""
         return cls.parse("")
 
     @classmethod
     def parse(cls, hocon, func=None, pystyle=False):
+        """Parses and creates a hocon config from  text string"""
         res = Parser.parse(hocon, func, pystyle)
         configCls = PyConfig if pystyle else Config
         return configCls(res)
 
     @classmethod
     def parse_file(cls, path, pystyle=False):
+        """Parses and creates a hocon confi from  the file path"""
         with open(path) as f:
             content = f.read()
             return cls.parse(content, pystyle=pystyle)
 
     @classmethod
     def from_json(cls, jsonObj, pystyle=False):
+        """Creates hocon from json data"""
         import json
         text = json.dumps(jsonObj)
         return cls.parse(text, pystyle)
