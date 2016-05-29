@@ -33,7 +33,7 @@ class Null(object):
     """
     pass
 
-# Null sigtelon
+# Null singleton
 _Null = Null()
 
 

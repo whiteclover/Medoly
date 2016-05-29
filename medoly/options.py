@@ -113,26 +113,29 @@ __options = None
 
 
 def setup_options(doc):
-    """Settings the help doc description"""
+    """Sets the help doc description  for module options instnace"""
     global __options
     __options = Options(doc)
 
 
 def group(help_doc):
-    """Create group options instance entry"""
+    """Creates group options instance in module options instnace"""
     return __options.group(help_doc)
 
 
 def define(*args, **kw):
-    """Defines a config option"""
+    """Defines a config option in module options instnace"""
     return __options.define(*args, **kw)
 
 
 def set_defaults(**c):
-    """Sets the default config values"""
+    """Sets the default config values in module options instnace"""
     __options.set_defaults(**c)
 
 
 def parse_args(args=None):
-    """Pareses command options, and returns the options result"""
+    """Pareses command options in module options instnace
+
+    Returns the options result.
+    """
     return __options.parse_args(args)
