@@ -13,23 +13,23 @@ Install medoly
 ===================
 
 
-Requires python 2.7 version, tornado 4.0+ is better (tornado 3.0+) and choco template engine extends on mako tempalte engine.
+Requires python 2.7 version, tornado 4.0+  and choco template engine extends on mako template engine.
 
 You can install Modely with a single command using pip, type this into your terminal:
 
 
 .. code-block:: bash
 	
-	pip install modely
+	pip install medoly
 
 Develop mode, git clone the project, then cd proejct direcotry, type this into your terminal:
 
 .. code-block:: bash
 
-	python setup.py Develop
+	python setup.py develop
 
 
-Create a hello world application
+Creating a hello world application
 =====================================
 
 Writing code in file named ``hello.py``.

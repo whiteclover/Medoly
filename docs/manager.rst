@@ -10,10 +10,19 @@ Manager
     .. autoclass:: InventoryManager
 
 
-    .. automethod:: InventoryManager.load_mapper
-    .. automethod:: InventoryManager.load_thing
+
+    .. automethod:: InventoryManager.instance
+    .. automethod:: InventoryManager.set_instance
     .. automethod:: InventoryManager.initilaize_app
+    .. automethod:: InventoryManager.load_melos
     
+    .. automethod:: InventoryManager.connect
+
+
+    Menu
+    ------------
+
+    .. autoclass:: Menu
 
     TemplateManager
     --------------------------
