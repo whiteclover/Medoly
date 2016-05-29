@@ -14,6 +14,9 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+"""Kanon manager
+==============
+"""
 
 import os.path
 import logging
@@ -39,7 +42,7 @@ class InventoryManager(object):
         Defaults is ``anthem.Handler``.
     :param SelectConfig config: the select config , default create a new empty config
     :param template_mananger: the template mananger for custum template engine
-    :param bool enable_cmd_parse, when set to False to disable the console command pasre.
+    :param bool enable_cmd_parse: when set to False to disable the console command pasre.
             Defaults to   ``True`` enable the terminal command option.
     """
 
@@ -372,7 +375,7 @@ class InventoryManager(object):
                 setattr(kclass, k, inventory)
 
     def _load_melos(self, melos):
-        """ Get the inventory by melos"""
+        """ Gets the inventory by melos"""
         if melos.genre == "thing":
             return self.things.get(melos.name)
         elif melos.genre == "mapper":
@@ -427,7 +430,7 @@ class TempateMananger(object):
         self.uis = {}
 
     def is_valid(self):
-        """Check the template is empty"""
+        """Checks the template is empty"""
         return bool(self.template_paths)
 
     def create_template_loader(self, mgr):
@@ -460,7 +463,7 @@ class TempateMananger(object):
         self.uis[ui_name] = uicls
 
     def add_template_path(self, template_path):
-        """Add  tempate path to head"""
+        """Adds tempate path to head"""
         self.template_paths.insert(0, template_path)
         ui_path = os.path.join(template_path, self.ui_path)
         if os.path.isdir(ui_path):

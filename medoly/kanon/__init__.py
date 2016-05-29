@@ -68,24 +68,34 @@ def inventory_manager():
 
 def compose(module, url_prefix="", template_path="template"):
     """Scan the module including all sub modules.
-    check the template path ``template``, if exists, will add it in the template engine paths
+
+    Checks the template path , if exists, will add it in the template engine paths.
 
     :param module: the python dot module string.
     :param string url_prefix: sets the current package url prefix for url route.
     :param template_path: if the module is a diretory and set the template path. it will add the template path,
-            if exists the subdiretory  ``template_path`` in the current scan module directory,. Defaults to "template".
+            if exists the subdiretory  ``template_path`` in the current scan module directory. Defaults to "template".
     """
     # settings to current url prefix
     InventoryManager.instance().compose_url_prefix = url_prefix
     module_infso, is_path, package = composer.scan_submodules(module)
     if is_path and template_path:
         path = os.path.dirname(package.__file__)
-        full_tempalte_path = os.path.join(path, template_path)
-        if os.path.isdir(full_tempalte_path):
-            InventoryManager.instance().add_template_path(full_tempalte_path)
+        full_template_path = os.path.join(path, template_path)
+        if os.path.isdir(full_template_path):
+            InventoryManager.instance().add_template_path(full_template_path)
 
 
-def ui(template_name=None, name=None):
+def ui(template_name, name=None):
+    """Adds a ui module hanlder in manger
+
+
+    :param template_name: the ui  cutom  template path.
+    :type template_name: string
+    :param name: the name for template engine calling, defaults to  ui class name.
+    :type name: string, optional
+    """
+
     def _ui(uicls):
         ui_name = None
         if name and name.strip():
@@ -102,6 +112,7 @@ def ui(template_name=None, name=None):
 
 
 def menu(url_spec, settings=None, name=None, render=None):
+    """Adds a url route in manager"""
     def __menu(handler):
         InventoryManager.instance().add_route(url_spec, handler, settings, name, render)
         return handler
@@ -109,6 +120,7 @@ def menu(url_spec, settings=None, name=None, render=None):
 
 
 def route(prefix_url=''):
+    """Uses connector to add route in manager"""
 
     def __route(f):
         c = composer.Connetor(prefix_url, InventoryManager.instance())
@@ -118,7 +130,7 @@ def route(prefix_url=''):
 
 
 def bloom(inventory_name, alias=None):
-    """Bind the inventory"""
+    """Binds the inventory"""
 
     # check the inventory name validation
     if inventory_name not in ['model', 'thing', 'mapper']:
@@ -164,7 +176,7 @@ def bloom(inventory_name, alias=None):
 
 
 def chord(name=None, **settings):
-    """Add a chord"""
+    """Adds a chord"""
 
     def _chord(inventory):
         kclass_name = inventory.__name__
