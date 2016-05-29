@@ -47,10 +47,10 @@ def scan_submodules(package, recursive=True):
 class Connetor(object):
     """Route menu processor
 
-        :param prefix_path: the url route path prefix
-        :type prefix_path: stirng
-        :param mgr: the inventory manager for adding routes
-        :type mgr:  InventoryManager
+    :param prefix_path: the url route path prefix
+    :type prefix_path: string
+    :param mgr: the inventory manager for adding routes
+    :type mgr:  InventoryManager
     """
 
     def __init__(self, prefix_path, mgr):

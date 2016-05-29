@@ -87,7 +87,7 @@ def compose(module, url_prefix="", template_path="template"):
 
 
 def ui(template_name, name=None):
-    """Adds a ui module hanlder in manger
+    """Adds a ui module hanlder in manager
 
 
     :param template_name: the ui  cutom  template path.
