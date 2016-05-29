@@ -32,7 +32,6 @@ Medoly is a Web Framework, the design is inspried by Spring-boot and Emberjs.
         req_handler.write("Page not found!")
 
     if __name__ == "__main__":
-        kanon.set_debug()
         app = kanon.chant()
         app.listen(8888)
         tornado.ioloop.IOLoop.current().start()

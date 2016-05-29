@@ -31,7 +31,6 @@ def on_not_fonud(req_handler, code, **kw):
     req_handler.write("Page not found!")
 
 if __name__ == "__main__":
-    kanon.set_debug()
     app = kanon.chant()
     app.listen(8888)
     tornado.ioloop.IOLoop.current().start()
