@@ -5,13 +5,6 @@ Medoly
 
 Medoly is a Web Framework, the design is inspried by Spring-boot and Emberjs.
 
-#. mako(choco ) tempalte with  ui module styles
-#. mvc and mvvm
-#. all tornado  features
-#. auto dependency injection
-#. flexible config and bootstrap
-
-
 .. code:: python
 
     #!/usr/bin/env python
