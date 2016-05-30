@@ -64,14 +64,13 @@ class Cmd(object):
         o = opt.parse_args(sys.argv)
         return config_from_file(o.config)
 
-    def parse_cmd(self, help_doc, boots, config=None):
+    def parse_cmd(self, help_doc, boots):
         """Parse config and setting config for the terminal options
 
         Try load config from configuration file path, then override the file config by the command options .
 
         :param string help_doc: The OptionPaser help doc
         :param boots:  the boot  instances options
-        :param config:  if config  is not ``None``, it will use current config, otherwise create a new one.
 
         Returns:
             SelectConfig --  the dict like config
@@ -81,8 +80,7 @@ class Cmd(object):
         file_config = self.get_file_opt()
         self._set_defaults(file_config, boots)
         opt = self.options.parse_args()
-        if not config:
-            config = SelectConfig()
+        config = SelectConfig()
         config.update(file_config.config())
         config.update(vars(opt))
         return config
