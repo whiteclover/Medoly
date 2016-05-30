@@ -111,10 +111,10 @@ def ui(template_name, name=None):
     return _ui
 
 
-def menu(url_spec, settings=None, name=None, render=None):
+def menu(url_spec, settings=None, name=None):
     """Adds a url route in manager"""
     def __menu(handler):
-        InventoryManager.instance().add_route(url_spec, handler, settings, name, render)
+        InventoryManager.instance().add_route(url_spec, handler, settings, name)
         return handler
     return __menu
 
