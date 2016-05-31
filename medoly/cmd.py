@@ -81,7 +81,7 @@ class Cmd(object):
         self._set_defaults(file_config, boots)
         opt = self.options.parse_args()
         config = SelectConfig()
-        config.update(file_config.config())
+        config.update(file_config)
         config.update(vars(opt))
         return config
 

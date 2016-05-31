@@ -99,11 +99,16 @@ class SelectConfig(object):
 
     def update(self, config):
         """Update the settings in the current config"""
+        if isinstance(config, SelectConfig):
+            config = config.config()
         for k, v in config.items():
             self.set(k, v)
 
     def config(self):
         """Return real dict config """
+        return self._config
+
+    def __str__(self):
         return self._config
 
     def __contains__(self, key):

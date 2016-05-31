@@ -144,8 +144,8 @@ class InventoryManager(object):
             console = cmd.Cmd('/etc/%s/app.conf' % (self.app_name))
             self.boots = [boot() for boot in self.boots]
             config = console.parse_cmd(self.app_name, self.boots)
-            self.config.update(config.config())
-            LOGGER.info("config: %s", self.config.config())
+            self.config.update(config)
+            LOGGER.info("The appilcation config: %s", self.config)
         self.boot_config()
 
     def boot_config(self):
