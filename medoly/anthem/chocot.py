@@ -97,7 +97,7 @@ class ChocoTemplateLoader(Loader):
                                       default_filters=['decode.utf8'])
 
     def _create_template(self, name):
-        """The tonado temaple loader load the real tempalte
+        """The tornado temaple loader load the real tempalte
 
 
         :param name: the template path name
