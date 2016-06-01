@@ -20,4 +20,4 @@
 from ._config import ConfigFactory, SelectConfig
 
 
-__all__ = ('ConfigFactory', )
+__all__ = ('ConfigFactory', 'SelectConfig')

@@ -157,4 +157,4 @@ class InventoryMgrTest(unittest.TestCase):
         self.assertTrue(Index.thing == UserViewMinx.thing)
         self.assertTrue(isinstance(UserViewMinx.thing, BlablaService))
         self.assertTrue(isinstance(Index.userCache, UserCache))
-        self.assertTrue(isinstance(UserViewMinx(), anthem.Chord("UserViewMinx")))
+        self.assertTrue(isinstance(UserViewMinx(), muses.Chord("UserViewMinx")))
