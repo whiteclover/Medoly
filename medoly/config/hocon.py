@@ -14,13 +14,157 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-# Human-Optimized Config Object Notation
+"""Human-Optimized Config Object Notation"""
 
 
 import re
 
 from .errors import HoconParserException, HoconTokenizerException
-from ._config import Config
+from .select_config import SelectConfig
+
+
+class BaseConfig(object):
+    """Base Config
+
+    :param root:  the real hocon root value
+    :type root: HoconRoot
+    :raises: AttributeError
+    """
+
+    def __init__(self, root):
+
+        if root.value is None:
+            raise AttributeError(" error")
+        self.root = root.value  # HoconValue
+        self.substitutions = root.substitutions  # List<HoconSubstitution>
+
+    def get_node(self, path):
+        """Gets the path data node"""
+        keys = path.split(".")
+        current_node = self.root
+        if current_node is None:
+            raise KeyError("Doesn't exist the key:" % (path))
+        for key in keys:
+            current_node = current_node.get_childe_object(key)
+        return current_node
+
+    def __str__(self):
+        if self.root is None:
+            return ""
+        return str(self.root)
+
+    def to_dict(self):
+        """Converts to dict"""
+        return self.root.get()
+
+    def to_select_config(self):
+        """Converts to SelectConfig"""
+        return SelectConfig(self.root.get())
+
+    def has_path(self, path):
+        """Check  the config has the path node"""
+        return self.get_node(path) is not None
+
+
+class Config(BaseConfig):
+    """Hocon config"""
+
+    def get_bool(self, path, default=False):
+        """Gets the bool data value, defaults not found returns the default value"""
+        value = self.get_node(path)
+        if value is None:
+            return default
+        return value.get_bool()
+
+    def get_int(self, path, default=0):
+        """Gets the integer data value, defaults not found returns the default value"""
+        value = self.get_node(path)
+        if value is None:
+            return default
+        return value.get_int()
+
+    def get(self, path, default=None):
+        """Gets the  string data value, defaults not found returns the default value"""
+        value = self.get_node(path)
+        if value is None:
+            return default
+        return value.get_string()
+
+    get_string = get
+
+    def get_float(self, path, default=0.0):
+        """Gets the  float data value, defaults not found returns the default value"""
+        value = self.get_node(path)
+        if value is None:
+            return default
+        return value.get_float()
+
+    def get_bool_list(self, path):
+        """Gets the  bool data value, defaults not found returns the default value"""
+        value = self.get_node(path)
+
+        return value.get_bool_list()
+
+    def get_float_list(self, path):
+        """Gets the  float list data value"""
+        value = self.get_node(path)
+
+        return value.get_float_list()
+
+    def get_int_list(self, path):
+        """Gets the  int list data value"""
+        value = self.get_node(path)
+
+        return value.get_int_list()
+
+    def get_list(self, path):
+        """Gets the  list ojbect data value"""
+        value = self.get_node(path)
+
+        return value.get_list()
+
+    def get_value(self, path):
+        """Gets the  string data node, defaults not found returns the default value"""
+        return self.get_node(path)
+
+
+class PyConfig(BaseConfig):
+
+    def get(self, path, default=None):
+        """Get real type value"""
+        value = self.get_node(path)
+        if value is None:
+            return default
+        return value.get()
+
+
+class ConfigFactory(object):
+
+    @classmethod
+    def empty(cls):
+        """Creates a empty hocon config"""
+        return cls.parse("")
+
+    @classmethod
+    def parse(cls, hocon, func=None, pystyle=False):
+        """Parses and creates a hocon config from  text string"""
+        res = Parser.parse(hocon, func, pystyle)
+        configCls = PyConfig if pystyle else Config
+        return configCls(res)
+
+    @classmethod
+    def parse_file(cls, path, pystyle=False):
+        """Parses and creates a hocon confi from  the file path"""
+        with open(path) as f:
+            content = f.read()
+            return cls.parse(content, pystyle=pystyle)
+
+    @classmethod
+    def from_json(cls, jsonObj, pystyle=False):
+        """Creates hocon from json data"""
+        import json
+        text = json.dumps(jsonObj)
+        return cls.parse(text, pystyle)
 
 
 class HoconRoot(object):

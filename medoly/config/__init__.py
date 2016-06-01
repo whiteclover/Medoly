@@ -15,9 +15,10 @@
 # under the License.
 
 
-"""Human-Optimized Config Object Notation"""
+"""Config  Utils"""
 
-from ._config import ConfigFactory, SelectConfig
+from .hocon import ConfigFactory
+from .select_config import SelectConfig
 
 
 __all__ = ('ConfigFactory', 'SelectConfig')

@@ -14,7 +14,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-# Human-Optimized Config Object Notation
+"""Human-Optimized Config Object Notation"""
 
 
 class ConfigError(Exception):
