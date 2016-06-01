@@ -24,7 +24,7 @@ def Backend(key):
         key {str} -- backend key
 
     Returns:
-            backend -- instacne
+            backend  instacne
     """
     return __backend.get(key)
 
