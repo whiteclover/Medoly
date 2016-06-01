@@ -20,6 +20,7 @@
 
 import os.path
 import logging
+import re
 
 from choco.ui import UIContainer, UIModule
 from tornado.web import RequestHandler
@@ -45,6 +46,7 @@ class InventoryManager(object):
     :param template_mananger: the template mananger for custum template engine
     :param bool enable_cmd_parse: when set to False to disable the console command pasre.
             Defaults to   ``True`` enable the terminal command option.
+    :param url_pattern_manager: the url pattern process manager.
     """
 
     @staticmethod
@@ -70,7 +72,8 @@ class InventoryManager(object):
         else:
             raise TypeError("The mgr must be an instance of InventoryManager")
 
-    def __init__(self, handlercls=None, config=None, template_mananger=None, enable_cmd_parse=True):
+    def __init__(self, handlercls=None, config=None, template_mananger=None, enable_cmd_parse=True,
+                 url_pattern_manager=None):
 
         #: the current compose context url prefix
         self.compose_url_prefix = "/"
@@ -107,6 +110,9 @@ class InventoryManager(object):
 
         #: the choco template manager
         self.template_mananger = template_mananger or TempateMananger()
+
+        #: the url pattern processor
+        self.url_pattern_manager = url_pattern_manager or URLPatternManager()
 
         #: the custom chords
         self.chords = {}
@@ -341,7 +347,7 @@ class InventoryManager(object):
             classes = [self.defalut_handler] + self.get_class_bases(handler)
             handler = type(handler.__name__, tuple(
                 classes), dict(handler.__dict__))
-
+        url_spec = self.url_pattern_manager.url(url_spec)
         self.app_ctx.routes.append(anthem.url(url_spec, handler, settings, name))
 
     def get_class_bases(self, klass):
@@ -418,6 +424,64 @@ class Menu(object):
         self.settings = settings
         self.name = name
         self.render = render
+
+
+class URLPatternManager(object):
+    """The Url pattern processor
+
+    Examples::
+
+        @kanona.menu("/post/{post_id:int}")
+        class PostView(anthem.Handler):
+
+            def get(self, post_id):
+                post_id = int(post_id)
+                self.jsonify({"post_id": post_id})
+
+
+    """
+
+    """The defaults url regex expresion rule"""
+    RULE_RE = re.compile(
+        r"""\{([a-zA-Z_][a-zA-Z0-9_]*)(?::([a-zA-Z_][a-zA-Z0-9_]*|\(.*\)))?\}""")
+
+    """The defaults url patterns"""
+    DEFAULT_PATTERNS = {
+        'int': r'-?\d+',
+        'any': r'[^/]+',
+        'float': r'-?\d+\.\d+',
+    }
+
+    def __init__(self):
+        self.patterns = self.DEFAULT_PATTERNS.copy()
+
+    def add_pattern(self, name, pattern):
+        """Add a url rule"""
+        self.patterns[name] = pattern
+
+    def url(self, rule):
+        """Converts to url regex express rule"""
+        end = 0
+        ms = self.RULE_RE.finditer(rule)
+        pattern = ''
+        regex = False
+        if ms:
+            for m in ms:
+                regex = True
+                label, p = m.group(1), m.group(2) or 'any'
+                pp = self.patterns.get(p)
+                pattern += rule[end:m.start()]
+                if pp:
+                    pattern += '(?P<%s>%s)' % (label, pp)
+                else:
+                    pattern += '(?P<%s>%s)' % (label, p[1:-1])
+                end = m.end()
+
+        if regex:
+            pattern += rule[end:]
+            pattern = '%s' % pattern
+
+        return pattern
 
 
 class TempateMananger(object):
