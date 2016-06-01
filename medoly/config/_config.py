@@ -138,17 +138,15 @@ class BaseConfig(object):
 
     :param root:  the real hocon root value
     :type root: HoconRoot
-    :param fallback:  the fallback for handle hocon actions, defaults to None
     :raises: AttributeError
     """
 
-    def __init__(self, root, fallback=None):
+    def __init__(self, root):
 
         if root.value is None:
             raise AttributeError(" error")
         self.root = root.value  # HoconValue
         self.substitutions = root.substitutions  # List<HoconSubstitution>
-        self.fallback = fallback  # Config
 
     def get_node(self, path):
         """Gets the path data node"""
@@ -158,10 +156,6 @@ class BaseConfig(object):
             raise KeyError("Doesn't exist the key:" % (path))
         for key in keys:
             current_node = current_node.get_childe_object(key)
-            if current_node is None:
-                if self.fallback:
-                    return self.fallback.get_node(path)
-                return None
         return current_node
 
     def __str__(self):
@@ -176,17 +170,6 @@ class BaseConfig(object):
     def to_select_config(self):
         """Converts to SelectConfig"""
         return SelectConfig(self.root.get())
-
-    def with_fallback(self, fallback):
-        """Clones a new one config"""
-        if id(fallback) == id(self):
-            raise Exception("The fallback can't be self")
-        clone = deepcopy(self)
-        current = clone
-        while current.fallback:
-            current.fallback
-        current.fallback = fallback
-        return clone
 
     def has_path(self, path):
         """Check  the config has the path node"""
