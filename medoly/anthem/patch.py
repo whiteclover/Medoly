@@ -15,71 +15,76 @@
 # under the License.
 
 
+import traceback
+import datetime
+import decimal
+
+try:
+    import simplejson as json  # try external module
+except ImportError:
+    import json
+
+
 __all__ = ['patch_tornado']
 
-import traceback
+
+def as_json(obj):
+    """Returns the json serialize content
+    when the obj is a object isinstance and has as_json method, then it will call the method,
+    and dumps the return content. Also it can handle the datetime.date and decimal dumps
+    """
+    if hasattr(obj, '__json__') and callable(obj.__json__):
+        return obj.__json__()
+    if isinstance(obj, (datetime.date,
+                        datetime.datetime,
+                        datetime.time)):
+        return obj.isoformat()[:19].replace('T', ' ')
+    elif isinstance(obj, (int, long)):
+        return int(obj)
+    elif isinstance(obj, decimal.Decimal):
+        return str(obj)
+    else:
+        raise TypeError(repr(obj) + " is not JSON serializable")
+
+
+def json_encode(value, ensure_ascii=True, default=as_json):
+    """Returns the json serialize stream"""
+    return json.dumps(value, default=default, ensure_ascii=ensure_ascii)
+
+
+def write_error(self, status_code, **kwargs):
+    """Handle the last unanticipated exception. (Core)"""
+    try:
+        self.hooks.run("before_error_response",
+                       self, status_code, **kwargs)
+        handler = self.application.error_pages.get(str(status_code), None)
+        if handler:
+            handler(self, status_code, **kwargs)
+        else:
+            if self.settings.get("serve_traceback") and "exc_info" in kwargs:
+                # in debug mode, try to send a traceback
+                self.set_header('Content-Type', 'text/plain')
+                for line in traceback.format_exception(*kwargs["exc_info"]):
+                    self.write(line)
+                self.finish()
+            else:
+                self.finish("<html><title>%(code)d: %(message)s</title>"
+                            "<body>%(code)d: %(message)s</body></html>" % {
+                                "code": status_code,
+                                "message": self._reason,
+                            })
+    finally:
+        self.hooks.run("after_error_response", self, status_code, **kwargs)
+
+
+@property
+def hooks(self):
+    """Get Application request handler hooks"""
+    return self.application.hooks
 
 
 def patch_tornado():
-
-    import datetime
-    import decimal
-
-    try:
-        import simplejson as json  # try external module
-    except ImportError:
-        import json
-
-    def as_json(o):
-        """Returns the json serialize content
-        when the o is a object isinstance and has as_json method, then it will call the method, 
-        and dumps the return content. Also it can handle the datetime.date and decimal dumps
-        """
-        if hasattr(o, '__json__') and callable(o.__json__):
-            return o.__json__()
-        if isinstance(o, (datetime.date,
-                          datetime.datetime,
-                          datetime.time)):
-            return o.isoformat()[:19].replace('T', ' ')
-        elif isinstance(o, (int, long)):
-            return int(o)
-        elif isinstance(o, decimal.Decimal):
-            return str(o)
-        else:
-            raise TypeError(repr(o) + " is not JSON serializable")
-
-    def json_encode(value, ensure_ascii=True, default=as_json):
-        """Returns the json serialize stream"""
-        return json.dumps(value, default=default, ensure_ascii=ensure_ascii)
-
-    def write_error(self, status_code, **kwargs):
-        """Handle the last unanticipated exception. (Core)"""
-        try:
-            self.hooks.run("before_error_response",
-                           self, status_code, **kwargs)
-            handler = self.application.error_pages.get(str(status_code), None)
-            if handler:
-                handler(self, status_code, **kwargs)
-            else:
-                if self.settings.get("serve_traceback") and "exc_info" in kwargs:
-                    # in debug mode, try to send a traceback
-                    self.set_header('Content-Type', 'text/plain')
-                    for line in traceback.format_exception(*kwargs["exc_info"]):
-                        self.write(line)
-                    self.finish()
-                else:
-                    self.finish("<html><title>%(code)d: %(message)s</title>"
-                                "<body>%(code)d: %(message)s</body></html>" % {
-                                    "code": status_code,
-                                    "message": self._reason,
-                                })
-        finally:
-            self.hooks.run("after_error_response", self, status_code, **kwargs)
-
-    @property
-    def hooks(self):
-        """Get Application request handler hooks"""
-        return self.application.hooks
+    """Patch tornado"""
 
     from tornado import escape
     from tornado import web
