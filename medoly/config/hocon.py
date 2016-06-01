@@ -465,8 +465,9 @@ class Parser(object):
         finally:
             # no value was found, tokenizer is still at the same position
             if self._reader.index == start:
-                raise HoconParserException(str.format("Hocon syntax error: {0}\r{1}", self._reader.get_help_text_at_index(
-                    start), self.get_diagnostics_stacktrace()))
+                raise HoconParserException(
+                    str.format("Hocon syntax error: {0}\r{1}",
+                               self._reader.get_help_text_at_index(start), self.get_diagnostics_stacktrace()))
 
     def parse_trailing_whitespace(self, current):
         ws = self._reader.pull_space_or_tab()
@@ -717,10 +718,12 @@ class HoconTokenizer(Tokenizer):
         return Token.Key(sb.strip(), start, self.index - start)
 
     def is_unquoted_key(self):
-        return (not self.eof) and (not self.is_start_of_comment()) and (self.peek() not in self.NotInUnquotedKey)
+        return (not self.eof) and (not self.is_start_of_comment()) and \
+            (self.peek() not in self.NotInUnquotedKey)
 
     def is_unquoted_key_start(self):
-        return (not self.eof) and (not self.is_whitesplace()) and (not self.is_start_of_comment()) and (self.peek() not in self.NotInUnquotedKey)
+        return (not self.eof) and (not self.is_whitesplace()) and \
+            (not self.is_start_of_comment()) and (self.peek() not in self.NotInUnquotedKey)
 
     def is_whitesplace(self):
         return self.peek().isspace()
@@ -830,7 +833,8 @@ class HoconTokenizer(Tokenizer):
             return self.pull_substitution()
 
         raise HoconTokenizerException(str.format(
-            "Expected value: Null literal, Array, Quoted Text, Unquoted Text, Triple quoted Text, Object or End of array {0}", self.get_help_text_at_index(start)))
+            "Expected value: Null literal, Array, Quoted Text, Unquoted Text, Triple quoted Text, Object or End of array {0}",
+            self.get_help_text_at_index(start)))
 
     def is_substitution_start(self):
         return self.match("${")
@@ -857,7 +861,7 @@ class HoconTokenizer(Tokenizer):
         start = self.index
         sb = ''
         self.take(2)
-        while ((not self.eof) and self.is_unquoted_text()):
+        while (not self.eof) and self.is_unquoted_text():
             sb += self.take_one()
 
         self.take_one()
@@ -912,7 +916,8 @@ class HoconTokenizer(Tokenizer):
         return value
 
     def is_unquoted_text(self):
-        return (not self.eof) and (not self.is_whitesplace()) and (not self.is_start_of_comment()) and (self.peek() not in self.NotInUnquotedText)
+        return (not self.eof) and (not self.is_whitesplace()) and \
+            (not self.is_start_of_comment()) and (self.peek() not in self.NotInUnquotedText)
 
     def pull_simple_value(self):
         start = self.index
