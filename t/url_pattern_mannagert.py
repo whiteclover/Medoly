@@ -22,21 +22,21 @@ from medoly.kanon.manager import URLPatternManager
 class URLPatternManagerTest(unittest.TestCase):
 
     @classmethod
-    def setUpClass(self):
-        self.mgr = URLPatternManager()
+    def setUpClass(cls):
+        cls.mgr = URLPatternManager()
 
     def test_url_rule(self):
         # any
         url = self.mgr.url("/post/{post_id}")
-        self.assertEqual(url, "/post/(?P<post_id>[^/]+)")
+        self.assertEqual(url, r"/post/(?P<post_id>[^/]+)")
 
         # int
         url = self.mgr.url("/post/{post_id:int}")
-        self.assertEqual(url, "/post/(?P<post_id>-?\d+)")
+        self.assertEqual(url, r"/post/(?P<post_id>-?\d+)")
 
         # float
         url = self.mgr.url("/post/{post_id:float}")
-        self.assertEqual(url, "/post/(?P<post_id>-?\d+\.\d+)")
+        self.assertEqual(url, r"/post/(?P<post_id>-?\d+\.\d+)")
 
         # normal
         url = self.mgr.url("/post/1")
