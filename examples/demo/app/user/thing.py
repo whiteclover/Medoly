@@ -15,7 +15,7 @@
 # under the License.
 
 from medoly.kanon import bloom
-from medoly.anthem import Backend
+from medoly.muses import Backend
 
 
 @bloom("thing")

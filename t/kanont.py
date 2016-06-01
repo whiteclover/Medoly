@@ -16,7 +16,7 @@
 
 import unittest
 from medoly import kanon
-from medoly import anthem
+from medoly import anthem, muses
 from tornado.web import RequestHandler
 
 
@@ -52,9 +52,9 @@ class InventoryMgrTest(unittest.TestCase):
             pass
 
         kanon.chant()
-        self.assertTrue(isinstance(anthem.Thing("DefaultName"), DefaultNameThing))
-        self.assertTrue(isinstance(anthem.Thing("BlablaService"), BlablaService))
-        self.assertTrue(isinstance(anthem.Thing("user"), UserService))
+        self.assertTrue(isinstance(muses.Thing("DefaultName"), DefaultNameThing))
+        self.assertTrue(isinstance(muses.Thing("BlablaService"), BlablaService))
+        self.assertTrue(isinstance(muses.Thing("user"), UserService))
 
     def test_mount_mapper(self):
         # default class postfix name mapper
@@ -73,9 +73,9 @@ class InventoryMgrTest(unittest.TestCase):
             pass
 
         kanon.chant()
-        self.assertTrue(isinstance(anthem.Backend("DefaultName"), DefaultNameMapper))
-        self.assertTrue(isinstance(anthem.Backend("BlablaDao"), BlablaDao))
-        self.assertTrue(isinstance(anthem.Backend("user"), UserDao))
+        self.assertTrue(isinstance(muses.Backend("DefaultName"), DefaultNameMapper))
+        self.assertTrue(isinstance(muses.Backend("BlablaDao"), BlablaDao))
+        self.assertTrue(isinstance(muses.Backend("user"), UserDao))
 
     def test_mount_model(self):
         # default   model
@@ -90,8 +90,8 @@ class InventoryMgrTest(unittest.TestCase):
 
         kanon.chant()
 
-        self.assertEqual(anthem.Model("ModelName"), ModelName)
-        self.assertEqual(anthem.Model("user"), UserModel)
+        self.assertEqual(muses.Model("ModelName"), ModelName)
+        self.assertEqual(muses.Model("user"), UserModel)
 
     def test_add_route(self):
         # default   model

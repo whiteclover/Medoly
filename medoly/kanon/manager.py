@@ -24,6 +24,7 @@ import logging
 from choco.ui import UIContainer, UIModule
 from tornado.web import RequestHandler
 from medoly import anthem
+from medoly import muses
 from medoly.config import SelectConfig
 from medoly import cmd
 
@@ -278,11 +279,11 @@ class InventoryManager(object):
             else:
                 self.chords[chord_name] = chord
 
-        setattr(anthem.handler, "__chord", self.chords)
+        setattr(muses, "__chord", self.chords)
 
     def mount_model(self):
         """Sets Model"""
-        setattr(anthem.handler, '__model', self.models)
+        setattr(muses, '__model', self.models)
 
     def mount_mapper(self):
         """Initailize and regiest the backend"""
@@ -292,7 +293,7 @@ class InventoryManager(object):
             mappers[mapper_name] = mapper()
 
         self.mappers = mappers
-        setattr(anthem.handler, '__backend', mappers)
+        setattr(muses, '__backend', mappers)
 
     def mount_thing(self):
         """Initailize and regiest the thing"""
@@ -302,7 +303,7 @@ class InventoryManager(object):
             things[thing_name] = thing()
 
         self.things = things
-        setattr(anthem.handler, '__thing', things)
+        setattr(muses, '__thing', things)
 
     def mount_menu(self):
         """Intialize the url routes and handlers"""

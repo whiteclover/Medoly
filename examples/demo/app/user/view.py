@@ -15,10 +15,11 @@
 # under the License.
 
 from medoly.kanon import menu, Melos
+from medoly import anthem
 
 
 @menu("/user")
-class UserPage(object):
+class UserPage(anthem.Handler):
 
     def get(self):
         uid = int(self.get_argument("uid"))
@@ -26,7 +27,7 @@ class UserPage(object):
 
 
 @menu("/user.json")
-class UserJsonPage(object):
+class UserJsonPage(anthem.Handler):
 
     thing = Melos("User")
 

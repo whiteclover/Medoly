@@ -15,12 +15,12 @@
 # under the License.
 
 
-from medoly import kanon
+from medoly import kanon, anthem
 import tornado.ioloop
 
 
 @kanon.menu("/")
-class Index(object):
+class Index(anthem.Handler):
 
     def get(self):
         self.write("Hello World!")

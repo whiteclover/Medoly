@@ -122,50 +122,6 @@ class Handler(RequestHandler, FlashMessagesMixin):
         """
         pass
 
-    def Backend(self, key):
-        """Get backend by bean key
-
-        Arguments:
-            key {str} -- backend key
-
-        Returns:
-             backend instacne
-        """
-        return __backend.get(key)
-
-    def Thing(self, key):
-        """Get thing by bean key
-
-        Arguments:
-            key {str} -- thing key
-
-        Returns:
-             thing instacne
-        """
-        return __thing.get(key)
-
-    def Model(self, key):
-        """Get model by bean key
-
-        Arguments:
-            key {str} -- model key
-
-        Returns:
-             model instacne
-        """
-        return __model.get(key)
-
-    def Chord(self, key):
-        """Get chrod by bean key
-
-        Arguments:
-                key {str} -- chord key
-
-        Returns:
-                chord instacne
-        """
-        return __chord.get(key)
-
 
 class RenderHandler(Handler):
     """Render Hanlder class """
@@ -183,51 +139,3 @@ class RenderHandler(Handler):
         """Reder template
         """
         self.render(self.template)
-
-
-def Backend(key):
-    """Get backend by bean key
-
-    Arguments:
-        key {str} -- backend key
-
-    Returns:
-            backend -- instacne
-    """
-    return __backend.get(key)
-
-
-def Thing(key):
-    """Get thing by bean key
-
-    Arguments:
-        key {str} -- thing key
-
-    Returns:
-            thing instacne
-     """
-    return __thing.get(key)
-
-
-def Model(key):
-    """Get model by bean key
-
-    Arguments:
-            key {str} -- model key
-
-    Returns:
-            model instacne
-    """
-    return __model.get(key)
-
-
-def Chord(key):
-    """Get chord by bean key
-
-    Arguments:
-            key {str} -- chord key
-
-    Returns:
-            chord instacne
-    """
-    return __chord.get(key)
