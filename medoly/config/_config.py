@@ -179,8 +179,8 @@ class BaseConfig(object):
 
     def with_fallback(self, fallback):
         """Clones a new one config"""
-        if fallback == self:
-            raise Exception(" error")
+        if id(fallback) == id(self):
+            raise Exception("The fallback can't be self")
         clone = deepcopy(self)
         current = clone
         while current.fallback:
