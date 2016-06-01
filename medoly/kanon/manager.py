@@ -22,8 +22,8 @@ import os.path
 import logging
 import re
 
-from choco.ui import UIContainer, UIModule
 from tornado.web import RequestHandler
+from choco.ui import UIContainer, UIModule
 from medoly import anthem
 from medoly import muses
 from medoly.config import SelectConfig
@@ -274,7 +274,7 @@ class InventoryManager(object):
         self.menus.append(Menu(self.compose_url_prefix + url_spec, handler, settings, name, render))
 
     def mount_chord(self):
-        """Registe the melos for  the  chord class"""
+        """Register the melos for  the  chord class"""
 
         for chord_name in self.chords:
             chord, settings = self.chords.get(chord_name)
@@ -318,7 +318,7 @@ class InventoryManager(object):
                          menu.settings, menu.name, menu.render)
 
     def connect(self, url_spec, handler=None, settings=None, name=None, render=None):
-        """Add a route 
+        """Adds a route 
 
          if render is ``true``,  it is a simple template request handler.
 
@@ -441,16 +441,16 @@ class URLPatternManager(object):
 
     """
 
-    """The defaults url regex expresion rule"""
     RULE_RE = re.compile(
         r"""\{([a-zA-Z_][a-zA-Z0-9_]*)(?::([a-zA-Z_][a-zA-Z0-9_]*|\(.*\)))?\}""")
+    """The defaults url regex expresion rule"""
 
-    """The defaults url patterns"""
     DEFAULT_PATTERNS = {
         'int': r'-?\d+',
         'any': r'[^/]+',
         'float': r'-?\d+\.\d+',
     }
+    """The defaults url patterns"""
 
     def __init__(self):
         self.patterns = self.DEFAULT_PATTERNS.copy()
@@ -480,6 +480,8 @@ class URLPatternManager(object):
         if regex:
             pattern += rule[end:]
             pattern = '%s' % pattern
+        else:
+            pattern = rule
 
         return pattern
 
