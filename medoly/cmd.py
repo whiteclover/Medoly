@@ -29,7 +29,7 @@ LOG = logging.getLogger(__name__)
 
 
 class Null(object):
-    """Null instaince for parsing hocon and Option config
+    """Null instance for parsing hocon and Option config
     """
     pass
 
