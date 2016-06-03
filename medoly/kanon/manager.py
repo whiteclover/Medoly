@@ -184,8 +184,8 @@ class InventoryManager(object):
 
         :param Applaction app: the modely application
         """
-        LOGGER.debug("Starting init app!")
-        LOGGER.debug("Start init app hooks!")
+        LOGGER.debug("Starting Initialize app!")
+        LOGGER.debug("Starting initilaize app hooks!")
         # intialize app hooks
         for (point, callback, failsafe, priority, kwargs) in self.app_ctx.hooks:
             app.attach(point, callback, failsafe, priority, **kwargs)
