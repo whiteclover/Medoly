@@ -144,7 +144,7 @@ class InventoryManager(object):
         return self.create_app()
 
     def load_boot(self):
-        """load bott config"""
+        """Loads boot config"""
         # intialize console option parser
         if self.enable_cmd_parse:
             LOGGER.debug("Parsing console options")
@@ -152,7 +152,7 @@ class InventoryManager(object):
             self.boots = [boot() for boot in self.boots]
             config = console.parse_cmd(self.app_name, self.boots)
             self.config.update(config)
-            LOGGER.info("The appilcation config: %s", self.config)
+            LOGGER.info("The application config: %s", self.config)
         self.boot_config()
 
     def boot_config(self):
@@ -217,14 +217,14 @@ class InventoryManager(object):
         return settings
 
     def put_chord(self, chord_name, chord_class, **settings):
-        """Added a chord"""
+        """Adds a chord"""
         LOGGER.debug("Putting chord:{%s -> %r}", chord_name, chord_class)
         if chord_name in self.chords:
             raise InventoryExistError("chord for ```{}`` exists.".format(chord_name))
         self.chords[chord_name] = (chord_class, settings)
 
     def put_ui(self, ui_name, uicls):
-        """Added a ui"""
+        """Adds a ui"""
         LOGGER.debug("Putting ui:{%s -> %r}", ui_name, uicls)
         if ui_name in self.template_mananger.uis:
             raise InventoryExistError("UI for ```{}`` exists.".format(ui_name))
@@ -235,12 +235,12 @@ class InventoryManager(object):
         self.template_mananger.put_ui(ui_name, uicls)
 
     def put_boot(self, boot):
-        """Add a boot config"""
+        """Adds a boot config"""
         LOGGER.debug("Puting boot:%s", boot.__name__)
         self.boots.append(boot)
 
     def put_model(self, name, model):
-        """Add a model"""
+        """Adds a model"""
         LOGGER.debug("Puting model:{%s -> %r}", name, model)
         if name in self.models:
             raise InventoryExistError("Model for ```{}`` exists.".format(name))
@@ -248,7 +248,7 @@ class InventoryManager(object):
         self.models[name] = model
 
     def put_mapper(self, name, mapper):
-        """Add a mapper"""
+        """Adds a mapper"""
         LOGGER.debug("Puting mapper:{%s -> %r}", name, mapper)
         if name in self.mappers:
             raise InventoryExistError("Backend for ```{}`` exists.".format(name))
@@ -256,7 +256,7 @@ class InventoryManager(object):
         self.mappers[name] = mapper
 
     def put_thing(self, name, thing):
-        """Add a thing"""
+        """Adds a thing"""
         LOGGER.debug("Puting thing:{%s -> %r}", name, thing)
         if name in self.things:
             raise InventoryExistError("Thing for ```{}`` exists.".format(name))
@@ -264,12 +264,12 @@ class InventoryManager(object):
         self.things[name] = thing
 
     def add_template_path(self, template_path):
-        """Added a template path in template manager"""
+        """Adds a template path in template manager"""
         LOGGER.debug("Adding template path: '%s'", template_path)
         self.template_mananger.add_template_path(template_path)
 
     def add_route(self, url_spec, handler=None, settings=None, name=None, render=None):
-        """Add a url route"""
+        """Adds a url route"""
 
         self.menus.append(Menu(self.compose_url_prefix + url_spec, handler, settings, name, render))
 
@@ -359,7 +359,7 @@ class InventoryManager(object):
             return list(bases)
 
     def load_meloes(self, kclass):
-        """Load inventory for the kclasss
+        """Loads the inventory for the kclasss
 
         Examples:
 
