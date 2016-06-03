@@ -30,6 +30,7 @@ __all__ = ['patch_tornado']
 
 def as_json(obj):
     """Returns the json serialize content
+
     when the obj is a object isinstance and has as_json method, then it will call the method,
     and dumps the return content. Also it can handle the datetime.date and decimal dumps
     """
