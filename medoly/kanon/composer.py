@@ -72,4 +72,4 @@ class Connetor(object):
         self.mgr.add_menu(self.prefix_path + url_spec, *args, **kw)
 
     def __exit__(self, exc_type, exc_value, traceback):
-        pass
+        self.mgr = None
