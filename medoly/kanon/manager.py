@@ -328,7 +328,7 @@ class InventoryManager(object):
                          menu.settings, menu.name, menu.render)
 
     def connect(self, url_spec, handler=None, settings=None, name=None, render=None):
-        """Adds a route 
+        """Adds a route
 
          if render is ``true``,  it is a simple template request handler.
 
@@ -340,10 +340,11 @@ class InventoryManager(object):
         :type render: string, optional
         :raises: ValueError
         """
-
+        # Preprocess url rule
+        url_spec = self.url_pattern_manager.url(url_spec)
         #: if render is ``true``,  it is a simple template request handler
         if render:
-            self.app_ctx.routes.append((url_spec, anthem.RenderHandler, dict(template=render)))
+            self.app_ctx.routes.append(anthem.url(url_spec, anthem.RenderHandler, dict(template=render), name))
             return
 
         if handler is None:
@@ -357,7 +358,7 @@ class InventoryManager(object):
             classes = [self.defalut_handler] + self.get_class_bases(handler)
             handler = type(handler.__name__, tuple(
                 classes), dict(handler.__dict__))
-        url_spec = self.url_pattern_manager.url(url_spec)
+
         self.app_ctx.routes.append(anthem.url(url_spec, handler, settings, name))
 
     def get_class_bases(self, klass):
