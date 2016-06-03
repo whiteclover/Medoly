@@ -21,6 +21,7 @@
 import os.path
 import logging
 import re
+import types
 
 from tornado.web import RequestHandler
 from choco.ui import UIContainer, UIModule
@@ -235,9 +236,18 @@ class InventoryManager(object):
         self.template_mananger.put_ui(ui_name, uicls)
 
     def put_boot(self, boot):
-        """Adds a boot config"""
+        """Adds a boot config
+
+        If the boot is a function, then call the function gets a chain config boots, then add them in manager boot list,
+        else appends it to manager boot  list.
+        """
         LOGGER.debug("Puting boot:%s", boot.__name__)
-        self.boots.append(boot)
+        if isinstance(boot, types.FunctionType):
+            boots = boot()
+            for boot_config in boots:
+                self.boots.append(boot_config)
+        else:
+            self.boots.append(boot)
 
     def put_model(self, name, model):
         """Adds a model"""
