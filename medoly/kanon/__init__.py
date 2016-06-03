@@ -32,6 +32,7 @@ def chant():
 
 
 def hook(point, failsafe=None, priority=None, **kwargs):
+    """Add a hook point for application"""
 
     def _hook(func):
         InventoryManager.instance().attach(point, func, failsafe, priority, kwargs)
@@ -39,6 +40,7 @@ def hook(point, failsafe=None, priority=None, **kwargs):
 
 
 def error_page(status_code):
+    """Add an error page handler for the application"""
 
     def _error_page(func):
         InventoryManager.instance().error_page(status_code, func)
@@ -46,6 +48,25 @@ def error_page(status_code):
 
 
 def boot():
+    """Add a boot config or  boot configs
+
+    Examples::
+
+    .. code-block:: python
+
+        # add a config class
+        @kanon.boot()
+        class SiteConfig(object):
+            def config(self, options):
+                group = options.group("Service settings")
+                _ = group.define
+                _('-H', '--server.host', default='localhost', help='The host of the http server (default %(default)r)')
+
+        # add a more than one boot config class at once
+        @kanon.boot()
+        def boots():
+            return [BlalaConfig, DemoConfig]
+    """
     def _boot(kclass):
         InventoryManager.instance().put_boot(kclass)
         return kclass
