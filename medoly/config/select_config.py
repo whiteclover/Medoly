@@ -105,7 +105,7 @@ class SelectConfig(object):
         return self._config
 
     def __str__(self):
-        return self._config
+        return str(self._config)
 
     def __contains__(self, key):
         """Check a key in the config"""
