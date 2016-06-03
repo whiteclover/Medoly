@@ -26,7 +26,7 @@ from .flash import FlashMessagesMixin
 
 
 class Handler(RequestHandler, FlashMessagesMixin):
-    """Medoly Request Hander class
+    """Medoly Request Handler class
 
     Extends:
         RequestHandler
@@ -118,13 +118,13 @@ class Handler(RequestHandler, FlashMessagesMixin):
         self.hooks.run('on_end_request', self)
 
     def on_end_request(self):
-        """Custom request hanlder hook on end request
+        """Custom request handler hook on end request
         """
         pass
 
 
 class RenderHandler(Handler):
-    """Render Hanlder class """
+    """Render Handler class """
 
     def initialize(self, template):
         """Initialize and bind tempalte
@@ -136,6 +136,6 @@ class RenderHandler(Handler):
         self.template = template
 
     def get(self, *args):
-        """Reder template
+        """Render template
         """
         self.render(self.template)

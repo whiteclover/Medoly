@@ -44,7 +44,7 @@ class DemoService(object):
             self.shutdown()
 
     def shutdown(self):
-        """stop the servie"""
+        """stop the service"""
         tornado.ioloop.IOLoop.instance().stop()
 
 
