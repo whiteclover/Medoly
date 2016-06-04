@@ -16,17 +16,17 @@ and respond with a JSON representation of a greeting:
 
 .. code-block:: json
 
-    {"id":1,"content":"Hello, World!"}
+    {"id":1,"content":"Hello, Guest!"}
 
 You can customize the greeting with an optional name parameter in the query string::
 
     http://localhost:8080/greeting?name=User
 
-The name parameter value overrides the default value of "World" and is reflected in the response:
+The name parameter value overrides the default value of "Guest" and is reflected in the response:
 
 .. code-block:: json
 
-    {"id":1,"content":"Hello, User!"}
+    {"id":1,"content":"Hello, Guest!"}
 
 
 Create a model class
