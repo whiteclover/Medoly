@@ -48,7 +48,7 @@ class GreetingService(object):
             self.shutdown()
 
     def shutdown(self):
-        """stop the service"""
+        """Stop the service"""
         tornado.ioloop.IOLoop.instance().stop()
 
 

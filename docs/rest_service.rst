@@ -6,7 +6,7 @@ This guide walks you through the process of creating a "hello world" RESTful web
 
 
 .. note::
-    The source code in the meodly ``exmaples/rest_service`` directory.
+    The source code in the medoly ``exmaples/rest_service`` directory.
 
 What you’ll build
 ===============
@@ -76,7 +76,7 @@ examples/rest_service/greeting/model.py
 
 
 .. note::
-    As you see in steps below, modely uses  the jsonify method the make a json response, and the object has __json__ method will invoke to get json data.
+    As you see in steps below, modely uses  the jsonify method the make a json response, and the object has ``__json__`` method will be invoked to get json data.
 
 Create a resource handler
 =========================
@@ -149,7 +149,7 @@ exmaples/rest_service/service.py
                 self.shutdown()
 
         def shutdown(self):
-            """stop the service"""
+            """Stop the service"""
             tornado.ioloop.IOLoop.instance().stop()
 
 
@@ -157,7 +157,7 @@ exmaples/rest_service/service.py
 
         GreetingService().startup()
 
-In constuct method, gets the manager to set the app name, then compose scan the greeting module , call ``chant`` method to build a anthem appliction.
+In ``construct`` method, gets the manager to set the app name, then ``compose`` method scans the greeting module , calls ``chant`` method to build a anthem application.
 
 In ``startup`` method try load server setting for appliction config then bootstrap the http service through the current default ``IOLoop`` instance. 
 
