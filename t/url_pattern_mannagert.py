@@ -42,8 +42,15 @@ class URLPatternManagerTest(unittest.TestCase):
         url = self.mgr.url("/post/1")
         self.assertEqual(url, "/post/1")
 
+    def test_not_match_rule(self):
         # tornado regex rule
         url = self.mgr.url("/post/(?P<post_id>[^/]+)")
         self.assertEqual(url, "/post/(?P<post_id>[^/]+)")
         url = self.mgr.url("/post/([^/]+)")
         self.assertEqual(url, "/post/([^/]+)")
+
+        # not match rule
+        url = self.mgr.url("/post/{123badname}")
+        self.assertEqual(url, "/post/{123badname}")
+        url = self.mgr.url("/post/{123badname:int}")
+        self.assertEqual(url, "/post/{123badname:int}")
