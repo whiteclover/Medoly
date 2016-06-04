@@ -44,10 +44,6 @@ class Handler(RequestHandler, FlashMessagesMixin):
         """
         pass
 
-    def get_current_user(self):
-        """Override to determine the current user from, e.g., a cookie."""
-        return None
-
     @property
     def current_user(self):
         """The authenticated user for this request.
