@@ -4,6 +4,10 @@ Building a RESTful Web Service
 
 This guide walks you through the process of creating a "hello world" RESTful web service with medoly.
 
+
+.. note::
+    The source code in the meodly ``exmaples/rest_service`` directory.
+
 What you’ll build
 ===============
 
@@ -53,7 +57,7 @@ The id field is a unique identifier for the greeting, and content is the textual
 
 To model the greeting representation, you create a model class. Provide a plain python object with fields, constructors, and json  hook method to get json data:
 
-examples/gretting/app/model.py
+examples/rest_service/greeting/model.py
 
 
 .. code-block:: python
@@ -112,7 +116,7 @@ A key difference between a traditional tornado ``RequestHandler``， the ``write
 Creating the application bootstrap service
 ===================================
 
-exmaples/rest_service/greeting/view.py
+exmaples/rest_service/service.py
 
 .. code-block:: python
 
