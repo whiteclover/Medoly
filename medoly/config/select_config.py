@@ -39,6 +39,8 @@ class SelectConfig(object):
     def __len__(self):
         return len(self._config)
 
+    __nonzero__ = __len__
+
     def set(self, key, value):
         """Set a chain key  value
 
