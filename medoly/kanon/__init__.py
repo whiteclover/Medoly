@@ -48,9 +48,9 @@ def error_page(status_code):
 
 
 def boot():
-    """Add a boot config or  boot configs
+    """Add a boot config or boot configs
 
-    Examples::
+    Examples:
 
     .. code-block:: python
 

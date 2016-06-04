@@ -18,8 +18,7 @@
 
 
 class Melos(object):
-    """ Melos
-
+    """Melos
 
     Loads inventory for the class, dependecy injection when the inventory manager  called ``load`` method
 

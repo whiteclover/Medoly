@@ -23,7 +23,7 @@ LOGGER = logging.getLogger("kanon.composer")
 
 
 def scan_submodules(package, recursive=True):
-    """ Import and scan all submodules of a module, recursively, including sub packages,
+    """Import and scan all submodules of a module, recursively, including sub packages,
 
     :param package: package (name or actual module)
     :type package: str | module
