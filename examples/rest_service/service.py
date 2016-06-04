@@ -20,22 +20,28 @@ import logging
 import tornado.ioloop
 
 
-LOG = logging.getLogger('app')
+LOG = logging.getLogger('greeting')
 
 
-class DemoService(object):
-    """ Demo boot service"""
+class GreetingService(object):
+    """ Greeting boot service"""
 
     def __init__(self):
-        kanon.compose("app")
+        """Get the manager setting the app name, then compose scan a app module , 
+        call ``chant`` method to build a anthem appliction.
+        """
+        mgr = kanon.inventory_manager()
+        mgr.set_app_name("Greeting")
+        kanon.compose("greeting")
         self.app = kanon.chant()
 
     def startup(self):
         """Start up service"""
         try:
-            port = self.app.config.get("server.port", 8888)
+            # try get server config for app config
+            port = self.app.config.get("server.port", 8080)
             host = self.app.config.get("server.host", 'localhost')
-            LOG.info("Starting demo on %s:%s", host, port)
+            LOG.info("Starting Greeting on %s:%s", host, port)
             self.app.listen(port, host)
             tornado.ioloop.IOLoop.instance().start()
         except KeyboardInterrupt as e:
@@ -48,4 +54,4 @@ class DemoService(object):
 
 if __name__ == "__main__":
 
-    DemoService().startup()
+    GreetingService().startup()
