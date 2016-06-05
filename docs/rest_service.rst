@@ -6,7 +6,7 @@ This guide walks you through the process of creating a "hello world" RESTful web
 
 
 .. note::
-    The source code in the medoly ``exmaples/rest_service`` directory.
+    The source code in the medoly ``examples/rest_service`` directory.
 
 What you’ll build
 ===============
@@ -30,7 +30,7 @@ The name parameter value overrides the default value of "Guest" and is reflected
 
 .. code-block:: json
 
-    {"id":1,"content":"Hello, Guest!"}
+    {"id":1,"content":"Hello, User!"}
 
 
 Create a model class
@@ -83,7 +83,7 @@ Create a resource handler
 
 Now we ceating a anthem handler class  for handler the restfull api request.
 
-exmaples/rest_service/greeting/view.py
+examples/rest_service/greeting/view.py
 
 .. code-block:: python
 
@@ -116,7 +116,7 @@ A key difference between a traditional tornado ``RequestHandler``， the ``write
 Creating the application bootstrap service
 ===================================
 
-exmaples/rest_service/service.py
+examples/rest_service/service.py
 
 .. code-block:: python
 
@@ -157,7 +157,7 @@ exmaples/rest_service/service.py
 
         GreetingService().startup()
 
-In ``construct`` method, gets the manager to set the app name, then ``compose`` method scans the greeting module , calls ``chant`` method to build a anthem application.
+In ``__init__``  construct method, gets the manager to set the app name, then ``compose`` method scans the greeting module , calls ``chant`` method to build a anthem application.
 
 In ``startup`` method try load server setting for appliction config then bootstrap the http service through the current default ``IOLoop`` instance. 
 

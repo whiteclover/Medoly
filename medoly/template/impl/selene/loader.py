@@ -34,7 +34,7 @@ from tornado.template import Template, _DEFAULT_AUTOESCAPE
 class SeleneLoader(object):
     """The Selene Template Loader
 
-     :param directories: the  template root paths
+    :param directories: the  template root paths
     :type directories: lst[string]
     :param filesystem_checks: the ui template container (default: {None})
     :type filesystem_checks: bool, optional
