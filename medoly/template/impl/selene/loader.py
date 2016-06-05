@@ -28,7 +28,7 @@ except:
 from . import errors
 
 from mako import util
-from tornado.template import Template
+from tornado.template import Template, _DEFAULT_AUTOESCAPE
 
 
 class SeleneLoader(object):
@@ -42,13 +42,26 @@ class SeleneLoader(object):
     :type collection_size: number, optional
     :param UIContainer ui_container: when ``True`` the  loader will check the template file
             and reload the last modify template(default: {False})
+    :param string autoescape: The name of a function in the template namespace, such
+            as "xhtml_escape", or ``None`` to disable autoescaping by default.
+    :param dict namespace: A dictionary to be added to the default template
+            namespace, or ``None``.
+    :param string whitespace: A string specifying default behavior for
+            whitespace in templates; see `filter_whitespace` for options.
+            Default is "single" for files ending in ".html" and ".js" and
+            "all" for other files.
     """
 
-    def __init__(self, directories, ui_container=None, filesystem_checks=True, collection_size=-1):
+    def __init__(self, directories, ui_container=None, filesystem_checks=True, collection_size=-1,
+                 autoescape=_DEFAULT_AUTOESCAPE, namespace=None, whitespace=None):
         self.directories = [posixpath.normpath(d) for d in
                             util.to_list(directories, ())
                             ]
 
+        self.autoescape = autoescape
+        self.namespace = namespace or {}
+        self.whitespace = whitespace
+        self.templates = {}
         self.filesystem_checks = filesystem_checks
         self.collection_size = collection_size
         self.ui_container = ui_container
@@ -56,10 +69,10 @@ class SeleneLoader(object):
             self.ui_container.set_loader(self)
 
         #: the basic template namespace
-        self.namespace = {
+        self.namespace.update({
             "_loader": self,
             "handler": None,
-            "__ttmodule": ui_render}
+            "__ttmodule": ui_render})
 
         if collection_size == -1:
             self.collection = {}

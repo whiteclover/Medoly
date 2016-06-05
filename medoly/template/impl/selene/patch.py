@@ -19,13 +19,20 @@ from tornado.template import _Expression
 
 
 class _Module(_Expression):
+    """The Module  Expression
+
+    Exmaple::
+
+        {% module UserView(uid) $}
+
+    """
 
     def __init__(self, expression, line):
-        parts = self.expression.split("(", 1)
+        parts = expression.split("(", 1)
         name = parts[0]
         args = parts[1]
-        expression = name + ", " + args
-        super(_Module, self).__init__("__ttmoude(handler, _loader" + expression, line, raw=True)
+        expression = "'" + name + "', " + args
+        super(_Module, self).__init__("__ttmodule(_loader, handler, " + expression, line, raw=True)
 
 
 def patch_tornado_template():

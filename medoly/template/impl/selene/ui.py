@@ -24,8 +24,18 @@ from . import errors
 
 
 class UIModule(object):
+    """UIModule for selene template module expression
 
-    default_template = ""
+
+    :param handler: The current request handler, the subclass of RequestHandler.
+    :param loader: The template loader
+    :param template: The template path for ui render, Defaults using default_template.
+    :type template: string, optional
+    :raises: UINestedCallException, when nested call ui in module render.
+    """
+
+    default_template = "index.html"
+    """Default template for render module"""
 
     def __init__(self, handler, loader, template=None):
         self.loader = loader
@@ -38,10 +48,14 @@ class UIModule(object):
 
     @property
     def current_user(self):
+        """Get current handler user"""
         return self.handler.current_user
 
     def initialize(self):
-        """Initialize the setting before render"""
+        """Initialize the setting before render
+
+        Implements it in subclass to hook initialize settings.
+        """
         pass
 
     def _execute(self, *args, **kw):
@@ -111,7 +125,7 @@ class UIContainer(object):
                 directory = directory.replace(os.path.sep, posixpath.sep)
                 srcfile = posixpath.normpath(posixpath.join(directory, u))
                 if os.path.isfile(srcfile):
-                    return self.loader.load(srcfile, uiuri)
+                    return self.loader._create_template(srcfile, uiuri)
                 else:
                     raise errors.TopLevelLoaderException(
                         "Cant locate ui template for uri %r" % uiuri)

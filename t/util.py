@@ -16,6 +16,9 @@
 
 import os.path
 
-
+#:  test conf path
 conf_path = os.path.join(os.path.dirname(__file__), "conf", "test.conf")
 yaml_conf = os.path.join(os.path.dirname(__file__), "conf", "test.yaml")
+
+#: template path conf
+template_path = os.path.join(os.path.dirname(__file__), "template")

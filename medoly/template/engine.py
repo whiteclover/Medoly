@@ -29,9 +29,10 @@ class TemplateEngine(object):
         self.module_path = "medoly.template.impl." + self.name
 
         #:  template loader, ui container, ui module class
-        classes = _import_template_classes(self.module_path, name)
-        self.loader_cls = classes[0]
-        if self.loader_cls is None:
+        try:
+            classes = _import_template_classes(self.module_path, name)
+            self.loader_cls = classes[0]
+        except ImportError:
             raise NotImplementedError("Cant find the template engine adapter for '{}'".format(name))
         self.ui_container_cls = classes[1]
         self.ui_support = False
@@ -40,7 +41,7 @@ class TemplateEngine(object):
             self.ui_module_cls = classes[2]
             self.ui_support = True
 
-    def create_template_loader(self, directories, ui_container, settings):
+    def create_template_loader(self, directories, ui_container=None, settings={}):
         """Create template loader
 
         :param directories: the template root paths
