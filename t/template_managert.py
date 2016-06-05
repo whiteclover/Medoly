@@ -17,7 +17,7 @@
 import unittest
 
 from medoly.kanon.manager import TempateMananger, InventoryManager
-from medoly.anthem import chocot
+from medoly.template.impl import chocot
 
 
 class TemplateMangagerTest(unittest.TestCase):
@@ -46,5 +46,8 @@ class TemplateMangagerTest(unittest.TestCase):
         self.mgr.add_ui_path("ui_path")
         self.mgr.put_ui("ui", Ui)
 
+        self.mgr.load_template_engine("choco")
+        self.assertEqual(self.mgr.ui_support, True)
+
         engine = self.mgr.create_template_loader(InventoryManager.instance())
-        self.assertTrue(isinstance(engine, chocot.ChocoTemplateLoader))
+        self.assertTrue(isinstance(engine, chocot.ChocoLoader))
