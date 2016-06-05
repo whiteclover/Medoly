@@ -501,7 +501,7 @@ class TempateMananger(object):
         self.uis = {}
         self.__template_engine = template_engine
 
-    def load_template_egine(self, engine_name):
+    def load_template_engine(self, engine_name):
         """Load and create template engine info
         If the template engine had loaded, it will skip reload a new engine.
 
@@ -526,8 +526,8 @@ class TempateMananger(object):
         :param mgr: InventoryManger
         """
         namespace = {}
-        template_engine = mgr.config.get("template_engine", "jina2")
-        self.load_template_egine(template_engine)
+        template_engine = mgr.config.get("template_engine", "jinja2")
+        self.load_template_engine(template_engine)
         template_settings = mgr.config.get("template_setting", {})
         namespace.update(template_settings)
         ui_container = None
