@@ -511,7 +511,7 @@ class TempateMananger(object):
         :type engine_name: [type]
         """
         if self.__template_engine:
-            LOGGER.warning("The template engine ``%s`` had loaded", engine_name)
+            LOGGER.warning("The template engine ``%s`` has loaded", engine_name)
         else:
             LOGGER.info("Creating template engine ``%s``.", engine_name)
             self.__template_engine = TemplateEngine(engine_name)
@@ -538,7 +538,9 @@ class TempateMananger(object):
 
     @property
     def ui_support(self):
-        return self.__template_engine.ui_support
+        """Check the template engine is support ui module featue"""
+        if self.__template_engine is not None:
+            return self.__template_engine.ui_support
 
     def load_ui_container(self, mgr):
         """Loads ui container"""

@@ -26,7 +26,6 @@ except:
 
 
 from . import errors
-try:
 
 from mako import util
 from tornado.template import Template
@@ -41,7 +40,8 @@ class SeleneLoader(object):
     :type filesystem_checks: bool, optional
     :param collection_size: the collection template  size, defaults to -1  no limit size.
     :type collection_size: number, optional
-    :param UIContainer ui_container: when ``True`` the choco loader will check the template file and reload the last modify template(default: {False})
+    :param UIContainer ui_container: when ``True`` the  loader will check the template file
+            and reload the last modify template(default: {False})
     """
 
     def __init__(self, directories, ui_container=None, filesystem_checks=True, collection_size=-1):
@@ -55,6 +55,7 @@ class SeleneLoader(object):
         if self.ui_container:
             self.ui_container.set_loader(self)
 
+        #: the basic template namespace
         self.namespace = {
             "_loader": self,
             "handler": None,

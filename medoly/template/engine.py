@@ -32,7 +32,7 @@ class TemplateEngine(object):
         classes = _import_template_classes(self.module_path, name)
         self.loader_cls = classes[0]
         if self.loader_cls is None:
-            raise NotImplementedError("Cant find the template engine adpater for {}".format(name))
+            raise NotImplementedError("Cant find the template engine adapter for '{}'".format(name))
         self.ui_container_cls = classes[1]
         self.ui_support = False
 
