@@ -15,17 +15,13 @@
 # under the License.
 
 
-from .patch import patch_tornado
+""""""
 
-patch_tornado()
-
-
-from .handler import Handler, RenderHandler, url
-from .app import Application
+from .patch import patch_tornado_template
+from .loader import SeleneLoader
+from .ui import UIContainer, UIModule
 
 
-__all__ = ('Handler',
-           'RenderHandler',
-           'url',
-           'Application',
-           )
+patch_tornado_template()
+
+__all__ = ("UIContainer", "SeleneLoader", "UIModule")

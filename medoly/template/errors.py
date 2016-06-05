@@ -15,17 +15,9 @@
 # under the License.
 
 
-from .patch import patch_tornado
-
-patch_tornado()
-
-
-from .handler import Handler, RenderHandler, url
-from .app import Application
+class EngineError(Exception):
+    pass
 
 
-__all__ = ('Handler',
-           'RenderHandler',
-           'url',
-           'Application',
-           )
+class NotInstallTemplateAdapterError(EngineError):
+    pass

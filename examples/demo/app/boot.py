@@ -37,15 +37,16 @@ class SiteBoot(object):
 
 
 @boot()
-class ChocotBoot(object):
+class TemplateBoot(object):
     """Choco template options"""
 
     def config(self, options):
-        group = options.group("choco template settings")
+        group = options.group("Template settings")
         _ = group.define
-        _('--choco.cache_path', default=None,
+        _("--template_engine", default="choco", help="Template engine name")
+        _('--template_setting.module_directory', default=None,
           help='choco template module cache path: (default %(default)r)')
-        _('--choco.filesystem_checks', action='store_true', default=False,
+        _('--template_setting.filesystem_checks', action='store_true', default=False,
           help='choco filesystem checks (default %(default)r)')
 
 

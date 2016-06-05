@@ -15,17 +15,21 @@
 # under the License.
 
 
-from .patch import patch_tornado
-
-patch_tornado()
-
-
-from .handler import Handler, RenderHandler, url
-from .app import Application
+class SeleneException(Exception):
+    pass
 
 
-__all__ = ('Handler',
-           'RenderHandler',
-           'url',
-           'Application',
-           )
+class TemplateLoaderException(SeleneException):
+    pass
+
+
+class TopLevelLoaderException(TemplateLoaderException):
+    pass
+
+
+class UINotFoundException(SeleneException):
+    pass
+
+
+class UINestedCallException(SeleneException):
+    pass

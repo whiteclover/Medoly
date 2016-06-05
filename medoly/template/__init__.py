@@ -13,19 +13,3 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
-
-
-from .patch import patch_tornado
-
-patch_tornado()
-
-
-from .handler import Handler, RenderHandler, url
-from .app import Application
-
-
-__all__ = ('Handler',
-           'RenderHandler',
-           'url',
-           'Application',
-           )

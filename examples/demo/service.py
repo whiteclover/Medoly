@@ -28,7 +28,13 @@ class DemoService(object):
 
     def __init__(self):
         kanon.compose("app")
+        self.log_config("demo")
         self.app = kanon.chant()
+
+    def log_config(self, tag):
+        """log config"""
+        format = tag + '[%%(process)d]: [%%(levelname)s] %s%%(message)s' % '%(name)s - '
+        logging.basicConfig(format='[%(asctime)s] ' + format, datefmt='%Y%m%d %H:%M:%S', level=logging.DEBUG)
 
     def startup(self):
         """Start up service"""

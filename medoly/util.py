@@ -16,6 +16,8 @@
 
 class lazy_attr(object):
 
+    """Lazy property"""
+
     def __init__(self, wrapped):
         self.wrapped = wrapped
         try:
@@ -31,5 +33,15 @@ class lazy_attr(object):
         return val
 
 
+def get_class_bases(klass):
+    """Getting the base classes excluding the type<object>"""
+    bases = klass.__bases__
+    if len(bases) == 1 and bases[0] == object:
+        return []
+    else:
+        return list(bases)
+
+
 def with_metaclass(meta, bases=(object,)):
+    """Mete class"""
     return meta("NewBase", bases, {})

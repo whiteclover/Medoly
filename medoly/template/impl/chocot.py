@@ -64,15 +64,50 @@ ui/post.html:
 
 """
 
-from choco.lookup import TemplateLookup
-from tornado.template import Loader
+
+from medoly.template.errors import (
+    NotInstallTemplateAdapterError,
+)
 
 
-class ChocoTemplateLoader(Loader):
+try:
+    from choco.lookup import TemplateLookup
+    from choco.template import Template
+    from choco import errors
+
+    from choco.ui import UIContainer, UIModule
+except ImportError:
+    raise NotInstallTemplateAdapterError("Must install choco module fistly, try pip install choco")
+
+from medoly.util import lazy_attr
+
+# Fixed template render
+Template.generate = Template.render
+
+
+@lazy_attr
+def handler(self):
+    """Try get the request handler"""
+    _handler = self.get("handler", None)
+    if _handler is None:
+        raise errors.UINestedCallException("Cant call an ui module in an ui module template: {}".format(self.template))
+    return _handler
+
+
+@property
+def current_user(self):
+    """Get current user"""
+    return self.handler.current_user
+
+UIModule.handler = handler
+UIModule.current_user = current_user
+
+
+__all__ = ("UIContainer", "UIModule", "ChocoLoader")
+
+
+class ChocoLoader(object):
     """Choco Tempatle Engine Loader
-
-    Extends:
-        Loader
 
 
     :param  list[str] directories: the choco template root paths
@@ -85,16 +120,18 @@ class ChocoTemplateLoader(Loader):
     """
 
     def __init__(self, directories, ui_container=None, module_directory=None, filesystem_checks=False, **kwargs):
-
-        super(ChocoTemplateLoader, self).__init__(directories[0], **kwargs)
-
         self._lookup = TemplateLookup(directories=directories,
                                       ui_container=ui_container,
                                       filesystem_checks=filesystem_checks,
                                       module_directory=module_directory,
                                       input_encoding='utf-8',
                                       output_encoding='utf-8',
-                                      default_filters=['decode.utf8'])
+                                      default_filters=['decode.utf8'],
+                                      **kwargs)
+
+    def load(self, name, parent_path=None):
+        """Load the template by name"""
+        return self._create_template(name)
 
     def _create_template(self, name):
         """The tornado temaple loader load the real tempalte
@@ -109,3 +146,7 @@ class ChocoTemplateLoader(Loader):
         template.generate = template.render
 
         return template
+
+    def reset(self):
+        """Reset the template engine cache"""
+        pass

@@ -24,13 +24,13 @@ import re
 import types
 
 from tornado.web import RequestHandler
-from choco.ui import UIContainer, UIModule
+
 from medoly import anthem
 from medoly import muses
 from medoly.config import SelectConfig
 from medoly import cmd
-
-
+from medoly.template.engine import TemplateEngine
+from medoly.util import get_class_bases
 from ._kanon import Melos
 from .ctx import AppContext
 
@@ -229,9 +229,6 @@ class InventoryManager(object):
         LOGGER.debug("Putting ui:{%s -> %r}", ui_name, uicls)
         if ui_name in self.template_mananger.uis:
             raise InventoryExistError("UI for ```{}`` exists.".format(ui_name))
-        if not issubclass(uicls, UIModule):
-            classes = [UIModule] + self.get_class_bases(uicls)
-            uicls = type(uicls.__name__, tuple(classes), dict(uicls.__dict__))
 
         self.template_mananger.put_ui(ui_name, uicls)
 
@@ -355,19 +352,11 @@ class InventoryManager(object):
 
         #: check inhert handler class, if not, inject the default handler class
         if not issubclass(handler, RequestHandler):
-            classes = [self.defalut_handler] + self.get_class_bases(handler)
+            classes = [self.defalut_handler] + get_class_bases(handler)
             handler = type(handler.__name__, tuple(
                 classes), dict(handler.__dict__))
 
         self.app_ctx.routes.append(anthem.url(url_spec, handler, settings, name))
-
-    def get_class_bases(self, klass):
-        """Getting the base classes excluding the type<object>"""
-        bases = klass.__bases__
-        if len(bases) == 1 and bases[0] == object:
-            return []
-        else:
-            return list(bases)
 
     def load_meloes(self, kclass):
         """Loads the inventory for the kclasss
@@ -500,14 +489,32 @@ class URLPatternManager(object):
 class TempateMananger(object):
     """Template Mannager
 
+    Currently, supports choco, mako, jinja2, selene (tornado default tempate).
+
     :param string ui_path: the default ui path for template loading, Defaults to "ui".
     """
 
-    def __init__(self, ui_path="ui"):
+    def __init__(self, template_engine=None, ui_path="ui"):
         self.template_paths = []
         self.ui_path = ui_path
         self.ui_paths = []
         self.uis = {}
+        self.__template_engine = template_engine
+
+    def load_template_egine(self, engine_name):
+        """Load and create template engine info
+        If the template engine had loaded, it will skip reload a new engine.
+
+        Currently, supports choco, mako, jinja2, selene (tornado default tempate).
+
+        :param engine_name:  the template engine name
+        :type engine_name: [type]
+        """
+        if self.__template_engine:
+            LOGGER.warning("The template engine ``%s`` had loaded", engine_name)
+        else:
+            LOGGER.info("Creating template engine ``%s``.", engine_name)
+            self.__template_engine = TemplateEngine(engine_name)
 
     def is_valid(self):
         """Checks the template is empty"""
@@ -518,17 +525,35 @@ class TempateMananger(object):
 
         :param mgr: InventoryManger
         """
+        namespace = {}
+        template_engine = mgr.config.get("template_engine", "jina2")
+        self.load_template_egine(template_engine)
+        template_settings = mgr.config.get("template_setting", {})
+        namespace.update(template_settings)
+        ui_container = None
+        if self.ui_support:
+            ui_container = self.load_ui_container(mgr)
 
-        ui_container = UIContainer(self.ui_paths)
+        return self.__template_engine.create_template_loader(self.template_paths, ui_container, namespace)
+
+    @property
+    def ui_support(self):
+        return self.__template_engine.ui_support
+
+    def load_ui_container(self, mgr):
+        """Loads ui container"""
+        LOGGER.debug("Loading ui modules.")
+        ui_container = self.__template_engine.ui_container_cls(self.ui_paths)
 
         # load ui and bind mapper or thing
+        ui_module_cls = self.__template_engine.ui_module_cls
         for name, uicls in self.uis.items():
+            if not issubclass(uicls, ui_module_cls):
+                classes = [ui_module_cls] + get_class_bases(uicls)
+                uicls = type(uicls.__name__, tuple(classes), dict(uicls.__dict__))
             mgr.load_meloes(uicls)
             ui_container.put_ui(name, uicls)
-        return anthem.ChocoTemplateLoader(self.template_paths, ui_container=ui_container,
-                                          filesystem_checks=mgr.config.get(
-                                              "choco.filesystem_checks", False),
-                                          module_directory=mgr.config.get("choco.cache_path"))
+        return ui_container
 
     def add_ui_path(self, ui_path):
         """Adds Ui tempate path to head"""

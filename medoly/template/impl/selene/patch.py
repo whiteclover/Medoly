@@ -15,17 +15,20 @@
 # under the License.
 
 
-from .patch import patch_tornado
-
-patch_tornado()
+from tornado.template import _Expression
 
 
-from .handler import Handler, RenderHandler, url
-from .app import Application
+class _Module(_Expression):
+
+    def __init__(self, expression, line):
+        parts = self.expression.split("(", 1)
+        name = parts[0]
+        args = parts[1]
+        expression = name + ", " + args
+        super(_Module, self).__init__("__ttmoude(handler, _loader" + expression, line, raw=True)
 
 
-__all__ = ('Handler',
-           'RenderHandler',
-           'url',
-           'Application',
-           )
+def patch_tornado_template():
+    """Patch tornado.template._Module to selence _Module class"""
+    from tornado import template
+    setattr(template, "_Module", _Module)
