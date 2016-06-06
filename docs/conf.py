@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import sphinx_rtd_theme
 import pkg_resources
 
 version = release = "0.1.0a"
@@ -18,10 +19,6 @@ exclude_patterns = ['jsonrpc-example-code/*']
 # Sample rst2pdf doc - title of the pdf
 # Your Name - author name in the pdf
 
-pdf_documents = [('index', u'rst2pdf', project, u'Lianghui Huang'), ]
-
-
-import sphinx_rtd_theme
 
 html_theme = "sphinx_rtd_theme"
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]

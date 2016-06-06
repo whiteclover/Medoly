@@ -18,7 +18,7 @@ Examples::
 
 Optionally, it can be used by specifying a rule with {name:filter}. Here are the rules:
 
-:int: matches (signed) digits only and converts the value to integer.
+:int: matches integer number.
 :float: similar to ``int`` but for decimal numbers.
 
 Example:
@@ -37,7 +37,7 @@ Link handler with ``route`` decorator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-In kanon has an other ``route`` decorator supports to link a group handlers to url paths at once.
+In kanon has an other decorator ``route``  supports to link a group handlers to url paths at once.
 
 
 Example:
