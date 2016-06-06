@@ -1,4 +1,4 @@
-``medoly.cmd`` --- Consone parser 
+``medoly.cmd`` --- Command-line options parser 
 ==============================================
 
 

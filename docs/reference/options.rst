@@ -1,4 +1,4 @@
-``medoly.options`` --- Consone parser 
+``medoly.options`` --- Console options parser 
 ==============================================
 
 

@@ -13,7 +13,7 @@ The url supports preprocessing rule for building dynamic path arguement variable
 Examples::
     
     /{post_id} #=> /(?P<name>[^/]+)
-    /post/{category/}{page_id} #=> /post/(?P<category>[^/]+)/(?P<page_id>[^/]+)
+    /post/{category}/{page_id} #=> /post/(?P<category>[^/]+)/(?P<page_id>[^/]+)
 
 
 Optionally, it can be used by specifying a rule with {name:filter}. Here are the rules:
