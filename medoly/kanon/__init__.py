@@ -15,8 +15,7 @@
 # under the License.
 
 
-"""Kanon
-=========
+"""Kanon is a composer, bule print a application.
 """
 
 import os.path
@@ -57,10 +56,12 @@ def boot():
         # add a config class
         @kanon.boot()
         class SiteConfig(object):
+
             def config(self, options):
                 group = options.group("Service settings")
                 _ = group.define
-                _('-H', '--server.host', default='localhost', help='The host of the http server (default %(default)r)')
+                _('-H', '--server.host', default='localhost',
+                    help='The host of the http server (default %(default)r)')
 
         # add a more than one boot config class at once
         @kanon.boot()
@@ -75,11 +76,6 @@ def boot():
 
 def set_app_name(name):
     InventoryManager.instance().set_app_name(name)
-
-
-def set_debug():
-    from medoly import log
-    log.log_config(InventoryManager.instance().app_name, True)
 
 
 def inventory_manager():
@@ -140,11 +136,11 @@ def menu(url_spec, settings=None, name=None):
     return __menu
 
 
-def route(prefix_url=''):
+def route(url_prefix=''):
     """Uses connector to add route in manager"""
 
     def __route(f):
-        c = composer.Connetor(prefix_url, InventoryManager.instance())
+        c = composer.Connector(url_prefix, InventoryManager.instance())
         f(c)
         return f
     return __route

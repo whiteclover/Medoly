@@ -44,32 +44,40 @@ def scan_submodules(package, recursive=True):
     return results, is_path, package
 
 
-class Connetor(object):
+class Connector(object):
     """Route menu processor
 
-    :param prefix_path: the url route path prefix
-    :type prefix_path: string
+    :param url_prefix: the url route path prefix
+    :type url_prefix: string
     :param mgr: the inventory manager for adding routes
     :type mgr:  InventoryManager
     """
 
-    def __init__(self, prefix_path, mgr):
+    def __init__(self, url_prefix, mgr):
 
-        self.prefix_path = prefix_path
+        self.url_prefix = url_prefix
         self.mgr = mgr
 
     def __enter__(self):
         return self
 
-    def connect(self, url_spec, *args, **kw):
+    def connect(self, url_spec, handler=None, setting=None, name=None, render=None):
         """Added a url route handler
 
-        :param url_spec: the url path or URLSpec
-        :type url_spec: string|url
-        :param args:  the more args for  route
-        :param kw: the more settings for route confinguration
+        if  ``render`` is not ``None``, it will use the template render hanlder, else use the ``handler`` as request handler class.
+
+        :param url_spec:  the url path
+        :type url_spec: string
+        :param handler: the tornado web request handler class, defaults to None
+        :type handler: the subclass of WebRequestHandler,  optional
+        :param settings: the handler setting config, defaults to None
+        :type settings: dict, optional
+        :param name: the name for reverse url, defaults to None
+        :type name: string, optional
+        :param render: the temaplate path for tempalte render handler, defaults to None
+        :type render: string, optional
         """
-        self.mgr.add_menu(self.prefix_path + url_spec, *args, **kw)
+        self.mgr.add_route(self.url_prefix + url_spec, handler, setting, name, render)
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.mgr = None
