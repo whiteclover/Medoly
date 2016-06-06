@@ -14,9 +14,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-"""Kanon manager
-==============
-"""
+"""Kanon managers"""
 
 import os.path
 import logging
@@ -276,7 +274,21 @@ class InventoryManager(object):
         self.template_mananger.add_template_path(template_path)
 
     def add_route(self, url_spec, handler=None, settings=None, name=None, render=None):
-        """Adds a url route"""
+        """Adds a url route
+
+        if  ``render`` is not ``None``, it will use the template render hanlder, else use the ``handler`` as request handler class.
+
+        :param url_spec:  the url path
+        :type url_spec: string
+        :param handler: the tornado web request handler class, defaults to None
+        :type handler: the subclass of WebRequestHandler,  optional
+        :param settings: the handler setting config, defaults to None
+        :type settings: dict, optional
+        :param name: the name for reverse url, defaults to None
+        :type name: string, optional
+        :param render: the temaplate path for tempalte render handler, defaults to None
+        :type render: string, optional
+        """
 
         self.menus.append(Menu(self.compose_url_prefix + url_spec, handler, settings, name, render))
 
@@ -327,7 +339,7 @@ class InventoryManager(object):
     def connect(self, url_spec, handler=None, settings=None, name=None, render=None):
         """Adds a route
 
-         if render is ``true``,  it is a simple template request handler.
+        if  ``render`` is not ``None``, it will use the template render hanlder, else use the ``handler`` as request handler class.
 
         :param url_spec: the url path
         :type url_spec: url
@@ -363,7 +375,7 @@ class InventoryManager(object):
 
         Examples:
 
-        .. code: python
+        .. code-block:: python
 
             class Index(object):
                 user_thing  = Melos("thing:User")
@@ -402,8 +414,6 @@ class InventoryExistError(Exception):
 
 class Menu(object):
     """Url Menu
-
-    if  ``render`` is not ``None``, it will use the template render. else set the ``handler``.
 
     :param url_spec:  the url path
     :type url_spec: string
@@ -456,7 +466,23 @@ class URLPatternManager(object):
         self.patterns = self.DEFAULT_PATTERNS.copy()
 
     def add_pattern(self, name, pattern):
-        """Add a url rule"""
+        """Adds a url pattern rule
+
+        Example:
+
+        .. code-block:: python
+
+            >>> pattern_mgr  = URLPatternManager()
+            >>> pattern_mgr.add_pattern("yymm", r"\d\d\d\d")
+            >>> pattern_mgr.url("/{date:yyymm}")
+            >>> ... "/(?P<date>\d\d\d\d)"
+
+
+        :param name: the rule pattern name
+        :type name: string
+        :param pattern: the regex expression is used to converted.
+        :type pattern: string
+        """
         self.patterns[name] = pattern
 
     def url(self, rule):

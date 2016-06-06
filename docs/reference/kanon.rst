@@ -1,5 +1,16 @@
+``kanon`` -- The Application Composer
+==========================
+
+
+kanon
+~~~~~~~~~~
+
+.. automodule:: medoly.kanon
+    :members:
+
+
 Manager
-=============
+~~~~~~~~~~~
 
 
 .. automodule:: medoly.kanon.manager
@@ -14,7 +25,7 @@ Manager
     .. automethod:: InventoryManager.instance
     .. automethod:: InventoryManager.set_instance
     .. automethod:: InventoryManager.initilaize_app
-    .. automethod:: InventoryManager.load_melos
+    .. automethod:: InventoryManager.load_meloes
     
     .. automethod:: InventoryManager.connect
 
@@ -36,4 +47,9 @@ Manager
     .. automethod:: TempateMananger.add_ui_path
     .. automethod:: TempateMananger.add_template_path
 
+    URLPatternManager
+    --------------------------
 
+    .. autoclass:: URLPatternManager
+    .. automethod:: URLPatternManager.add_pattern
+    .. automethod:: URLPatternManager.url

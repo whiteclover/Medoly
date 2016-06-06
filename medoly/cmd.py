@@ -113,7 +113,7 @@ def config_from_file(path):
     """Load config form file
 
     If config path exist  try to load and parse the config the file, else returns a empty config.
-    If the config path extension is ``yml`` , will load the config by yaml parse module requires
+    If the config path extension is ``yaml`` , will load the config by yaml parse module requires
     the yaml module, otherwise load hocon config
     """
     if os.path.exists(path):
