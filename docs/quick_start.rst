@@ -1,7 +1,7 @@
 Quick Start
 ++++++++++++++++
 
-This guide will teach you how to build a simple app using medoly.
+This Documention will teach you how to build a simple app using medoly.
 
 #. Installing modely
 #. Creating a hello world application
@@ -13,7 +13,7 @@ Install medoly
 ===================
 
 
-Requires python 2.7 version, tornado 4.0+  and choco template engine extends on mako template engine.
+Requires python 2.7 version, tornado 4.0+, ``mako`` and ``jinja2`` template engine.
 
 You can install Modely with a single command using pip, type this into your terminal:
 
