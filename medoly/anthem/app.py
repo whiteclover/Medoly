@@ -19,11 +19,14 @@
 =================
 
 
-The ``Application``  extends from  tornado base application clalss, encapsulates all of the stateful settings and hook map of a running Application.
+The ``Application``  extends from  tornado base application clalss, encapsulates all of the stateful settings and
+hook map of a running Application.
 
 
-Examples::
+Examples:
 
+
+.. code-block:: python
 
         app = Appliction(handlers, intialize)
 
@@ -95,10 +98,12 @@ class Application(tornado.web.Application):
 
         callback::
 
-        def on_not_found(request_handler, status_code, **kw):
-            theme = request_handler.application.config.get('theme', 'default')
-            tpl = 'theme/' + theme + '/404.html'
-            request_handler.render(tpl, page_title='Not Found')
+        .. code-block:: python
+
+            def on_not_found(request_handler, status_code, **kw):
+                theme = request_handler.application.config.get('theme', 'default')
+                tpl = 'theme/' + theme + '/404.html'
+                request_handler.render(tpl, page_title='Not Found')
 
 
         :request_handler: the reqeust handler

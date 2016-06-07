@@ -44,25 +44,6 @@ class Handler(RequestHandler, FlashMessagesMixin):
         """
         pass
 
-    @property
-    def current_user(self):
-        """The authenticated user for this request.
-
-        This is a cached version of `get_current_user`, which you can
-        override to set the user based on, e.g., a cookie. If that
-        method is not overridden, this method always returns None.
-
-        We lazy-load the current user the first time this method is called
-        and cache the result after that.
-        """
-        if not hasattr(self, "account"):
-            self.account = self.get_current_user()
-        return self.account
-
-    @current_user.setter
-    def current_user(self, value):
-        self.account = value
-
     def get_template_namespace(self):
         """Returns a dictionary to be used as the default template namespace.
         May be overridden by subclasses to add or modify values.
