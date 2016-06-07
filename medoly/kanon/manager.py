@@ -169,7 +169,7 @@ class InventoryManager(object):
     def create_app(self):
         """Returns an anthem application thats intialize with settings"""
         LOGGER.debug("Creating app!")
-        settings = self.intitilaize_app_settings()
+        settings = self.initialize_app_settings()
         self.app_ctx.settings.update(settings)
         return anthem.Application(self.app_ctx.routes, self.initilaize_app, **self.app_ctx.settings)
 
@@ -184,17 +184,17 @@ class InventoryManager(object):
         """
         LOGGER.debug("Starting Initialize app!")
         LOGGER.debug("Starting initilaize app hooks!")
-        # intialize app hooks
+        # initialize app hooks
         for (point, callback, failsafe, priority, kwargs) in self.app_ctx.hooks:
             app.attach(point, callback, failsafe, priority, **kwargs)
 
-        # intialize error page hooks
+        # initialize error page hooks
         for (code, func) in self.app_ctx.error_pages.items():
             app.error_page(code, func)
 
         app.config = self.config
 
-    def intitilaize_app_settings(self):
+    def initialize_app_settings(self):
         """Initialize the application settings"""
         settings = dict()
         # try bind template loader
@@ -276,7 +276,7 @@ class InventoryManager(object):
     def add_route(self, url_spec, handler=None, settings=None, name=None, render=None):
         """Adds a url route
 
-        if  ``render`` is not ``None``, it will use the template render hanlder, else use the ``handler`` as request handler class.
+        If  ``render`` is not ``None``, it will use the template render hanlder, else use the ``handler`` as request handler class.
 
         :param url_spec:  the url path
         :type url_spec: string
@@ -311,7 +311,7 @@ class InventoryManager(object):
         setattr(muses, '__model', self.models)
 
     def mount_mapper(self):
-        """Initailize and regiest the backend"""
+        """Initialize and regiest the backend"""
         mappers = {}
         for mapper_name in self.mappers:
             mapper = self.mappers.get(mapper_name)
@@ -321,7 +321,7 @@ class InventoryManager(object):
         setattr(muses, '__backend', mappers)
 
     def mount_thing(self):
-        """Initailize and regiest the thing"""
+        """Initialize and regiest the thing"""
         things = {}
         for thing_name in self.things:
             thing = self.things.get(thing_name)
@@ -331,7 +331,7 @@ class InventoryManager(object):
         setattr(muses, '__thing', things)
 
     def mount_menu(self):
-        """Intialize the url routes and handlers"""
+        """Initialize the url routes and handlers"""
         for menu in self.menus:
             self.connect(menu.url_spec, menu.handler,
                          menu.settings, menu.name, menu.render)
@@ -339,7 +339,7 @@ class InventoryManager(object):
     def connect(self, url_spec, handler=None, settings=None, name=None, render=None):
         """Adds a route
 
-        if  ``render`` is not ``None``, it will use the template render hanlder, else use the ``handler`` as request handler class.
+        If  ``render`` is not ``None``, it will use the template render hanlder, else use the ``handler`` as request handler class.
 
         :param url_spec: the url path
         :type url_spec: url
@@ -494,13 +494,13 @@ class URLPatternManager(object):
         if ms:
             for m in ms:
                 regex = True
-                label, p = m.group(1), m.group(2) or 'any'
-                pp = self.patterns.get(p)
+                label, rule_name = m.group(1), m.group(2) or 'any'
+                regex = self.patterns.get(rule_name)
                 pattern += rule[end:m.start()]
-                if pp:
-                    pattern += '(?P<%s>%s)' % (label, pp)
+                if regex:
+                    pattern += '(?P<%s>%s)' % (label, regex)
                 else:
-                    pattern += '(?P<%s>%s)' % (label, p[1:-1])
+                    pattern += '(?P<%s>%s)' % (label, rule_name[1:-1])
                 end = m.end()
 
         if regex:
@@ -517,6 +517,8 @@ class TempateMananger(object):
 
     Currently, supports choco, mako, jinja2, selene (tornado default tempate).
 
+    :param template_engine: The default tempalte egine, Defaults None, you need
+        load the template engine using ``load_template_engine``.
     :param string ui_path: the default ui path for template loading, Defaults to "ui".
     """
 
@@ -525,6 +527,8 @@ class TempateMananger(object):
         self.ui_path = ui_path
         self.ui_paths = []
         self.uis = {}
+
+        #: the template engine
         self.__template_engine = template_engine
 
     def load_template_engine(self, engine_name):
@@ -573,7 +577,7 @@ class TempateMananger(object):
         LOGGER.debug("Loading ui modules.")
         ui_container = self.__template_engine.ui_container_cls(self.ui_paths)
 
-        # load ui and bind mapper or thing
+        #: Load ui and bind mapper or thing
         ui_module_cls = self.__template_engine.ui_module_cls
         for name, uicls in self.uis.items():
             if not issubclass(uicls, ui_module_cls):
