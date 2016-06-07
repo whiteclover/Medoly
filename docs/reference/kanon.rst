@@ -25,7 +25,7 @@ Manager
     .. automethod:: InventoryManager.instance
     .. automethod:: InventoryManager.set_instance
     .. automethod:: InventoryManager.initilaize_app
-    .. automethod:: InventoryManager.load_meloes
+    .. automethod:: InventoryManager.load_melos
     
     .. automethod:: InventoryManager.connect
 

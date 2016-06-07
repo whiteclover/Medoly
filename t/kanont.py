@@ -158,3 +158,46 @@ class InventoryMgrTest(unittest.TestCase):
         self.assertTrue(isinstance(UserViewMinx.thing, BlablaService))
         self.assertTrue(isinstance(Index.userCache, UserCache))
         self.assertTrue(isinstance(UserViewMinx(), muses.Chord("UserViewMinx")))
+
+    def test_route(self):
+        class PostIndex(object):
+            pass
+
+        class PostView(object):
+            pass
+
+        @kanon.route("/post")
+        def post_menu(menu):
+            menu.connect("", PostIndex)
+            menu.connect("/{post_id}", PostView)
+            menu.connect("/render", render="post.html")
+
+        kanon.chant()
+        handler = self.mgr.app_ctx.routes[0]
+        self.assertTrue(issubclass(handler.handler_class, anthem.Handler))
+        self.assertEqual(handler.regex.pattern, r"/post$")
+
+        handler = self.mgr.app_ctx.routes[2]
+        self.assertTrue(issubclass(handler.handler_class, anthem.RenderHandler))
+        self.assertEqual(handler.regex.pattern, r"/post/render$")
+
+    def test_compose_file_module(self):
+        kanon.compose("simple_app")
+        kanon.chant()
+        handler_class = self.mgr.app_ctx.routes[0].handler_class
+        self.assertTrue(issubclass(handler_class, RequestHandler))
+        self.assertTrue(issubclass(handler_class, anthem.Handler))
+        self.assertEqual(muses.Model("Greeting").__name__, "Greeting")
+
+    def test_compose_folder_module(self):
+        kanon.compose("app")
+        kanon.chant()
+        handler_class = self.mgr.app_ctx.routes[0].handler_class
+        self.assertTrue(issubclass(handler_class, RequestHandler))
+        self.assertTrue(issubclass(handler_class, anthem.Handler))
+        self.assertEqual(muses.Model("Greeting").__name__, "Greeting")
+        self.assertEqual(muses.Backend("Demo").__class__.__name__, "DemoMapper")
+        template_mgr = self.mgr.template_mananger
+        self.assertEqual(len(template_mgr.template_paths), 1)
+
+        self.assertEqual(template_mgr.ui_support, False)

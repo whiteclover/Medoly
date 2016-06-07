@@ -75,7 +75,7 @@ class InventoryManager(object):
                  url_pattern_manager=None):
 
         #: the current compose context url prefix
-        self.compose_url_prefix = "/"
+        self.compose_url_prefix = ""
         #: the terminal parse controll
         self.enable_cmd_parse = enable_cmd_parse
 
@@ -297,7 +297,7 @@ class InventoryManager(object):
 
         for chord_name in self.chords:
             chord, settings = self.chords.get(chord_name)
-            self.load_meloes(chord)
+            self.load_melos(chord)
             bean = settings.get('bean')
             if bean:
                 self.chords[chord_name] = chord()
@@ -360,7 +360,7 @@ class InventoryManager(object):
             raise ValueError("Handler is required, can't be empty")
 
         # DI: mapper and thing
-        self.load_meloes(handler)
+        self.load_melos(handler)
 
         #: check inhert handler class, if not, inject the default handler class
         if not issubclass(handler, RequestHandler):
@@ -370,7 +370,7 @@ class InventoryManager(object):
 
         self.app_ctx.routes.append(anthem.url(url_spec, handler, settings, name))
 
-    def load_meloes(self, kclass):
+    def load_melos(self, kclass):
         """Loads the inventory for the kclasss
 
         Examples:
@@ -579,7 +579,7 @@ class TempateMananger(object):
             if not issubclass(uicls, ui_module_cls):
                 classes = [ui_module_cls] + get_class_bases(uicls)
                 uicls = type(uicls.__name__, tuple(classes), dict(uicls.__dict__))
-            mgr.load_meloes(uicls)
+            mgr.load_melos(uicls)
             ui_container.put_ui(name, uicls)
         return ui_container
 
