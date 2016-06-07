@@ -54,3 +54,7 @@ class URLPatternManagerTest(unittest.TestCase):
         self.assertEqual(url, "/post/{123badname}")
         url = self.mgr.url("/post/{123badname:int}")
         self.assertEqual(url, "/post/{123badname:int}")
+
+    def test_add_pattern(self):
+        self.mgr.add_pattern("date", r'\d{4}')
+        self.assertEqual(self.mgr.url("/{d:date}"), '/(?P<d>\d{4})')
