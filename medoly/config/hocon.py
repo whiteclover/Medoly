@@ -45,7 +45,7 @@ class BaseConfig(object):
         if current_node is None:
             raise KeyError("Doesn't exist the key:" % (path))
         for key in keys:
-            current_node = current_node.get_childe_object(key)
+            current_node = current_node.get_child_object(key)
         return current_node
 
     def __str__(self):
@@ -129,6 +129,7 @@ class Config(BaseConfig):
 
 
 class PyConfig(BaseConfig):
+    """Python style ocnfig"""
 
     def get(self, path, default=None):
         """Get real type value"""
@@ -139,6 +140,7 @@ class PyConfig(BaseConfig):
 
 
 class ConfigFactory(object):
+    """Config create tool"""
 
     @classmethod
     def empty(cls):
@@ -186,6 +188,7 @@ class HoconValue(MightBeAHoconObject):
         self.values = values or []
 
     def at_key(self, key):
+        """Get data node by key"""
         o = HoconObject()
         o.get_or_create_key(key)
         o[key] = self
@@ -193,6 +196,7 @@ class HoconValue(MightBeAHoconObject):
         return Config(HoconRoot(r))
 
     def get_object(self):
+        """Get the real current object"""
         raw = self.values[0] if len(self.values) >= 1 else None
 
         if isinstance(raw, HoconObject):
@@ -204,24 +208,30 @@ class HoconValue(MightBeAHoconObject):
         return raw
 
     def is_object(self):
+        """Check is an object"""
         return self.get_object() is not None
 
     def append_value(self, value):
+        """Append a value inf current node"""
         # if isinstance(value, HoconElement):
         self.values.append(value)
         return self
 
     def clear(self):
+        """Clear the sub nodes"""
         self.values[:] = []
 
     def new_value(self, value):
+        """Clear the sub values and reset by the new value"""
         self.clear()
         self.append_value(value)
 
     def is_string(self):
+        """Check is string object"""
         return all([v.is_string() for v in self.values])
 
     def get_array(self):
+        """Get the datas value as node list"""
         x = []
         for arr in self.values:
             if arr.is_array():
@@ -229,23 +239,29 @@ class HoconValue(MightBeAHoconObject):
         return x
 
     def get_list(self):
+        """Get the datas value as string list"""
         return [e.get_string() for e in self.get_array()]
 
     def is_array(self):
+        """Is array?"""
         return self.get_list() is not None
 
     def get(self):
+        """Get the the sub node"""
         if len(self.values) == 1:
             return self.values[0].get_object()
         return [_.get_object() for _ in self.values]
 
     def contat(self):
+        """Contat the contain objects as string"""
         return "".join([_.get_string() for _ in self.values])
 
-    def get_childe_object(self, key):
+    def get_child_object(self, key):
+        """Get chield object"""
         return self.get_object().get_key(key)
 
     def get_bool(self):
+        """Get the current object as bool value"""
         v = self.get_string()
         if v == 'on':
             return True
@@ -259,12 +275,16 @@ class HoconValue(MightBeAHoconObject):
         raise ValueError("Unknown boolean format: " + v)
 
     def get_string(self):
+        """Get the nodes as string"""
         if self.is_string():
             return self.contat()
 
         return None
 
     def _get_by_type(self, cast):
+        """Get the value node by cast type
+        :param cast: the cast object  (eg. int, float, string)
+        """
         v = self.get_string()
         try:
             return cast(v)
@@ -272,15 +292,19 @@ class HoconValue(MightBeAHoconObject):
             raise TypeError("Invalid %s format for: %s" % (str(cast), v))
 
     def get_int(self):
+        """Get the data value as int data"""
         return self._get_by_type(int)
 
     def get_float(self):
+        """Get the data value as float data"""
         return self._get_by_type(float)
 
     def get_int_list(self):
+        """Get the data value as int list"""
         return [e.get_int() for e in self.get_array()]
 
     def get_float_list(self):
+        """Get the data value as float list"""
         return [e.get_float() for e in self.get_array()]
 
     def __str__(self):
@@ -295,10 +319,12 @@ class HoconValue(MightBeAHoconObject):
 
 
 class HoconElement(object):
+    """Base Hocon element"""
     pass
 
 
 class HoconArray(HoconElement, list):
+    """Hocon array node"""
 
     def is_string(self):
         return False
@@ -317,6 +343,7 @@ class HoconArray(HoconElement, list):
 
 
 class HoconLiteral(HoconElement):
+    """Hocon literal value node"""
 
     def __init__(self, text=''):
         self.value = text
@@ -344,6 +371,7 @@ class HoconLiteral(HoconElement):
 
 
 class HoconObject(HoconElement, dict):
+    """Hocon abstract object"""
 
     def is_string(self):
         return False
@@ -376,6 +404,7 @@ class HoconObject(HoconElement, dict):
         return child
 
     def merge(self, obj):
+        """Merge the node into current node"""
         for k, v in obj.iteritems():
             if k in self:
                 this_item = self[k]
@@ -386,6 +415,7 @@ class HoconObject(HoconElement, dict):
 
 
 class HoconSubstitution(HoconElement, MightBeAHoconObject):
+    """Hocon $ variable"""
 
     def __init__(self, path=None):
         self.path = path
@@ -411,7 +441,7 @@ class HoconSubstitution(HoconElement, MightBeAHoconObject):
 
 
 class TokenType(object):
-    """Token  Type enum"""
+    """Token Type Enum"""
 
     Comment = 1
     Key = 2
@@ -429,6 +459,17 @@ class TokenType(object):
 
 
 class Token(object):
+    """Token object
+
+    :param token_type: the token type
+    :type token_type: string
+    :param source_index: the  begin source index
+    :type source_index: int
+    :param length: the length of token
+    :type length: the length of token
+    :param value: the value of token, defaults to None
+    :type value: string, optional
+    """
 
     def __init__(self, token_type, source_index, length, value=None):
         self.source_index = source_index
@@ -454,6 +495,7 @@ class Token(object):
 
 
 class Parser(object):
+    """The hocon parser"""
 
     def __init__(self):
         self._substitutions = []
@@ -463,9 +505,11 @@ class Parser(object):
         self._root = None
 
     def push_diagnostics(self, message):
+        """Added diagnostic message"""
         self._diagnostics_stack.append(message)
 
     def pop_diagnostics(self):
+        """Pop out diagnostic message"""
         self._diagnostics_stack.pop()
 
     def get_diagnostics_stacktrace(self):
@@ -474,9 +518,32 @@ class Parser(object):
 
     @staticmethod
     def parse(text, include_callback, pystyle=False):
+        """Create a paser and parse the text , returns a hocon config
+
+        :param text: the hocon text
+        :type text: string
+        :param include_callback: the included handle callback
+        :type include_callback: types.Function
+        :param pystyle: If ``Ture`` use the PyConfig and converts the data node to real type data, defaults to False
+        :type pystyle: bool, optional
+        :returns: the hocon conguration
+        :rtype: PyConfig | Config
+        """
         return Parser().parse_text(text, include_callback, pystyle)
 
     def parse_text(self, text, include_callback, pystyle):
+        """Parse the text , returns a hocon config
+
+        :param text: the hocon text
+        :type text: string
+        :param include_callback: the included handle callback
+        :type include_callback: types.Function
+        :param pystyle: If ``Ture`` use the PyConfig and converts the data node to real type data, defaults to False
+        :type pystyle: bool, optional
+        :returns: the hocon conguration
+        :rtype: PyConfig | Config
+        :raises: HoconParserException
+        """
         self._include_callback = include_callback
         self._root = HoconValue()
         self._reader = HoconTokenizer(text, pystyle)
@@ -495,6 +562,7 @@ class Parser(object):
         return HoconRoot(self._root, self._substitutions)
 
     def parse_object(self, current, root, current_path):
+        """Parse the current path object"""
         try:
             self.push_diagnostics("{")
             if current.is_object():
@@ -538,6 +606,7 @@ class Parser(object):
             self.pop_diagnostics()
 
     def parse_key_content(self, value, current_path):
+        """Parse the token key content"""
         try:
 
             last = current_path.rsplit(".", 1)[-1]
@@ -563,6 +632,7 @@ class Parser(object):
             self.pop_diagnostics()
 
     def parse_value(self, current, current_path):
+        """Parse the value of token"""
 
         if self._reader.eof:
             raise HoconParserException(
@@ -614,15 +684,18 @@ class Parser(object):
                                self._reader.get_help_text_at_index(start), self.get_diagnostics_stacktrace()))
 
     def parse_trailing_whitespace(self, current):
+        """Parse trailing whitespace"""
         ws = self._reader.pull_space_or_tab()
         while len(ws.value) > 0:
             wsList = HoconLiteral(ws.value)
             current.append_value(wsList)
 
     def parse_substitution(self, value):
+        """Parse substitution"""
         return HoconSubstitution(value)
 
     def parse_array(self, current_path):
+        """Parse array path"""
         try:
             self.push_diagnostics("|")
             arr = HoconArray()
@@ -637,16 +710,22 @@ class Parser(object):
             self.pop_diagnostics()
 
     def ignore_comma(self):
+        """Ignore comma"""
         if self._reader.is_comma():
             self._reader.pull_comma()
 
 
 class Tokenizer(object):
+    """The Base Hocon Tokenizer"""
 
     def __init__(self, text, pystyle=False):
+        #: the current node text
         self._text = text
+        #: the begin index
         self._index = 0
+        #: the index stack
         self._index_stack = []
+        #: the value covert style
         self.pystyle = pystyle
 
     @property
@@ -665,10 +744,11 @@ class Tokenizer(object):
 
     @property
     def eof(self):
+        """End of file"""
         return self._index >= len(self._text)
 
     def match(self, pattern):
-
+        """Match the pattern returns ``True``"""
         if (len(pattern) + self._index) > len(self._text):
             return False
         end = self._index + len(pattern)
@@ -677,6 +757,7 @@ class Tokenizer(object):
         return False
 
     def matches(self, *patterns):
+        """Match all patterns returns ``True``"""
         for pattern in patterns:
             m = self.match(pattern)
             if m:
@@ -684,6 +765,7 @@ class Tokenizer(object):
         return False
 
     def take(self, length):
+        """Get the head  length text """
         if(self._index + length) > len(self._text):
             return None
         end = self._index + length
@@ -692,13 +774,14 @@ class Tokenizer(object):
         return s
 
     def peek(self):
+        """Peek the head char if not end"""
         if self.eof:
             return chr(0)
 
         return self._text[self._index]
 
     def take_one(self):
-
+        """Take the head one length char string"""
         if self.eof:
             return chr(0)
         index = self._index
@@ -706,10 +789,12 @@ class Tokenizer(object):
         return self._text[index]
 
     def pull_whitespace(self):
+        """Pull white space"""
         while (not self.eof) and self.peek().isspace():
             self.take_one()
 
     def get_help_text_at_index(self, index, length=0):
+        """Get the help text at index"""
         if length == 0:
             length = self.length - index
         l = min(20, length)
@@ -722,11 +807,13 @@ class Tokenizer(object):
 
 
 class HoconTokenizer(Tokenizer):
+    """The  Hocon Tokenizer"""
 
     NotInUnquotedKey = "$\"{}[]:=,#`^?!@*&\\."
     NotInUnquotedText = "$\"{}[]:=,#`^?!@*&\\"
 
     def pull_whitespace_and_comments(self):
+        """Pull whitespace and comments"""
         while True:
             self.pull_whitespace()
             while self.is_start_of_comment():
@@ -735,6 +822,7 @@ class HoconTokenizer(Tokenizer):
                 break
 
     def pull_rest_of_line(self):
+        """Pull the rest of the current line"""
         sb = ""
         while not self.eof:
             c = self.take_one()
@@ -746,6 +834,7 @@ class HoconTokenizer(Tokenizer):
         return sb.strip()
 
     def pull_next(self):
+        """Pull the next token section"""
         self.pull_whitespace_and_comments()
         start = self.index
         if self.is_dot():
@@ -779,9 +868,11 @@ class HoconTokenizer(Tokenizer):
             "Unknown token: {0}", self.get_help_text_at_index(start)))
 
     def is_start_of_quoted_key(self):
+        """Check is start of quoted key"""
         return self.match("\"")
 
     def pull_array_end(self):
+        """Pull the end of array"""
         start = self.index
         if not self.is_array_end():
             raise HoconTokenizerException(str.format(
@@ -790,32 +881,39 @@ class HoconTokenizer(Tokenizer):
         return Token(TokenType.ArrayEnd, start, self.index - start)
 
     def is_array_end(self):
+        """Check is the end of array"""
         return self.match("]")
 
     def is_array_start(self):
+        """Check is the begin of array"""
         return self.match("[")
 
     def pull_array_start(self):
+        """Pull the begin of array"""
         start = self.index
         self.take_one()
         return Token(TokenType.ArrayStart, self.index, self.index - start)
 
     def pull_dot(self):
+        """Pull dot"""
         start = self.index
         self.take_one()
         return Token(TokenType.Dot, start, self.index - start)
 
     def pull_comma(self):
+        """Pull comma"""
         start = self.index
         self.take_one()
         return Token(TokenType.Comma, start, self.index - start)
 
     def pull_start_object(self):
+        """Pull  the start of the current object"""
         start = self.index
         self.take_one()
         return Token(TokenType.ObjectStart, start, self.index - start)
 
     def pull_object_end(self):
+        """Pull  the end of the current object"""
         start = self.index
         if not self.is_object_end():
             raise HoconTokenizerException(str.format(
@@ -824,37 +922,47 @@ class HoconTokenizer(Tokenizer):
         return Token(TokenType.ObjectEnd, start, self.index - start)
 
     def pull_assignment(self):
+        """Pull  assignment (= or :) """
         start = self.index
         self.take_one()
         return Token(TokenType.Assign, start, self.index - start)
 
     def is_comma(self):
+        """Check is comma"""
         return self.match(",")
 
     def is_dot(self):
+        """Check is dot(.)"""
         return self.match(".")
 
     def is_object_start(self):
+        """Check is the start of object"""
         return self.match("{")
 
     def is_object_end(self):
+        """Check is the end of object"""
         return self.match("}")
 
     def is_assignment(self):
+        """Check is assignment"""
         return self.matches("=", ":")
 
     def is_start_quoted_text(self):
+        """Check is the start of  quoted text"""
         return self.match("\"")
 
-    def is_start_trip_quotexd_text(self):
+    def is_start_trip_quoted_text(self):
+        """Check is the start of trip quoted text"""
         return self.match("\"\"\"")
 
     def pull_comment(self):
+        """Pull the comment"""
         start = self.index
         self.pull_rest_of_line()
         return Token(TokenType.Comment, start, self.index - start)
 
     def pull_unquoted_key(self):
+        """Pull unquoted key"""
         start = self.index
         sb = ""
         while (not self.eof) and self.is_unquoted_key():
@@ -862,20 +970,25 @@ class HoconTokenizer(Tokenizer):
         return Token.Key(sb.strip(), start, self.index - start)
 
     def is_unquoted_key(self):
+        """Check is the  unquoted key"""
         return (not self.eof) and (not self.is_start_of_comment()) and \
             (self.peek() not in self.NotInUnquotedKey)
 
     def is_unquoted_key_start(self):
+        """Check is the start of unquoted key"""
         return (not self.eof) and (not self.is_whitesplace()) and \
             (not self.is_start_of_comment()) and (self.peek() not in self.NotInUnquotedKey)
 
     def is_whitesplace(self):
+        """Check is blank"""
         return self.peek().isspace()
 
     def is_whitesplace_or_comment(self):
+        """Check is blank or comment"""
         return self.is_whitesplace() or self.is_start_of_comment()
 
     def pull_trip_quoted_text(self):
+        """Pull the trip quoted text"""
         start = self.index
         sb = ''
         self.take(3)
@@ -893,6 +1006,7 @@ class HoconTokenizer(Tokenizer):
         return Token.LiteralValue(sb, start, self.index - start)
 
     def pull_quoted_text(self):
+        """Pull the quoted text"""
         start = self.index
         sb = ''
         self.take_one()
@@ -906,6 +1020,7 @@ class HoconTokenizer(Tokenizer):
         return Token.LiteralValue(sb, start, self.index - start)
 
     def pull_quoted_key(self):
+        """Pull the quoted key"""
         start = self.index
         sb = ''
         self.take(3)
@@ -919,6 +1034,7 @@ class HoconTokenizer(Tokenizer):
         return Token.Key(sb, start, self.index - start)
 
     def pull_include(self):
+        """Pull the include token"""
         start = self.index
         self.take(len("include"))
         self.pull_whitespace_and_comments()
@@ -927,6 +1043,7 @@ class HoconTokenizer(Tokenizer):
         return Token.Include(unQuote, start, self.index - start)
 
     def pull_escape_sequence(self):
+        """Pull the escape squence"""
         start = self.index
 
         escaped = self.take_one()
@@ -954,14 +1071,16 @@ class HoconTokenizer(Tokenizer):
             "Unknown escape code `{0}` {1}", escaped, self.get_help_text_at_index(start)))
 
     def is_start_of_comment(self):
+        """Is the start of comment(# or //)"""
         return self.matches("#", "//")
 
     def pull_value(self):
+        """Pull the value, returns the token"""
         start = self.index
         if self.is_object_start():
             return self.pull_start_object()
 
-        if self.is_start_trip_quotexd_text():
+        if self.is_start_trip_quoted_text():
             return self.pull_trip_quoted_text()
 
         if self.is_start_quoted_text():
@@ -981,9 +1100,11 @@ class HoconTokenizer(Tokenizer):
             self.get_help_text_at_index(start)))
 
     def is_substitution_start(self):
+        """Check is the start of substitution"""
         return self.match("${")
 
     def is_include(self):
+        """Check is include"""
         self.push()
         try:
             if self.match("include"):
@@ -1002,6 +1123,7 @@ class HoconTokenizer(Tokenizer):
             self.pop()
 
     def pull_substitution(self):
+        """Pull substitution token"""
         start = self.index
         sb = ''
         self.take(2)
@@ -1012,9 +1134,11 @@ class HoconTokenizer(Tokenizer):
         return Token.Substitution(sb.strip(), start, self.index - start)
 
     def is_space_or_tab(self):
+        """Check is  blank context"""
         return self.matches(" ", "\t", "\v")
 
     def is_start_simple_value(self):
+        """Check is the begin of simaple value"""
         if self.is_space_or_tab():
             return True
 
@@ -1024,6 +1148,7 @@ class HoconTokenizer(Tokenizer):
         return False
 
     def pull_space_or_tab(self):
+        """Pull black text"""
         start = self.index
         sb = ''
         while self.is_space_or_tab():
@@ -1032,6 +1157,7 @@ class HoconTokenizer(Tokenizer):
         return Token.LiteralValue(sb, start, self.index - start)
 
     def pull_unquoted_text(self):
+        """Pull unquotes text"""
         start = self.index
         value = ''
         while (not self.eof) and self.is_unquoted_text():
@@ -1047,6 +1173,7 @@ class HoconTokenizer(Tokenizer):
     BOOL_VAR = {'true': True, 'false': False, 'on': True, 'off': False}
 
     def convert_to_pyvalue(self, value):
+        """Convet to python value"""
         if value in self.BOOL_VAR:
             return self.BOOL_VAR[value]
 
@@ -1060,10 +1187,12 @@ class HoconTokenizer(Tokenizer):
         return value
 
     def is_unquoted_text(self):
+        """Check is a is unquoted text"""
         return (not self.eof) and (not self.is_whitesplace()) and \
             (not self.is_start_of_comment()) and (self.peek() not in self.NotInUnquotedText)
 
     def pull_simple_value(self):
+        """Get the simplate string or space value"""
         start = self.index
 
         if self.is_space_or_tab():
@@ -1075,12 +1204,13 @@ class HoconTokenizer(Tokenizer):
             "No simple value found {0}", self.get_help_text_at_index(start)))
 
     def is_value(self):
+        """Check the current token is a value"""
 
         if self.is_array_start():
             return True
         if self.is_object_start():
             return True
-        if self.is_start_trip_quotexd_text():
+        if self.is_start_trip_quoted_text():
             return True
         if self.is_substitution_start():
             return True
