@@ -27,21 +27,22 @@ def scan_submodules(package, recursive=True):
 
     :param package: package (name or actual module)
     :type package: str | module
-    :rtype: dict[str, types.ModuleType]
+    :returns: the  package infos, is a path module info, and the current package module instance
+    :rtype: (dict[str, types.ModuleType], bool, top level module)
     """
     if isinstance(package, str):
         package = importlib.import_module(package)
-    results = {}
+    package_infos = {}
     is_path = False
     if hasattr(package, "__path__"):
         is_path = True
         for loader, name, is_pkg in pkgutil.walk_packages(package.__path__):
             full_name = package.__name__ + '.' + name
-            results[full_name] = importlib.import_module(full_name)
+            package_infos[full_name] = importlib.import_module(full_name)
             if recursive and is_pkg:
                 LOGGER.debug("Scaning package: %s", full_name)
-                results.update(scan_submodules(full_name)[0])
-    return results, is_path, package
+                package_infos.update(scan_submodules(full_name)[0])
+    return package_infos, is_path, package
 
 
 class Connector(object):
@@ -64,7 +65,7 @@ class Connector(object):
     def connect(self, url_spec, handler=None, setting=None, name=None, render=None):
         """Added a url route handler
 
-        if  ``render`` is not ``None``, it will use the template render hanlder, else use the ``handler`` as request handler class.
+        If  ``render`` is not ``None``, it will use the template render hanlder, else use the ``handler`` as request handler class.
 
         :param url_spec:  the url path
         :type url_spec: string
