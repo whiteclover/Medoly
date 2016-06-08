@@ -31,9 +31,18 @@ class SiteBoot(object):
         _('-H', '--server.host', default='localhost', help='The host of the http server (default %(default)r)')
         _('-p', '--server.port', default=8888, help='The port of the http server (default %(default)r)', type=int)
         _('-d', '--debug', help='Open debug mode (default %(default)r)', action='store_true', default=False)
-        _('--secert_key', default="7oGwHH8NQDKn9hL12Gak9G/MEjZZYk4PsAxqKU4cJoY=", help='The secert key for secure cookies (default %(default)r)')
         _('-c', '--config', default='etc/demo/app.conf', help="config path (default %(default)r)", metavar="FILE")
         _("-v", "--version", help="Show demo version 0.1")
+
+
+@boot()
+class WebBoot(object):
+
+    def config(self, options):
+        """Web settings"""
+        group = options.group("Web settings")
+        _ = group.define
+        _('--web.secert_key', default=None, help='The secert key for secure cookies (default %(default)r)')
 
 
 @boot()

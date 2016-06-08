@@ -195,12 +195,21 @@ class InventoryManager(object):
         app.config = self.config
 
     def initialize_app_settings(self):
-        """Initialize the application settings"""
+        """Initialize the application settings
+
+        #. Load and create template loader
+        #. Load web config firstly
+        #. Load the  static asset settings
+        #. If has global debug setting, override it.
+        """
         settings = dict()
         # try bind template loader
         if self.template_mananger.is_valid():
             LOGGER.debug("Init template!")
             settings['template_loader'] = self.template_mananger.create_template_loader(self)
+
+        #: load web settings firstly
+        settings.update(self.config.get("web", {}))
 
         # try to setting static resource
         static_path = self.config.get("asset.path")
@@ -210,7 +219,10 @@ class InventoryManager(object):
         if static_url_prefix:
             settings['static_url_prefix'] = static_url_prefix
 
-        settings['debug'] = self.config.get("debug", False)
+        #: If has global debug setting, override it.
+        debug = self.config.get("debug")
+        if debug is not None:
+            settings['debug'] = debug
         settings['cookie_secret'] = self.config.get("secert_key", None)
 
         return settings
