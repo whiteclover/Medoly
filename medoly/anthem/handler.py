@@ -14,8 +14,8 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-"""Medoly Request Hander class
-===========================
+"""Medoly Request Handlers
+-------------------------------------------------
 """
 
 from tornado.web import RequestHandler, url

@@ -14,6 +14,9 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+"""
+The tornado methods or functions patch  module
+"""
 
 import traceback
 import datetime
@@ -24,14 +27,13 @@ try:
 except ImportError:
     import json
 
-
-__all__ = ['patch_tornado']
+__all__ = ('patch_tornado', 'as_json', 'hooks', 'json_encode', 'write_error')
 
 
 def as_json(obj):
     """Returns the json serialize content
 
-    when the obj is a object isinstance and has as_json method, then it will call the method,
+    when the obj is a object isinstance and has ``_json__ ``method, then it will call the method,
     and dumps the return content. Also it can handle the datetime.date and decimal dumps
     """
     if hasattr(obj, '__json__') and callable(obj.__json__):
@@ -85,7 +87,15 @@ def hooks(self):
 
 
 def patch_tornado():
-    """Patch tornado"""
+    """Patch tornado
+
+    Here are the methods or fucntions are patched :
+
+     :web.RequestHandler.write_error: ``medoly.anthem.pathc.write_error``
+     :web.RequestHandler.hooks: ``medoly.anthem.pathc.hooks``
+     :escape.json_encode:  ``medoly.anthem.pathc.json_encode``
+
+    """
 
     from tornado import escape
     from tornado import web

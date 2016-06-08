@@ -1,4 +1,4 @@
-``kanon`` -- The Application Composer
+``medoly.kanon`` -- The Application Composer
 ==========================
 
 

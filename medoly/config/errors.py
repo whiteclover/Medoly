@@ -14,7 +14,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-"""Human-Optimized Config Object Notation"""
+"""Human-Optimized Config Object error exception"""
 
 
 class ConfigError(Exception):
@@ -23,10 +23,10 @@ class ConfigError(Exception):
 
 
 class HoconParserException(ConfigError):
-    """hocon parse error"""
+    """Hocon parse error"""
     pass
 
 
 class HoconTokenizerException(ConfigError):
-    """tokenizer error exception"""
+    """Tokenizer error exception"""
     pass

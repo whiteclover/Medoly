@@ -76,7 +76,7 @@ examples/rest_service/greeting/model.py
 
 
 .. note::
-    As you see in steps below, modely uses  the jsonify method the make a json response, and the object has ``__json__`` method will be invoked to get json data.
+    As you see in steps below, medoly uses  the jsonify method the make a json response, and the object has ``__json__`` method will be invoked to get json data.
 
 Create a resource handler
 =========================

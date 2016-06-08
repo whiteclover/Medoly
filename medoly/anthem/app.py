@@ -16,11 +16,11 @@
 
 
 """Medoly Application
-=================
+------------------------------------------------
 
 
-The ``Application``  extends from  tornado base application clalss, encapsulates all of the stateful settings and
-hook map of a running Application.
+The ``Application``  extends from  tornado base application clalss, encapsulates all of the stateful
+settings and hook map of a running Application.
 
 
 Examples:
@@ -96,7 +96,7 @@ class Application(tornado.web.Application):
         :param callback: the calllable object for error page handle stateful process .
 
 
-        callback::
+        callback:
 
         .. code-block:: python
 

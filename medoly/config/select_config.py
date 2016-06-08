@@ -25,9 +25,9 @@ class SelectConfig(object):
         >>> conf = SelectConfig()
         >>> conf.set("db.host", "localhost")
         >>> conf.get("db")
-        ...       {"host": "localhost"}
+        >>> ... "host": "localhost"}
         >>> conf.get("db.host")
-        ...     "localhost"
+        >>> ... "localhost"
 
     :param config: the default dict namnesapce for config, defaults to None
     :type config: dict, optional

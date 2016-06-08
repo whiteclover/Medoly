@@ -8,6 +8,7 @@ Reference
     reference/anthem
     reference/cmd
     reference/options
+    reference/config
 
 
 

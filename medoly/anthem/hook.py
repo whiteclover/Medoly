@@ -16,6 +16,7 @@
 
 
 """Http RequestHandler hook point manager
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 """
 import logging

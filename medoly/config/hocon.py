@@ -67,7 +67,13 @@ class BaseConfig(object):
 
 
 class Config(BaseConfig):
-    """Hocon config"""
+    """Hocon config
+
+    Extends:
+
+        BaseConfig
+
+    """
 
     def get_bool(self, path, default=False):
         """Gets the bool data value, defaults not found returns the default value"""
@@ -178,11 +184,17 @@ class HoconRoot(object):
 
 
 class MightBeAHoconObject(object):
+    """Hocon Maybe a hocon object"""
     pass
 
 
 class HoconValue(MightBeAHoconObject):
-    """Hocon data value node object"""
+    """Hocon data value node object
+
+    Extends
+    :
+        MightBeAHoconObject
+    """
 
     def __init__(self, values=None):
         self.values = values or []
@@ -324,7 +336,14 @@ class HoconElement(object):
 
 
 class HoconArray(HoconElement, list):
-    """Hocon array node"""
+    """Hocon Array object
+
+
+   Extends::
+
+        HoconElement
+        list
+    """
 
     def is_string(self):
         return False
@@ -343,7 +362,12 @@ class HoconArray(HoconElement, list):
 
 
 class HoconLiteral(HoconElement):
-    """Hocon literal value node"""
+    """Hocon literal value node
+
+    Extends::
+
+        HoconElement
+    """
 
     def __init__(self, text=''):
         self.value = text
@@ -371,7 +395,13 @@ class HoconLiteral(HoconElement):
 
 
 class HoconObject(HoconElement, dict):
-    """Hocon abstract object"""
+    """Hocon abstract object
+
+    Extends::
+
+        HoconElement
+        dict
+    """
 
     def is_string(self):
         return False
@@ -395,6 +425,13 @@ class HoconObject(HoconElement, dict):
         return self.get(key)
 
     def get_or_create_key(self, key):
+        """Get or create a new value by key
+
+        :param key: the data node key
+        :type key: string
+        :returns: the child node
+        :rtype: HoconValue
+        """
         if key in self:
             return self.get(key)
 
@@ -444,18 +481,42 @@ class TokenType(object):
     """Token Type Enum"""
 
     Comment = 1
+    """Comment Type"""
+
     Key = 2
+    """Key Type"""
+
     LiteralValue = 3
+    """Literal Value"""
+
     Assign = 4
+    """Literal Value"""
+
     ObjectStart = 5
+    """The object start type"""
+
     ObjectEnd = 6
+    """The object end type"""
     Dot = 7
+    """Dot Type"""
+
     EoF = 8
+    """EoF Type"""
+
     ArrayStart = 9
+    """The start of array"""
+
     ArrayEnd = 10
+    """The end of array"""
+
     Comma = 11
+    """The end of array"""
+
     Substitute = 12
+    """The substitute type"""
+
     Include = 13
+    """Include Type"""
 
 
 class Token(object):
@@ -479,18 +540,46 @@ class Token(object):
 
     @staticmethod
     def Key(key, source_index, source_length):
+        """Create Key Token
+
+        :param source_index: the  begin source index
+        :type source_index: int
+        :param length: the length of token
+        :type length: the length of token
+        """
         return Token(TokenType.Key, source_index, source_length, key)
 
     @staticmethod
     def Substitution(path, source_index, source_length):
+        """Create Substitution Token
+
+        :param source_index: the  begin source index
+        :type source_index: int
+        :param length: the length of token
+        :type length: the length of token
+        """
         return Token(TokenType.Substitute, source_index, source_length, path)
 
     @staticmethod
     def LiteralValue(value, source_index, source_length):
+        """Create Literal Value Token
+
+        :param source_index: the  begin source index
+        :type source_index: int
+        :param length: the length of token
+        :type length: the length of token
+        """
         return Token(TokenType.LiteralValue, source_index, source_length, value)
 
     @staticmethod
     def Include(path, source_index, source_length):
+        """Create Literal Value Token
+
+        :param source_index: the  begin source index
+        :type source_index: int
+        :param length: the length of token
+        :type length: the length of token
+        """
         return Token(TokenType.Include, source_index, source_length, path)
 
 
@@ -922,7 +1011,7 @@ class HoconTokenizer(Tokenizer):
         return Token(TokenType.ObjectEnd, start, self.index - start)
 
     def pull_assignment(self):
-        """Pull  assignment (= or :) """
+        """Pull  assignment (=or : ) """
         start = self.index
         self.take_one()
         return Token(TokenType.Assign, start, self.index - start)
@@ -1071,7 +1160,7 @@ class HoconTokenizer(Tokenizer):
             "Unknown escape code `{0}` {1}", escaped, self.get_help_text_at_index(start)))
 
     def is_start_of_comment(self):
-        """Is the start of comment(# or //)"""
+        """Is the start of comment(  # or //)"""
         return self.matches("#", "//")
 
     def pull_value(self):

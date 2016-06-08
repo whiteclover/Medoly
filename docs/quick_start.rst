@@ -1,7 +1,7 @@
 Quick Start
 ++++++++++++++++
 
-This Documention will teach you how to build a simple app using medoly.
+This Documentation will teach you how to build a simple app using medoly.
 
 #. Installing modely
 #. Creating a hello world application

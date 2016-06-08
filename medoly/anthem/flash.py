@@ -16,28 +16,26 @@
 
 
 """Flash message session Mixin
-===================================
-
+----------------------------------------------
 
 How to use
------------------
+~~~~~~~~~~~~~~~~~~
 
-.. code:: python
+Exmaple:
 
+.. code-block:: python
 
-    Exmaple::
+    class Index(anthem.Handler):
 
-        class Index(anthem.Handler):
-
-            def get(self):
-                self.flash("User name is invalid", "error")
-                self.render("user.html")
-
+        def get(self):
+            self.flash("User name is invalid", "error")
+            self.render("user.html")
 
 
-template "user.html"::
 
-.. code:: mako
+template "user.html":
+
+.. code-block:: mako
 
         <div> <h2> Flash message</h2>
                 ${flash()}

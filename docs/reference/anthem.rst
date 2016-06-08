@@ -2,8 +2,18 @@
 =====================================
 
 
-Hook
-~~~~~~~
+
+.. automodule:: medoly.anthem.app
+    :members:
+
+
+.. automodule:: medoly.anthem.handler
+    :members:
+
+
+.. automodule:: medoly.anthem.flash
+    :members:
+
 
 
 .. automodule:: medoly.anthem.hook
@@ -11,8 +21,8 @@ Hook
 
 
 
-HookMap
----------------
+Patch tornado
+------------------------------
 
-   .. automethod:: HookMap.attach
-   .. automethod:: HookMap.run
+.. automodule:: medoly.anthem.patch
+    :members:
