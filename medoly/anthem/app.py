@@ -61,9 +61,9 @@ class Application(tornado.web.Application):
 
 
 
-     :param handlers:  the tornado request handers
-     :param intialize: the function for intailize of application
-     :param settings: the more tornado application settings,
+    :param handlers:  the tornado request handers
+    :param initialize: the function for initailize  application
+    :param settings: the more tornado application settings,
         configuration options for customizing the behavior.
 
 
@@ -74,11 +74,11 @@ class Application(tornado.web.Application):
     hookpoints = ['on_start_request', 'on_end_request',
                   'before_error_response', 'after_error_response']
 
-    def __init__(self, handlers, intialize, **settings):
-        # error pages, contains the error process handler for the status code
+    def __init__(self, handlers, initialize, **settings):
+        #: error pages, contains the error process handler for the status codes
         self.error_pages = {}
         self.hooks = HookMap()
-        intialize(self)
+        initialize(self)
         tornado.web.Application.__init__(
             self, handlers, **settings)
 
@@ -89,7 +89,7 @@ class Application(tornado.web.Application):
         self.hooks.attach(point, callback, failsafe, priority, **kwargs)
 
     def error_page(self, code, callback):
-        """Status code and error expction hander callback
+        """Status code and error exception hander callback
 
 
         :param int code: the http status code
