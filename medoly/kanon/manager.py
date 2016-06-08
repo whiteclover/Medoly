@@ -164,7 +164,7 @@ class InventoryManager(object):
     def config_from_file(self, path):
         """Loads config from file"""
         config = cmd.config_from_file(path)
-        self.config.update(config.config())
+        self.config.update(config)
 
     def create_app(self):
         """Returns an anthem application thats intialize with settings"""
