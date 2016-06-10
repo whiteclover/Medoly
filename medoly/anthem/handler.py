@@ -89,7 +89,7 @@ class Handler(RequestHandler, FlashMessagesMixin):
         self.finish(html)
 
     def on_finish(self):
-        """Hook  pointer process  on request finshing
+        """Hook pointer process  on request finshing
         """
         self.on_end_request()
         self.hooks.run('on_end_request', self)

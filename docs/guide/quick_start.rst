@@ -3,7 +3,7 @@ Quick Start
 
 This Documentation will teach you how to build a simple app using medoly.
 
-#. Installing modely
+#. Installing medoly
 #. Creating a hello world application
 #. Running the application
 
@@ -15,7 +15,7 @@ Install medoly
 
 Requires python 2.7 version, tornado 4.0+, ``mako`` and ``jinja2`` template engine.
 
-You can install Modely with a single command using pip, type this into your terminal:
+You can install Medoly with a single command using pip, type this into your terminal:
 
 
 .. code-block:: bash

@@ -39,7 +39,7 @@ LOGGER = logging.getLogger("kanon.manager")
 class InventoryManager(object):
     """Manage and load app context, mappers and things.
 
-     :param handlercls: the default request handler class for build url route handler.
+    :param handlercls: the default request handler class for build url route handler.
         Defaults is ``anthem.Handler``.
     :param SelectConfig config: the select config , default create a new empty config
     :param template_manager: the template mananger for custum template engine
@@ -180,7 +180,7 @@ class InventoryManager(object):
         #. load error page hooks
 
 
-        :param Applaction app: the modely application
+        :param Applaction app: the medoly application
         """
         LOGGER.debug("Starting Initialize app!")
         LOGGER.debug("Starting initilaize app hooks!")
