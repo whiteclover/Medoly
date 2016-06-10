@@ -2,12 +2,21 @@
 ==========================
 
 
-kanon
+Kanon
 ~~~~~~~~~~
 
 .. automodule:: medoly.kanon
     :members:
 
+
+.. automodule:: medoly.kanon._kanon
+    :members:
+
+Composer
+~~~~~~~~~~
+
+.. automodule:: medoly.kanon.composer
+    :members:
 
 Manager
 ~~~~~~~~~~~
@@ -28,7 +37,25 @@ Manager
     .. automethod:: InventoryManager.load_melos
     
     .. automethod:: InventoryManager.connect
+    .. automethod:: InventoryManager.add_route
+    .. automethod:: InventoryManager.put_model
+    .. automethod:: InventoryManager.put_mapper
+    .. automethod:: InventoryManager.put_thing
+    .. automethod:: InventoryManager.put_chord
+    .. automethod:: InventoryManager.put_boot
 
+    .. automethod:: InventoryManager.mount_model
+    .. automethod:: InventoryManager.mount_mapper
+    .. automethod:: InventoryManager.mount_thing
+    .. automethod:: InventoryManager.mount_chord
+    .. automethod:: InventoryManager.mount_menu
+
+
+    Error
+    ---------------------
+
+    .. autoclass:: InventoryExistError
+        :members:
 
     Menu
     ------------

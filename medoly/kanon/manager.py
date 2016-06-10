@@ -323,7 +323,7 @@ class InventoryManager(object):
         setattr(muses, '__model', self.models)
 
     def mount_mapper(self):
-        """Initialize and regiest the backend"""
+        """Initialize and register the backend"""
         mappers = {}
         for mapper_name in self.mappers:
             mapper = self.mappers.get(mapper_name)
@@ -333,7 +333,7 @@ class InventoryManager(object):
         setattr(muses, '__backend', mappers)
 
     def mount_thing(self):
-        """Initialize and regiest the thing"""
+        """Initialize and register  the thing"""
         things = {}
         for thing_name in self.things:
             thing = self.things.get(thing_name)
@@ -420,7 +420,7 @@ class InventoryManager(object):
 
 
 class InventoryExistError(Exception):
-    """Invenort exist exception"""
+    """Inventory not exist exception"""
     pass
 
 

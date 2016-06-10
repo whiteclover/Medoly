@@ -14,7 +14,9 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-"""Kanon builder util"""
+"""Kanon builder util
+------------------------------
+"""
 
 
 class Melos(object):
@@ -22,13 +24,11 @@ class Melos(object):
 
     Loads inventory for the class, dependecy injection when the inventory manager  called ``load`` method
 
-    Examples:
-
-    .. code: python
+    Examples::
 
         class Index(object):
             user_thing  = Melos("thing:User")
-            # default  is a thing inventory
+            # default is a thing inventory
             post_thing = Melos("Post")
 
     :param inventory_name: the ":" split inventroy name, Defaults if only have the name, will set to thing inventory
