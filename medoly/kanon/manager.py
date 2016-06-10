@@ -151,8 +151,9 @@ class InventoryManager(object):
             self.boots = [boot() for boot in self.boots]
             config = console.parse_cmd(self.app_name, self.boots)
             self.config.update(config)
-            LOGGER.info("The application config: %s", self.config)
+
         self.boot_config()
+        LOGGER.info("The application config: %s", self.config)
 
     def boot_config(self):
         """Bootstrap boot config setup"""
@@ -223,7 +224,6 @@ class InventoryManager(object):
         debug = self.config.get("debug")
         if debug is not None:
             settings['debug'] = debug
-        settings['cookie_secret'] = self.config.get("secert_key", None)
 
         return settings
 
