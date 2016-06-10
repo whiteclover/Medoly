@@ -42,7 +42,7 @@ class WebBoot(object):
         """Web settings"""
         group = options.group("Web settings")
         _ = group.define
-        _('--web.secert_key', default=None, help='The secert key for secure cookies (default %(default)r)')
+        _('--web.cookie_secret', default=None, help='The secert key for secure cookies (default %(default)r)')
 
 
 @boot()
