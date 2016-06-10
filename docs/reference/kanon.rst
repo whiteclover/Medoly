@@ -57,6 +57,12 @@ Manager
     .. autoclass:: InventoryExistError
         :members:
 
+    App context 
+    ---------------------
+    .. automodule:: medoly.kanon.ctx
+        :members:
+
+
     Menu
     ------------
 
