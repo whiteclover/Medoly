@@ -36,7 +36,6 @@ class Melos(object):
     """
 
     def __init__(self, inventory_name):
-
         self.inventory_name = inventory_name
         parts = inventory_name.split(":")
         genre = "thing"
