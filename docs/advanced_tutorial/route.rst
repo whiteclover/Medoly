@@ -45,10 +45,10 @@ Example:
 
 .. code-block:: python
 
-    @kanon.route("/post")
+    @kanon.route("/post") # url prefiex
     def post_menu(menu):
-        menu.connect("/", PostIndexPage)
-        menu.connect("/{post_id:int}",  PostPageView)
+        menu.connect("/", PostIndexPage) # /post/
+        menu.connect("/{post_id:int}",  PostPageView) # /post/{post_id}
 
 It  creates a ``Connector`` and passed it in ``post_menu`` function, calls the ``connect`` method to link to handlers.
 

@@ -9,8 +9,8 @@ extensions = ['sphinx.ext.autodoc']
 source_suffix = '.rst'  # The suffix of source filenames.
 master_doc = 'index'  # The master toctree document.
 
-project = 'Modaly Doc'
-copyright = '2016, Euterpe and contributors'
+project = 'Medoly Doc'
+copyright = '2016, Medoly and contributors'
 exclude_patterns = ['jsonrpc-example-code/*']
 
 

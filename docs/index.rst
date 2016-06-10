@@ -8,9 +8,9 @@ Content
 .. toctree::
     maxdepth: 2
 
-    quick_start
-    rest_service
+    guide
     tutorial
+    advanced_tutorial
     reference
 
 

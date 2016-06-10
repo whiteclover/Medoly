@@ -5,6 +5,4 @@ Tutorial
 
    maxdepth: 2
    
-   tutorial/have_fun_with_kanon
-   tutorial/route
-   tutorial/template_and_ui
+   tutorial/rest_service
