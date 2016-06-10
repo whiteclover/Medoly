@@ -11,9 +11,9 @@ SelectConfig
 
 .. automodule:: medoly.config.hocon
 
-    
 
-Hocon 
+
+Hocon
 ~~~~~~~~~~~~~~
 
 Hocon Config
@@ -71,7 +71,7 @@ Hocon config parser
 .. autoclass:: Parser
        :members:
 
-.. autoclass:: HocoParsernElement
+.. autoclass:: Tokenizer
        :members:
 
 .. autoclass:: HoconTokenizer
