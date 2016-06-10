@@ -44,7 +44,7 @@ class EntryMapper(object):
         """Create a enrty
 
         :param title: the nery title
-        :type title: stirng
+        :type title: string
         :param markdown: the entry markdown cotent
         :type markdown: string
         :param html: the html content

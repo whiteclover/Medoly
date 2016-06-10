@@ -13,5 +13,5 @@ def on_start_request(req_handler):
 
 @kanon.error_page(404)
 def not_found(req_handler, code, **kw):
-    """Not Found page"""
+    """Not Found Page"""
     req_handler.render("404.html", page_title='Page Not Found')
