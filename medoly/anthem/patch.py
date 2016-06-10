@@ -33,7 +33,7 @@ __all__ = ('patch_tornado', 'as_json', 'hooks', 'json_encode', 'write_error')
 def as_json(obj):
     """Returns the json serialize content
 
-    when the obj is a object isinstance and has ``_json__ ``method, then it will call the method,
+    When the ``obj`` is a class object instance and has ``__json__`` method, then it will call the method,
     and dumps the return content. Also it can handle the datetime.date and decimal dumps
     """
     if hasattr(obj, '__json__') and callable(obj.__json__):
