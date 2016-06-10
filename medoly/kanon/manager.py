@@ -42,7 +42,7 @@ class InventoryManager(object):
      :param handlercls: the default request handler class for build url route handler.
         Defaults is ``anthem.Handler``.
     :param SelectConfig config: the select config , default create a new empty config
-    :param template_mananger: the template mananger for custum template engine
+    :param template_manager: the template mananger for custum template engine
     :param bool enable_cmd_parse: when set to False to disable the console command pasre.
             Defaults to   ``True`` enable the terminal command option.
     :param url_pattern_manager: the url pattern process manager.
@@ -71,7 +71,7 @@ class InventoryManager(object):
         else:
             raise TypeError("The mgr must be an instance of InventoryManager")
 
-    def __init__(self, handlercls=None, config=None, template_mananger=None, enable_cmd_parse=True,
+    def __init__(self, handlercls=None, config=None, template_manager=None, enable_cmd_parse=True,
                  url_pattern_manager=None):
 
         #: the current compose context url prefix
@@ -108,7 +108,7 @@ class InventoryManager(object):
         self.defalut_handler = handlercls or anthem.Handler
 
         #: the choco template manager
-        self.template_mananger = template_mananger or TempateMananger()
+        self.template_manager = template_manager or TempateMananger()
 
         #: the url pattern processor
         self.url_pattern_manager = url_pattern_manager or URLPatternManager()
@@ -204,9 +204,9 @@ class InventoryManager(object):
         """
         settings = dict()
         # try bind template loader
-        if self.template_mananger.is_valid():
+        if self.template_manager.is_valid():
             LOGGER.debug("Init template!")
-            settings['template_loader'] = self.template_mananger.create_template_loader(self)
+            settings['template_loader'] = self.template_manager.create_template_loader(self)
 
         #: load web settings firstly
         settings.update(self.config.get("web", {}))
@@ -237,10 +237,10 @@ class InventoryManager(object):
     def put_ui(self, ui_name, uicls):
         """Adds a ui"""
         LOGGER.debug("Putting ui:{%s -> %r}", ui_name, uicls)
-        if ui_name in self.template_mananger.uis:
+        if ui_name in self.template_manager.uis:
             raise InventoryExistError("UI for ```{}`` exists.".format(ui_name))
 
-        self.template_mananger.put_ui(ui_name, uicls)
+        self.template_manager.put_ui(ui_name, uicls)
 
     def put_boot(self, boot):
         """Adds a boot config
@@ -283,7 +283,7 @@ class InventoryManager(object):
     def add_template_path(self, template_path):
         """Adds a template path in template manager"""
         LOGGER.debug("Adding template path: '%s'", template_path)
-        self.template_mananger.add_template_path(template_path)
+        self.template_manager.add_template_path(template_path)
 
     def add_route(self, url_spec, handler=None, settings=None, name=None, render=None):
         """Adds a url route
