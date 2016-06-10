@@ -2,7 +2,7 @@ More about routing
 =================
 
 The kanon ``menu`` decorator links a url path to a  request handler class. it supports the regex expression dynamic route. 
-Howerver, the kanon has a  url perprocess rule for url route.
+However, the kanon has a  url perprocess rule for url route.
 
 
 Dynamic route
@@ -45,7 +45,7 @@ Example:
 
 .. code-block:: python
 
-    @kanon.route("/post") # url prefiex
+    @kanon.route("/post") # url prefix
     def post_menu(menu):
         menu.connect("/", PostIndexPage) # /post/
         menu.connect("/{post_id:int}",  PostPageView) # /post/{post_id}

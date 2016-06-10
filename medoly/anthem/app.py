@@ -65,14 +65,11 @@ class Application(tornado.web.Application):
     :param initialize: the function for initailize  application
     :param settings: the more tornado application settings,
         configuration options for customizing the behavior.
-
-
-    :cvar hookpoints: hooks points
     """
 
-    # Hook points
     hookpoints = ['on_start_request', 'on_end_request',
                   'before_error_response', 'after_error_response']
+    """Hook entry  key points"""
 
     def __init__(self, handlers, initialize, **settings):
         #: error pages, contains the error process handler for the status codes
@@ -95,6 +92,8 @@ class Application(tornado.web.Application):
         :param int code: the http status code
         :param callback: the calllable object for error page handle stateful process .
 
+        Raises:
+            TypeError -- the invalid status code type
 
         callback:
 
@@ -105,13 +104,9 @@ class Application(tornado.web.Application):
                 tpl = 'theme/' + theme + '/404.html'
                 request_handler.render(tpl, page_title='Not Found')
 
-
-        :request_handler: the reqeust handler
-        :statuc_code: the status code
-        :kw: the more args for the excption handler
-
-        Raises:
-            TypeError -- the invalid status code type
+        ``request_handler`` the reqeust handler
+        ``statuc_code`` the status code
+        ``kw`` the more args for the exception handler
         """
 
         if not isinstance(code, int):

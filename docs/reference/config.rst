@@ -7,6 +7,7 @@ SelectConfig
 
 .. automodule:: medoly.config.select_config
     :members:
+    :special-members:
 
 .. automodule:: medoly.config.hocon
 

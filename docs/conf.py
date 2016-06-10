@@ -20,6 +20,18 @@ exclude_patterns = ['jsonrpc-example-code/*']
 # Your Name - author name in the pdf
 
 
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.coverage",
+    "sphinx.ext.doctest",
+    "sphinx.ext.extlinks",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.viewcode",
+]
+
+primary_domain = 'py'
+default_role = 'py:obj'
+
 html_theme = "sphinx_rtd_theme"
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 

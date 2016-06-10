@@ -15,8 +15,16 @@
 
 
 class lazy_attr(object):
+    """Lazy property
 
-    """Lazy property"""
+    Examples::
+
+        class SessionManager(object):
+
+            @lazy_attr
+            def author_thing(self):
+                return muses.Thing("Author")
+    """
 
     def __init__(self, wrapped):
         self.wrapped = wrapped
@@ -34,7 +42,7 @@ class lazy_attr(object):
 
 
 def get_class_bases(klass):
-    """Getting the base classes excluding the type<object>"""
+    """Getting the base classes excluding the type ``object``"""
     bases = klass.__bases__
     if len(bases) == 1 and bases[0] == object:
         return []

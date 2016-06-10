@@ -164,7 +164,6 @@ In ``startup`` method try load server setting for appliction config then bootstr
 Test the service
 ==============
 
-
 Type the command in your terminal as blow:
 
     python service.py
@@ -187,6 +186,3 @@ Summary
 ===============
 
 Congratulations! You’ve just developed a RESTful web service with medoly.
-
-
-

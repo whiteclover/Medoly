@@ -41,4 +41,4 @@ Chord likes ``Thing``, mostly is used to implement a thrid logic process , like 
 View  and Handler
 ===============
 
-Views describe how a user interface look like, render by ``Handler``  that bases  the tornado Tornado   ``RequestHandler`` class.  ``Handler`` simply renders a template to frontend, or uses ``Thing`` instances to build a json data.
+Views describe how a user interface look like, render by ``Handler``  that bases  the tornado Tornado ``RequestHandler`` class.  ``Handler`` simply renders a template to frontend, or uses ``Thing`` instances to build a json view.
