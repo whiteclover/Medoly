@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Demo</title>
+    <link rel="stylesheet" href="{{ static_url("blog.css") }}" type="text/css">
+    <link rel="alternate" href="/feed" type="application/atom+xml" title="Blog demo"> {% block head %}{% endblock %}
+</head>
+
+<body>
+    <div id="body">
+        <div id="header">
+            <div style="float:right">
+                {% if current_user %}
+                <a href="/compose">{{ _("New post") }}</a> -
+                <a href="/auth/logout?next={{request.uri}}">{{ _("Sign out") }}</a>
+                {% else %}
+                <a href="/auth/login?next={{request.uri}}">Sign in</a> to compose/edit
+                {% endif %}
+            </div>
+            <h1><a href="/">Blog Demo</a></h1>
+        </div>
+        <div id="content">{% block body %}{% endblock %}</div>
+    </div>
+    {% block bottom %}{% endblock %}
+</body>
+
+</html>

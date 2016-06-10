@@ -9,7 +9,7 @@ This guide walks you through the process of creating a "hello world" RESTful web
     The source code in the medoly ``examples/rest_service`` directory.
 
 What you’ll build
-===============
+=====================
 
 You’ll build a service that will accept HTTP GET requests at::
 
@@ -114,7 +114,7 @@ A key difference between a traditional tornado ``RequestHandler``， the ``write
 
 
 Creating the application bootstrap service
-===================================
+=============================================
 
 examples/rest_service/service.py
 
@@ -159,15 +159,15 @@ examples/rest_service/service.py
 
 In ``__init__``  construct method, gets the manager to set the app name, then ``compose`` method scans the greeting module , calls ``chant`` method to build a anthem application.
 
-In ``startup`` method try load server setting for appliction config then bootstrap the http service through the current default ``IOLoop`` instance. 
+In ``startup`` method try load server setting for appliction config then bootstrap the http service through the current default ``IOLoop`` instance.
 
 Test the service
-==============
+====================
 
 Type the command in your terminal as blow:
 
     python service.py
-    
+
 Now that the service is up, visit ``http://localhost:8080/greeting``, where you see:
 
 

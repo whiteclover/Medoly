@@ -1,0 +1,25 @@
+server:
+    host: localhost
+    port: 8880
+
+sqlalchemy:
+  url: mysql+mysqldb://blog:blog@localhost/blog
+  isolation_level: READ UNCOMMITTED
+  pool_size: 10
+  #echo: true
+
+
+web:
+  cookie_secret: secert_key
+
+debug: true
+
+template_setting:
+  auto_reload: true
+#  cache_path: cache_path ## jinja2 byte cache path 
+
+## the static resource setting
+##asset:
+##  url_prefix: /assets/ # asset url path prefix
+##  path:./nodejs/dist/assets" # static files path
+
