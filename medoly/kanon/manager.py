@@ -541,7 +541,7 @@ class TempateMananger(object):
         self.uis = {}
 
         #: the template engine
-        self.__template_engine = template_engine
+        self.template_engine = template_engine
 
     def load_template_engine(self, engine_name):
         """Load and create template engine info
@@ -552,11 +552,11 @@ class TempateMananger(object):
         :param engine_name:  the template engine name
         :type engine_name: [type]
         """
-        if self.__template_engine:
+        if self.template_engine:
             LOGGER.warning("The template engine ``%s`` has loaded", engine_name)
         else:
             LOGGER.info("Creating template engine ``%s``.", engine_name)
-            self.__template_engine = TemplateEngine(engine_name)
+            self.template_engine = TemplateEngine(engine_name)
 
     def is_valid(self):
         """Checks the template is empty"""
@@ -576,21 +576,21 @@ class TempateMananger(object):
         if self.ui_support:
             ui_container = self.load_ui_container(mgr)
 
-        return self.__template_engine.create_template_loader(self.template_paths, ui_container, namespace)
+        return self.template_engine.create_template_loader(self.template_paths, ui_container, namespace)
 
     @property
     def ui_support(self):
         """Check the template engine is support ui module featue"""
-        if self.__template_engine is not None:
-            return self.__template_engine.ui_support
+        if self.template_engine is not None:
+            return self.template_engine.ui_support
 
     def load_ui_container(self, mgr):
         """Loads ui container"""
         LOGGER.debug("Loading ui modules.")
-        ui_container = self.__template_engine.ui_container_cls(self.ui_paths)
+        ui_container = self.template_engine.ui_container_cls(self.ui_paths)
 
         #: Load ui and bind mapper or thing
-        ui_module_cls = self.__template_engine.ui_module_cls
+        ui_module_cls = self.template_engine.ui_module_cls
         for name, uicls in self.uis.items():
             if not issubclass(uicls, ui_module_cls):
                 classes = [ui_module_cls] + get_class_bases(uicls)
