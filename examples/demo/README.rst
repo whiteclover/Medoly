@@ -15,12 +15,12 @@ App Structure
   │  │  __init__.py
   │  │
   │  ├─ asset # default static asset path
-  │  ├─template # tempalte path
+  │  ├─template # template path
   │  │  │  404.html
   │  │  │  index.html
   │  │  │  user_index.html
   │  │  │
-  │  │  └─ui # ui module tempalte path
+  │  │  └─ui # ui module template path
   │  │          user.html
   │  │
   │  └─user # user module

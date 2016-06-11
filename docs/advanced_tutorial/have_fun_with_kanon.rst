@@ -1,8 +1,8 @@
 Have Fun with kanon
 ++++++++++++++++++++++++++++
 
-Kanon is a inventory composer, it combines model, thing, mappper, handler, route, boot all thing togther. 
-Inventory is a resource like mappper inventory, model inventory, chord inventory and thing inventory.
+Kanon is a inventory composer, it combines model, thing, mappper, handler, route, boot and so on all thing togther. 
+Inventory is a resource like mapper inventory, model inventory, chord inventory and thing inventory.
 
 
 bloom
@@ -67,7 +67,7 @@ the thing class name defaultly.
 
 
 
-Customize the kanon inventory name
+Customize the kanon inventory access name
 ----------------------------------------------------------------------
 
 if you wanna use custom name, adding the ``access_name`` in the ``bloom`` decorator:
@@ -203,7 +203,7 @@ it uses the ``setup`` method to sets the tornado application confirmed ``xsrf_co
 Add error page handler
 ========================
 
-kanon ``error_page`` decorator is used to add a http status error handler process.
+kanon ``error_page`` decorator is used to add a http status error handler process. it can process all http status expection error.
 
 For example, add a 404 page handler:
 
@@ -220,7 +220,7 @@ Adding a 500 status code page handler:
 .. code-block:: python
 
   @kanon.error_page(500)
-  def not_found(req_handler, code, **kw):
+  def internal_error(req_handler, code, **kw):
       """Internal Error Page"""
       req_handler.render("500.html", page_title='Internal Error')
 
@@ -239,6 +239,9 @@ Cuttently, hook supports fourth hook entry pointer:
 :before_error_response: Runnig on the error expection request, implements hook on  the ``write_error`` begining .
 :after_error_response: Runnig on the error expection request,  implements  hook on the ``write_error`` ending.
 
+
+Add two process handlers on ``on_start_request`` hook pointer:
+
 .. code-block:: python
 
   @kanon.hook("on_start_request")
@@ -250,7 +253,7 @@ Cuttently, hook supports fourth hook entry pointer:
       """on start request hook"""
       session.load(req_handler)
 
-Defaultly, ``hook`` decorator with ``priority`` value is 50, the application will run hooks on the order register.
+Defaultly, ``hook`` decorator with ``priority`` value is 50, the application will run hooks on the register order.
 You can set a higher ``priority`` value  to prioritize the hook method.  Priority numbers should be limited to the closed interval [0, 100].
 
 
@@ -292,12 +295,12 @@ For example,  int the demo project (the source in the ``examples/demo`` director
   │  │  __init__.py
   │  │
   │  ├─ asset # default static asset path
-  │  ├─template # tempalte path
+  │  ├─template # template path
   │  │  │  404.html
   │  │  │  index.html
   │  │  │  user_index.html
   │  │  │
-  │  │  └─ui # ui module tempalte path
+  │  │  └─ui # ui module template path
   │  │          user.html
   │  │
   │  └─user # user module
@@ -332,14 +335,14 @@ In the beblow example, it links every url path in ``app`` module menu to the sub
      app = kanon.chant()
 
 
-Configure the tempalte path
+Configure the template path
 -----------------------------------------------
 
-In the above example, the  ``compose``  check the app module, and find a tempalte folder named `tempalte` in the root module path, then append the 
-tempalte path in the head  tempalte paths of  the tempalte manager. 
+In the above example, the  ``compose``  check the app module, and find a template folder named `template` in the root module path, then append the 
+template path in the head  template paths of  the template manager. 
 
 
-In the beblow example, in app module  checks the root path `tempalte` , and in admin module  checks the `admin_template` path.
+In the beblow example, in app module  checks the root path `template` , and in admin module  checks the `admin_template` path.
 
 .. code-block:: python
 
