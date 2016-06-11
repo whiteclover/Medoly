@@ -74,10 +74,6 @@ def boot():
     return _boot
 
 
-def set_app_name(name):
-    InventoryManager.instance().set_app_name(name)
-
-
 def inventory_manager():
     """Get the current kanon inventory manager"""
     return InventoryManager.instance()
@@ -146,7 +142,7 @@ def route(url_prefix=''):
     return __route
 
 
-def bloom(inventory_name, alias=None):
+def bloom(inventory_name, access_name=None):
     """Binds the inventory"""
 
     # check the inventory name validation
@@ -157,8 +153,8 @@ def bloom(inventory_name, alias=None):
         kclass_name = inventory.__name__
         if inventory_name == "thing":
             name = None
-            if alias and alias.strip():
-                name = alias
+            if access_name and access_name.strip():
+                name = access_name
             else:
                 if kclass_name.endswith("Thing"):
                     name = kclass_name[:-5]
@@ -169,8 +165,8 @@ def bloom(inventory_name, alias=None):
 
         elif inventory_name == "model":
             name = None
-            if alias and alias.strip():
-                name = alias
+            if access_name and access_name.strip():
+                name = access_name
             else:
                 name = kclass_name
 
@@ -178,8 +174,8 @@ def bloom(inventory_name, alias=None):
 
         elif inventory_name == "mapper":
             name = None
-            if alias and alias.strip():
-                name = alias
+            if access_name and access_name.strip():
+                name = access_name
             else:
                 if kclass_name.endswith("Mapper"):
                     name = kclass_name[:-6]
