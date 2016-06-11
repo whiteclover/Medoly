@@ -1,12 +1,12 @@
 More about routing
-=================
++++++++++++++++++++++
 
 The kanon ``menu`` decorator links a url path to a  request handler class. it supports the regex expression dynamic route. 
 However, the kanon has a  url perprocess rule for url route.
 
 
 Dynamic route
-~~~~~~~~~~~~~~~~~
+==================
 
 The url supports preprocessing rule for building dynamic path arguement variable, it processes the simple name enclosed in braces (like. ``{post_id}``) to an path  arguement variable in regex expression url path.
 
@@ -34,7 +34,7 @@ Example:
 
 
 Link handler with ``route`` decorator
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+====================================
 
 
 In kanon has an other decorator ``route``  supports to link a group handlers to url paths at once.
@@ -54,7 +54,7 @@ It  creates a ``Connector`` and passed it in ``post_menu`` function, calls the `
 
 
 connect
------------------
+------------------------
 
     .. automodule:: medoly.kanon.composer
     .. automethod:: Connector.connect

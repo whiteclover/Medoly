@@ -57,11 +57,6 @@ Manager
     .. autoclass:: InventoryExistError
         :members:
 
-    App context 
-    ---------------------
-    .. automodule:: medoly.kanon.ctx
-        :members:
-
 
     Menu
     ------------
@@ -86,3 +81,9 @@ Manager
     .. autoclass:: URLPatternManager
     .. automethod:: URLPatternManager.add_pattern
     .. automethod:: URLPatternManager.url
+
+    App context 
+    ---------------------
+    .. automodule:: medoly.kanon.ctx
+        :members:
+
