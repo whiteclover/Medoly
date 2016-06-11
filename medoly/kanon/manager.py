@@ -133,7 +133,7 @@ class InventoryManager(object):
         self.app_ctx.error_page(status_code, callback)
 
     def load(self):
-        """Loads all invenory settings and create the anthem application"""
+        """Loads all inventory settings and create the anthem application"""
         self.load_boot()
         self.mount_model()
         self.mount_mapper()
