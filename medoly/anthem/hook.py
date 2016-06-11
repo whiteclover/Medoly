@@ -28,7 +28,7 @@ LOGGER = logging.getLogger('anthem.hook')
 
 class Hook(object):
 
-    """A callback and its metadata: failsafe, priority, and kwargs."""
+    """A Request Hook callback pointer and its metadata: failsafe, priority, and kwargs."""
 
     callback = None
     """
@@ -78,7 +78,7 @@ class Hook(object):
 
 class HookMap(dict):
 
-    """A map of call points to lists of callbacks (Hook objects)."""
+    """A Manager of Request call points to lists of callbacks (Hook objects)."""
 
     def __new__(cls, points=None):
         d = dict.__new__(cls)
@@ -103,11 +103,6 @@ class HookMap(dict):
         exc = None
         hooks = self.get(point, [])
         for hook in hooks:
-            # Some hooks are guaranteed to run even if others at
-            # the same hookpoint fail. We will still log the failure,
-            # but proceed on to the next hook. The only way
-            # to stop all processing from one of these hooks is
-            # to raise SystemExit and stop the whole server.
             if exc is None or hook.failsafe:
                 try:
                     hook(*args, **kw)
