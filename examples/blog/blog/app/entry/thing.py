@@ -52,7 +52,6 @@ class EntryThing(object):
             entry = self.mapper.find_by_id(int(entry_id))
             if not entry:
                 raise tornado.web.HTTPError(404)
-            slug = entry.slug
 
             entry.title = title
             entry.html = html
