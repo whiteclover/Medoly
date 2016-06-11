@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 import tornado.web
 
 from medoly import kanon
@@ -27,17 +26,6 @@ class ArchiveHandler(anthem.Handler):
     def get(self):
         entries = self.entry_thing.list_entries()
         self.render("archive.html", entries=entries)
-
-
-@kanon.menu("/feed")
-class FeedHandler(anthem.Handler):
-
-    entry_thing = kanon.Melos("thing:Entry")
-
-    def get(self):
-        entries = self.entry_thing.list_entries(page_size=10)
-        self.set_header("Content-Type", "application/atom+xml")
-        self.render("feed.xml", entries=entries)
 
 
 @kanon.menu("/compose")
