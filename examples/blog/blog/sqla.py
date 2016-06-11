@@ -25,7 +25,7 @@ class SQLABoot(object):
         _("--sqlalchemy.isolation_level", default="READ UNCOMMITTED", help="sqlalchemy isolation level (default %(default)r)")
         _("--sqlalchemy.pool_size", default=10, help="sqlalchemy pool size (default %(default)r)", type=int)
         _("--sqlalchemy.pool_recycle", default=10, help="sqlalchemy pool recycle (default %(default)r)", type=int)
-        _("-sqlalchemy.echo", default=False, help="sqlalchemy debug mode (default %(default)r)", type=bool)
+        _("--sqlalchemy.echo", default=False, help="sqlalchemy debug mode (default %(default)r)", type=bool)
 
     def setup(self, config, settings):
         """Setup sqalchemy engine"""
