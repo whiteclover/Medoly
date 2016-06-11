@@ -197,7 +197,7 @@ class InventoryMgrTest(unittest.TestCase):
         self.assertTrue(issubclass(handler_class, anthem.Handler))
         self.assertEqual(muses.Model("Greeting").__name__, "Greeting")
         self.assertEqual(muses.Backend("Demo").__class__.__name__, "DemoMapper")
-        template_mgr = self.mgr.template_mananger
+        template_mgr = self.mgr.template_manager
         self.assertEqual(len(template_mgr.template_paths), 1)
 
         self.assertEqual(template_mgr.ui_support, False)
