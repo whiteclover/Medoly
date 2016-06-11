@@ -130,7 +130,7 @@ A configuration file ``example/demo/conf/ap.conf``:
 
     template_engine = choco
 
-    # chco template settings 
+    # choco template settings 
     template_setting {
         module_directory = "./cache" # choco module cache  path, comments it if wanna  disable 
         filesystem_checks = on 
