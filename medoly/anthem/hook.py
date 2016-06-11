@@ -103,6 +103,8 @@ class HookMap(dict):
         exc = None
         hooks = self.get(point, [])
         for hook in hooks:
+            # Running the hook pointer, if fails, keep the exception info in exc,
+            # then raises it, when all hook pointer finished.
             if exc is None or hook.failsafe:
                 try:
                     hook(*args, **kw)
