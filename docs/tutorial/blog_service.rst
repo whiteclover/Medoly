@@ -47,16 +47,18 @@ examples/blog/setup.py
           description='Blog is simple blog demo wrote by Medoly',
           long_description=readme,
           packages=['blog'],
-          install_requires=['medoly', 'sqlalchemy'],
+          install_requires=['medoly', 'sqlalchemy', 'markdown', 'bcrypt'],
           license="Apache License",
           platforms='any'
           )
 
-The demo requires the ``sqlalchemy`` an orm module to access  MySQL service. Type this into your terminal for install ``sqlalchemy``:
+The demo requires the ``sqlalchemy`` an orm module to access  MySQL service, ``markdown`` for build markdown content and bcrypt to encrypt author password . Type this into your terminal for installing them:
 
 .. code-block:: bash
 
   pip insall SQLAlchemy
+  pip insall markdown
+  pip bcrypt
 
 
 Integrating SQLAlchemy
@@ -94,7 +96,7 @@ examples/blog/blog/sqla.py
           _("--sqlalchemy.encoding", default="utf-8", help="sqlalchemy encoding (default %(default)r)")
           _("--sqlalchemy.pool_size", default=10, help="sqlalchemy pool size (default %(default)r)", type=int)
           _("--sqlalchemy.pool_recycle", default=10, help="sqlalchemy pool recycle (default %(default)r)", type=int)
-          _("-sqlalchemy.echo", default=False, help="sqlalchemy debug mode (default %(default)r)", type=bool)
+          _("--sqlalchemy.echo", default=False, help="sqlalchemy debug mode (default %(default)r)", type=bool)
 
       def setup(self, config, settings):
           """Setup sqalchemy engine"""
