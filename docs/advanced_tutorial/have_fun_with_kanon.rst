@@ -187,7 +187,8 @@ kanon ``boot`` decorator is used to configuration the application bootstrap proc
             """Web settings"""
             group = options.group("Web settings")
             _ = group.define
-            _('--web.cookie_secret', default="secert_key", help='The secert key for secure cookies (default %(default)r)')
+            _('--web.cookie_secret', default="secert_key", 
+              help='The secert key for secure cookies (default %(default)r)')
 
         def setup(self, config, settings):
             """Ensure web settings"""
@@ -214,7 +215,7 @@ For example, add a 404 page handler:
       req_handler.render("404.html", page_title='Page Not Found')
 
  
- Adding a 500 page handler:
+Adding a 500 status code page handler:
 
 .. code-block:: python
 
@@ -235,8 +236,8 @@ Cuttently, hook supports fourth hook entry pointer:
 
 :on_start_request: Running on the request handler ``perpare`` mehtod
 :on_end_request: Running on the request handler ``on_finish`` mehtod
-:before_error_response: Runnig on the error expection request, hook on  the ``write_error`` begining .
-:after_error_response: Runnig on the error expection request, hook on the ``write_error`` ending.
+:before_error_response: Runnig on the error expection request, implements hook on  the ``write_error`` begining .
+:after_error_response: Runnig on the error expection request,  implements  hook on the ``write_error`` ending.
 
 .. code-block:: python
 
@@ -278,11 +279,11 @@ Also it check the module package whether or not a  folder package to configurati
 The ``chant`` method is  used to bootstrap every thing and create the application instance. Firstly parses the command-line and bootstrap the boot config. 
 Then loads the inventory in the ``muses`` and bootstraps application setting and creates the anthem application.
 
-For example,  int the demo project (the source in the ``example/demo`` directory) has a app module.
+For example,  int the demo project (the source in the ``examples/demo`` directory) has a app module.
 
 
 
-.. code-block:: txt
+.. code-block:: text
 
   ├─app
   │  │  boot.py # boot settings
