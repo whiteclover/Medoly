@@ -8,7 +8,7 @@ Inventory is a resource like mapper inventory, model inventory, chord inventory 
 bloom
 ================
 
-kanon ``bloom`` decorator is used to register Thing, Model, and Mapper.
+Medoly is here, in ever lasting ``@bloom``, kanon ``bloom`` decorator is used to register Thing, Model, and Mapper.
 
 
 model
@@ -166,7 +166,7 @@ section.
         hot_post_thing = Melos("HotPost")
 
         def render(self, item_size=10):
-            posts = self.hot_post_thing(item_size)
+            posts = self.hot_post_thing.get_hot_post(item_size)
             return {"posts": posts}
 
 
