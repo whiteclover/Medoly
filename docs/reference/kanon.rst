@@ -1,5 +1,5 @@
 ``medoly.kanon`` -- The Application Composer
-==========================
+==================================================
 
 
 Kanon
@@ -35,7 +35,7 @@ Manager
     .. automethod:: InventoryManager.set_instance
     .. automethod:: InventoryManager.initilaize_app
     .. automethod:: InventoryManager.load_melos
-    
+
     .. automethod:: InventoryManager.connect
     .. automethod:: InventoryManager.add_route
     .. automethod:: InventoryManager.put_model
@@ -82,8 +82,7 @@ Manager
     .. automethod:: URLPatternManager.add_pattern
     .. automethod:: URLPatternManager.url
 
-    App context 
+    App context
     ---------------------
     .. automodule:: medoly.kanon.ctx
         :members:
-

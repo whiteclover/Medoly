@@ -1,7 +1,7 @@
 More about routing
 +++++++++++++++++++++
 
-The kanon ``menu`` decorator links a url path to a  request handler class. it supports the regex expression dynamic route. 
+The kanon ``menu`` decorator links a url path to a  request handler class. it supports the regex expression dynamic route.
 However, the kanon has a  url perprocess rule for url route.
 
 
@@ -11,7 +11,7 @@ Dynamic route
 The url supports preprocessing rule for building dynamic path arguement variable, it processes the simple name enclosed in braces (like. ``{post_id}``) to an path  arguement variable in regex expression url path.
 
 Examples::
-    
+
     /{post_id} #=> /(?P<name>[^/]+)
     /post/{category}/{page_id} #=> /post/(?P<category>[^/]+)/(?P<page_id>[^/]+)
 
@@ -34,7 +34,7 @@ Example:
 
 
 Link handler with ``route`` decorator
-====================================
+========================================
 
 
 In kanon has an other decorator ``route``  supports to link a group handlers to url paths at once.
