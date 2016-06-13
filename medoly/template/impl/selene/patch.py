@@ -23,7 +23,7 @@ class _Module(_Expression):
 
     Exmaple::
 
-        {% module UserView(uid) $}
+        {% module UserView(uid) %}
 
     """
 
