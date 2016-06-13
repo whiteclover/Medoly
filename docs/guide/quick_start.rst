@@ -22,7 +22,7 @@ You can install Medoly with a single command using pip, type this into your term
 	
 	pip install medoly
 
-Develop mode, git clone the project, then cd proejct direcotry, type this into your terminal:
+Develop mode, git clone the project, then move to the proejct directory, type this into your terminal:
 
 .. code-block:: bash
 
