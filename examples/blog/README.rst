@@ -39,6 +39,7 @@ if your database has not been created yet, log into your mysql first using:
     mysql> USE a_new_database_name
     mysql> source schema\mysql.sql
 
+Then change the ``sqlalchemy.url`` to your database configuration in the ``conf/app.yaml``
 
 Run in console
 ================
@@ -47,5 +48,5 @@ Type this in yout terminal:
 
 .. code-block:: bash
 
-    > python blogd -c=conf\app.yaml -d
+    > python blogd -c=conf/app.yaml -d
 

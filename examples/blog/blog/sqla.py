@@ -28,7 +28,7 @@ class SQLABoot(object):
         _("--sqlalchemy.echo", default=False, help="sqlalchemy debug mode (default %(default)r)", type=bool)
 
     def setup(self, config, settings):
-        """Setup sqalchemy engine"""
+        """Setup sqlalchemy engine"""
         global Base, db
         sqla_settings = config.get("sqlalchemy", {}).copy()
         url = sqla_settings.pop("url")
