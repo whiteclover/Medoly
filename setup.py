@@ -16,10 +16,8 @@
 
 
 import os
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+
+from setuptools import setup, find_packages
 
 import medoly
 
@@ -33,7 +31,7 @@ setup(name='medoly',
       author="Thomas Huang",
       url='https://github.com/whiteclover/medoly',
       author_email='lyanghwy@gmail.com',
-      packages=['medoly'],
+      packages=find_packages(exclude=["t"]),
       install_requires=['setuptools', 'tornado', 'jinja2', 'mako'],
       keywords=["Web FrameWork"],
       license="Apache License",
